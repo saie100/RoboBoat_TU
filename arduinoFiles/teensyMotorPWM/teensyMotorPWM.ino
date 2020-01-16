@@ -6,8 +6,8 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/String.h>
 
-#define L_ESC 3
-#define R_ESC 4
+#define L_ESC 5
+#define R_ESC 
 
 #define STOP_PWM 4915
 //#define RANGEPWM 1311 //Used for production. No limits on speed
