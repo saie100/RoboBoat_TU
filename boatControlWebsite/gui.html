@@ -8,7 +8,7 @@
   <script type="text/javascript" src="roslib.js"></script>
   <script type="text/javascript" type="text/javascript">
 
-    var ros = new ROSLIB.Ros({url:'ws://192.168.8.178:9090'});
+    var ros = new ROSLIB.Ros({url:'ws://192.168.1.102:9090'});
     ros.on('connection', function () {document.getElementById("rosConnStatus").innerHTML = "Connected";});
     ros.on('error', function (error) {document.getElementById("rosConnStatus").innerHTML = "Error";});
     ros.on('close', function () {document.getElementById("rosConnStatus").innerHTML = "Closed";});
@@ -28,7 +28,7 @@
    
     function move(axVal) {
       var lScale = new ROSLIB.Message({data: -axVal[1]});
-      var rScale = new ROSLIB.Message({data: -axVal[3]});
+      var rScale = new ROSLIB.Message({data: -axVal[4]});
       ard_LeftPWM_listener.publish(lScale);
       ard_RightPWM_listener.publish(rScale)
     }
@@ -54,21 +54,21 @@
 	function updateControl()
 	{
 		gp = navigator.getGamepads();
-		for(var i = 0; i < gp[0].axes.length; i++)
+		for(var i = 0; i < gp[gpidx].axes.length; i++)
 		{
 			//We only care about one gamepad connected, so this will only apply an axis offset
 			//to a single gamepad, not multiple
-			document.getElementById("gpax$i".replace("$i",i)).innerHTML = gp[0].axes[i] - axisOffset[i];	
+			document.getElementById("gpax$i".replace("$i",i)).innerHTML = gp[gpidx].axes[i] - axisOffset[i];	
 		}
-		move(gp[0].axes);
+		move(gp[gpidx].axes);
 	}
 
 	function zeroAxis()
 	{
 		gp = navigator.getGamepads();
-		for(var i = 0; i < gp[0].axes.length; i++)
+		for(var i = 0; i < gp[gpidx].axes.length; i++)
 		{
-			axisOffset[i] = gp[0].axes[i];
+			axisOffset[i] = gp[gpidx].axes[i];
 		}
 	}
 
@@ -83,10 +83,12 @@
   <h1>Boat Connection Interface</h1>
   <p>Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
   
-  <p>Axis 0 (LH): <span id="gpax0"></span></p>
-  <p>Axis 1 (LV): <span id="gpax1"></span></p>
-  <p>Axis 2 (RH): <span id="gpax2"></span></p>
-  <p>Axis 3 (LH): <span id="gpax3"></span></p>
+  <p>Axis 0 (LStick-Hori): <span id="gpax0"></span></p>
+  <p>Axis 1 (LStick-Vert): <span id="gpax1"></span></p>
+  <p>Axis 2 (LTrigger)   : <span id="gpax2"></span></p>
+  <p>Axis 3 (RStick-Hori): <span id="gpax3"></span></p>
+  <p>Axis 4 (RStick-Vert): <span id="gpax4"></span></p>
+  <p>Axis 5 (RTrigger)   : <span id="gpax5"></span></p>
   
 </body>
 

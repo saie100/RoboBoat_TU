@@ -101,5 +101,5 @@ void loop() {
   nh.spinOnce(); 
 
   //Setting the update rate for the sensor data and ESC control
-  delayMicroseconds((int)(pow(10,6)/UPDATE_RATE)); //
+  delayMicroseconds((int)(pow(10,6)/UPDATE_RATE));
 }
