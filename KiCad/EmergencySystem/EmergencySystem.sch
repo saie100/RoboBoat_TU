@@ -1,0 +1,511 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L AdafruitBoards:Feather_32u4_RFM95 U6
+U 1 1 5E28C1D5
+P 7150 5200
+F 0 "U6" H 6750 6150 50  0000 C CNN
+F 1 "Feather_32u4_RFM95" H 7100 6050 50  0000 C CNN
+F 2 "" H 6750 6200 50  0001 C CNN
+F 3 "" H 6750 6200 50  0001 C CNN
+	1    7150 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L RoboBoat_Parts:Elegoo_4RelayModule U5
+U 1 1 5E28EA67
+P 4800 4500
+F 0 "U5" H 4400 5400 50  0000 C CNN
+F 1 "Elegoo_4RelayModule" H 4750 5300 50  0000 C CNN
+F 2 "" H 4950 5200 50  0001 C CNN
+F 3 "" H 4950 5200 50  0001 C CNN
+	1    4800 4500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 4850 6600 4850
+Wire Wire Line
+	5400 4950 6600 4950
+Wire Wire Line
+	5400 5050 6600 5050
+Wire Wire Line
+	5400 5150 6600 5150
+$Comp
+L RoboBoat_Parts:e-Boot_BuckConverter U7
+U 1 1 5E2A4126
+P 9100 5100
+F 0 "U7" H 8700 5300 50  0000 C CNN
+F 1 "e-Boot_BuckConverter" H 9100 5250 50  0000 C CNN
+F 2 "" H 9000 5350 50  0001 C CNN
+F 3 "" H 9000 5350 50  0001 C CNN
+	1    9100 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR010
+U 1 1 5E2A5688
+P 8450 5300
+F 0 "#PWR010" H 8450 5050 50  0001 C CNN
+F 1 "GND" H 8455 5127 50  0000 C CNN
+F 2 "" H 8450 5300 50  0001 C CNN
+F 3 "" H 8450 5300 50  0001 C CNN
+	1    8450 5300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8450 5300 8450 5200
+Wire Wire Line
+	8450 5200 8550 5200
+$Comp
+L power:+5V #PWR09
+U 1 1 5E2A6311
+P 8450 4950
+F 0 "#PWR09" H 8450 4800 50  0001 C CNN
+F 1 "+5V" H 8465 5123 50  0000 C CNN
+F 2 "" H 8450 4950 50  0001 C CNN
+F 3 "" H 8450 4950 50  0001 C CNN
+	1    8450 4950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8450 4950 8450 5050
+Wire Wire Line
+	8450 5050 8550 5050
+Wire Wire Line
+	5750 4200 5750 4750
+Wire Wire Line
+	5750 4750 6600 4750
+$Comp
+L power:GND #PWR08
+U 1 1 5E2AA5B1
+P 5950 4300
+F 0 "#PWR08" H 5950 4050 50  0001 C CNN
+F 1 "GND" H 5955 4127 50  0000 C CNN
+F 2 "" H 5950 4300 50  0001 C CNN
+F 3 "" H 5950 4300 50  0001 C CNN
+	1    5950 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 4200 5750 4200
+Wire Wire Line
+	7750 5050 8450 5050
+Connection ~ 8450 5050
+$Comp
+L power:+5V #PWR07
+U 1 1 5E2B058D
+P 5600 3700
+F 0 "#PWR07" H 5600 3550 50  0001 C CNN
+F 1 "+5V" H 5615 3873 50  0000 C CNN
+F 2 "" H 5600 3700 50  0001 C CNN
+F 3 "" H 5600 3700 50  0001 C CNN
+	1    5600 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5600 3700 5600 3850
+Wire Wire Line
+	5600 3850 5400 3850
+Wire Wire Line
+	6600 4550 6250 4550
+Wire Wire Line
+	6250 4550 6250 4100
+Wire Wire Line
+	6250 4100 5400 4100
+NoConn ~ 5400 3950
+NoConn ~ 6600 4650
+NoConn ~ 6600 4450
+$Comp
+L RoboBoat_Parts:T3_EmergencyLight_RED U1
+U 1 1 5E2B96F8
+P 2300 4500
+F 0 "U1" H 1950 4900 50  0000 C CNN
+F 1 "T3_EmergencyLight_RED" H 2350 4800 50  0000 C CNN
+F 2 "" H 2900 4750 50  0001 C CNN
+F 3 "" H 2900 4750 50  0001 C CNN
+	1    2300 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L RoboBoat_Parts:T3_EmergencyLight_BLUE U2
+U 1 1 5E2B9CF9
+P 2300 5350
+F 0 "U2" H 1950 5750 50  0000 C CNN
+F 1 "T3_EmergencyLight_BLUE" H 2350 5650 50  0000 C CNN
+F 2 "" H 2900 5600 50  0001 C CNN
+F 3 "" H 2900 5600 50  0001 C CNN
+	1    2300 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L RoboBoat_Parts:T3_EmergencyLight_AMBER U3
+U 1 1 5E2BA9DC
+P 2350 6200
+F 0 "U3" H 1950 6600 50  0000 C CNN
+F 1 "T3_EmergencyLight_AMBER" H 2400 6500 50  0000 C CNN
+F 2 "" H 2950 6450 50  0001 C CNN
+F 3 "" H 2950 6450 50  0001 C CNN
+	1    2350 6200
+	1    0    0    -1  
+$EndComp
+NoConn ~ 2750 4500
+NoConn ~ 2750 4600
+NoConn ~ 2750 4700
+NoConn ~ 2750 5350
+NoConn ~ 2750 5450
+NoConn ~ 2750 5550
+NoConn ~ 2750 6200
+NoConn ~ 2750 6300
+NoConn ~ 2750 6400
+Wire Wire Line
+	2750 5150 2950 5150
+Wire Wire Line
+	2950 5150 2950 4850
+Wire Wire Line
+	2950 4850 1700 4850
+Wire Wire Line
+	2750 6000 2950 6000
+Wire Wire Line
+	2950 6000 2950 5700
+Wire Wire Line
+	2950 5700 1700 5700
+Wire Wire Line
+	2750 4300 2950 4300
+Wire Wire Line
+	2950 4300 2950 4000
+Wire Wire Line
+	2950 4000 1700 4000
+Wire Wire Line
+	1700 4000 1700 4850
+Connection ~ 1700 4850
+Wire Wire Line
+	1700 4850 1700 5700
+Wire Wire Line
+	4250 4400 2750 4400
+NoConn ~ 4250 4800
+NoConn ~ 4250 4200
+NoConn ~ 4250 5200
+$Comp
+L power:+BATT #PWR01
+U 1 1 5E2C9A53
+P 1700 4000
+F 0 "#PWR01" H 1700 3850 50  0001 C CNN
+F 1 "+BATT" H 1715 4173 50  0000 C CNN
+F 2 "" H 1700 4000 50  0001 C CNN
+F 3 "" H 1700 4000 50  0001 C CNN
+	1    1700 4000
+	1    0    0    -1  
+$EndComp
+Text Notes 1450 3800 0    50   ~ 0
+22.2V 5S LiPO
+$Comp
+L RoboBoat_Parts:e-Boot_BuckConverter U4
+U 1 1 5E2CADEC
+P 4800 2800
+F 0 "U4" H 4400 3000 50  0000 C CNN
+F 1 "e-Boot_BuckConverter" H 4800 2950 50  0000 C CNN
+F 2 "" H 4700 3050 50  0001 C CNN
+F 3 "" H 4700 3050 50  0001 C CNN
+	1    4800 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4050 5100 4250 5100
+Wire Wire Line
+	4050 5350 4050 5100
+Wire Wire Line
+	4050 4700 4250 4700
+Wire Wire Line
+	4050 4950 4050 4700
+$Comp
+L power:-BATT #PWR04
+U 1 1 5E2D6288
+P 3700 5300
+F 0 "#PWR04" H 3700 5150 50  0001 C CNN
+F 1 "-BATT" H 3715 5473 50  0000 C CNN
+F 2 "" H 3700 5300 50  0001 C CNN
+F 3 "" H 3700 5300 50  0001 C CNN
+	1    3700 5300
+	1    0    0    -1  
+$EndComp
+Text Notes 3450 5100 0    50   ~ 0
+22.2V 5S LiPO
+$Comp
+L power:-BATT #PWR03
+U 1 1 5E2D746E
+P 3700 4900
+F 0 "#PWR03" H 3700 4750 50  0001 C CNN
+F 1 "-BATT" H 3715 5073 50  0000 C CNN
+F 2 "" H 3700 4900 50  0001 C CNN
+F 3 "" H 3700 4900 50  0001 C CNN
+	1    3700 4900
+	1    0    0    -1  
+$EndComp
+Text Notes 3450 4700 0    50   ~ 0
+22.2V 5S LiPO
+Wire Wire Line
+	3700 4950 3700 4900
+Wire Wire Line
+	3700 4950 4050 4950
+Wire Wire Line
+	3700 5350 3700 5300
+Wire Wire Line
+	3700 5350 4050 5350
+Wire Wire Line
+	3350 5000 4250 5000
+Wire Wire Line
+	3350 6100 2750 6100
+Wire Wire Line
+	3350 5000 3350 6100
+Wire Wire Line
+	3150 4600 3150 5250
+Wire Wire Line
+	3150 5250 2750 5250
+Wire Wire Line
+	3150 4600 4250 4600
+$Comp
+L power:+BATT #PWR011
+U 1 1 5E2E0AF2
+P 9850 4950
+F 0 "#PWR011" H 9850 4800 50  0001 C CNN
+F 1 "+BATT" H 9865 5123 50  0000 C CNN
+F 2 "" H 9850 4950 50  0001 C CNN
+F 3 "" H 9850 4950 50  0001 C CNN
+	1    9850 4950
+	1    0    0    -1  
+$EndComp
+Text Notes 10000 4800 0    50   ~ 0
+22.2V 5S LiPO
+Wire Wire Line
+	9850 4950 9850 5050
+Wire Wire Line
+	9850 5050 9650 5050
+$Comp
+L power:+BATT #PWR05
+U 1 1 5E2E44D8
+P 5550 2650
+F 0 "#PWR05" H 5550 2500 50  0001 C CNN
+F 1 "+BATT" H 5565 2823 50  0000 C CNN
+F 2 "" H 5550 2650 50  0001 C CNN
+F 3 "" H 5550 2650 50  0001 C CNN
+	1    5550 2650
+	1    0    0    -1  
+$EndComp
+Text Notes 5700 2500 0    50   ~ 0
+22.2V 5S LiPO
+Wire Wire Line
+	5550 2650 5550 2750
+Wire Wire Line
+	5550 2750 5350 2750
+$Comp
+L power:-BATT #PWR012
+U 1 1 5E2E6E57
+P 9850 5300
+F 0 "#PWR012" H 9850 5150 50  0001 C CNN
+F 1 "-BATT" H 9865 5473 50  0000 C CNN
+F 2 "" H 9850 5300 50  0001 C CNN
+F 3 "" H 9850 5300 50  0001 C CNN
+	1    9850 5300
+	-1   0    0    1   
+$EndComp
+Text Notes 10550 5500 2    50   ~ 0
+22.2V 5S LiPO
+Wire Wire Line
+	9650 5200 9850 5200
+Wire Wire Line
+	9850 5200 9850 5300
+$Comp
+L power:-BATT #PWR06
+U 1 1 5E2E9154
+P 5550 3000
+F 0 "#PWR06" H 5550 2850 50  0001 C CNN
+F 1 "-BATT" H 5565 3173 50  0000 C CNN
+F 2 "" H 5550 3000 50  0001 C CNN
+F 3 "" H 5550 3000 50  0001 C CNN
+	1    5550 3000
+	-1   0    0    1   
+$EndComp
+Text Notes 6250 3200 2    50   ~ 0
+22.2V 5S LiPO
+Wire Wire Line
+	5350 2900 5550 2900
+Wire Wire Line
+	5550 2900 5550 3000
+Wire Wire Line
+	4250 2900 4050 2900
+Wire Wire Line
+	4050 2900 4050 3800
+Wire Wire Line
+	4050 3800 4250 3800
+NoConn ~ 4250 4000
+Connection ~ 1700 4000
+$Comp
+L power:-BATT #PWR02
+U 1 1 5E2F5FC9
+P 3300 4150
+F 0 "#PWR02" H 3300 4000 50  0001 C CNN
+F 1 "-BATT" H 3315 4323 50  0000 C CNN
+F 2 "" H 3300 4150 50  0001 C CNN
+F 3 "" H 3300 4150 50  0001 C CNN
+	1    3300 4150
+	1    0    0    -1  
+$EndComp
+Text Notes 3050 3950 0    50   ~ 0
+22.2V 5S LiPO
+Wire Wire Line
+	4250 4300 3300 4300
+Wire Wire Line
+	3300 4150 3300 4300
+Wire Wire Line
+	5750 4200 5950 4200
+Wire Wire Line
+	5950 4200 5950 4300
+Connection ~ 5750 4200
+Wire Wire Line
+	3900 2750 4250 2750
+Wire Wire Line
+	3800 3350 3800 3900
+Wire Wire Line
+	3800 3900 4250 3900
+$Comp
+L Relay:RM50-xx21 K2
+U 1 1 5E30192A
+P 3600 2550
+F 0 "K2" V 4167 2550 50  0000 C CNN
+F 1 "HE1AN-S-DC12V" V 4076 2550 50  0000 C CNN
+F 2 "Relay_THT:Relay_SPST_Finder_32.21-x300" H 4870 2520 50  0001 C CNN
+F 3 "https://media.digikey.com/pdf/Data%20Sheets/Panasonic%20Electric%20Works%20PDFs/HE%20Relays%20TV-10,15.pdf" H 3600 2550 50  0001 C CNN
+	1    3600 2550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3900 2350 4050 2350
+Wire Wire Line
+	3200 2250 3300 2250
+Wire Wire Line
+	2150 2250 2250 2250
+Wire Wire Line
+	2850 2350 3000 2350
+Wire Wire Line
+	2100 3350 3800 3350
+Wire Wire Line
+	2100 2750 2100 3350
+Wire Wire Line
+	2250 2750 2100 2750
+Wire Wire Line
+	2850 2750 3300 2750
+$Comp
+L Relay:RM50-xx21 K1
+U 1 1 5E34CE36
+P 2550 2550
+F 0 "K1" V 3117 2550 50  0000 C CNN
+F 1 "HE1AN-S-DC12V" V 3026 2550 50  0000 C CNN
+F 2 "Relay_THT:Relay_SPST_Finder_32.21-x300" H 3820 2520 50  0001 C CNN
+F 3 "https://media.digikey.com/pdf/Data%20Sheets/Panasonic%20Electric%20Works%20PDFs/HE%20Relays%20TV-10,15.pdf" H 2550 2550 50  0001 C CNN
+	1    2550 2550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3000 1000 3000 1250
+Wire Wire Line
+	2700 1000 3000 1000
+Wire Wire Line
+	2150 1000 2150 1250
+Wire Wire Line
+	2400 1000 2150 1000
+Wire Wire Line
+	2150 1750 2150 2250
+$Comp
+L Device:Battery_Cell BT1
+U 1 1 5E34CE43
+P 2600 1000
+F 0 "BT1" V 2855 1050 50  0000 C CNN
+F 1 "Motor_Battery" V 2764 1050 50  0000 C CNN
+F 2 "" V 2600 1060 50  0001 C CNN
+F 3 "~" V 2600 1060 50  0001 C CNN
+	1    2600 1000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Motor:Motor_DC M1
+U 1 1 5E34CE3D
+P 2150 1450
+F 0 "M1" H 2308 1446 50  0000 L CNN
+F 1 "Left_Motor" H 2308 1355 50  0000 L CNN
+F 2 "" H 2150 1360 50  0001 C CNN
+F 3 "~" H 2150 1360 50  0001 C CNN
+	1    2150 1450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3750 1000 4050 1000
+Wire Wire Line
+	3200 1000 3200 1250
+Wire Wire Line
+	3450 1000 3200 1000
+Wire Wire Line
+	3200 1750 3200 2250
+$Comp
+L Device:Battery_Cell BT2
+U 1 1 5E32E0EA
+P 3650 1000
+F 0 "BT2" V 3905 1050 50  0000 C CNN
+F 1 "Motor_Battery" V 3814 1050 50  0000 C CNN
+F 2 "" V 3650 1060 50  0001 C CNN
+F 3 "~" V 3650 1060 50  0001 C CNN
+	1    3650 1000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Motor:Motor_DC M2
+U 1 1 5E32835F
+P 3200 1450
+F 0 "M2" H 3358 1446 50  0000 L CNN
+F 1 "Right_Motor" H 3358 1355 50  0000 L CNN
+F 2 "" H 3200 1360 50  0001 C CNN
+F 3 "~" H 3200 1360 50  0001 C CNN
+	1    3200 1450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4050 1000 4050 1250
+Wire Wire Line
+	4050 1850 4050 2350
+$Comp
+L Device:CircuitBreaker_1P CB1
+U 1 1 5E37879B
+P 3000 1550
+F 0 "CB1" H 2800 1850 50  0000 L CNN
+F 1 "30A" H 2800 1750 50  0000 L CNN
+F 2 "" H 3000 1550 50  0001 C CNN
+F 3 "~" H 3000 1550 50  0001 C CNN
+	1    3000 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3000 1850 3000 2350
+$Comp
+L Device:CircuitBreaker_1P CB2
+U 1 1 5E379B92
+P 4050 1550
+F 0 "CB2" H 3850 1850 50  0000 L CNN
+F 1 "30A" H 3850 1750 50  0000 L CNN
+F 2 "" H 4050 1550 50  0001 C CNN
+F 3 "~" H 4050 1550 50  0001 C CNN
+	1    4050 1550
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
