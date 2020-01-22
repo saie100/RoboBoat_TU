@@ -1,0 +1,6 @@
+(sym_lib_table
+  (lib (name teensy)(type Legacy)(uri /Users/byron/RoboBoat_TU/KiCadProjects/ImportedLibraries/teensyLibrary/teensy.lib)(options "")(descr "")(disabled))
+  (lib (name AdafruitBoards)(type Legacy)(uri /Users/byron/RoboBoat_TU/KiCad/Libraries/Custom/AdafruitBoards.lib)(options "")(descr ""))
+  (lib (name Teensy)(type Legacy)(uri /Users/byron/RoboBoat_TU/KiCad/Libraries/Custom/Teensy.lib)(options "")(descr ""))
+  (lib (name TeensySchematic-rescue)(type Legacy)(uri ${KIPRJMOD}/TeensySchematic-rescue.lib)(options "")(descr "")(disabled))
+)
