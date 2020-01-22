@@ -1,6 +1,7 @@
 
+# Clone the repository to your computer
 
-git clone [INSERT REPOSITORY ADDRESS]
+	git clone [INSERT REPOSITORY ADDRESS]
 
 # View the status of all files in your repository (see files that still need to be committed).
 	
@@ -16,4 +17,17 @@ git clone [INSERT REPOSITORY ADDRESS]
 
 # Used to actually push (publish) the changes to the repository
 
+	git push
+
+# ======================================================================
+# Pull updates others may have made to the repository
+
+	git pull
+
+
+# ======================================================================
+# Remove deleted files from tracking
+
+	git add -u .
+	git commit -m "removing deleted files from tracking"
 	git push
