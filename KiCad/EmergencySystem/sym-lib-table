@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name AdafruitBoards)(type Legacy)(uri /Users/byron/RoboBoat_TU/KiCad/Libraries/Custom/AdafruitBoards.lib)(options "")(descr ""))
   (lib (name RoboBoat_Parts)(type Legacy)(uri /Users/byron/RoboBoat_TU/KiCad/Libraries/Custom/RoboBoat_Parts.lib)(options "")(descr ""))
+  (lib (name RoboBoat_PowerSymbols)(type Legacy)(uri /Users/byron/RoboBoat_TU/KiCad/Libraries/Custom/RoboBoat_PowerSymbols.lib)(options "")(descr ""))
 )
