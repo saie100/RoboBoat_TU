@@ -901,14 +901,51 @@ $EndComp
 Wire Notes Line
 	550  550  550  4450
 Wire Notes Line
-	11100 4450 11100 550 
-Wire Notes Line
-	550  4450 11100 4450
-Wire Notes Line
-	550  550  11100 550 
+	11150 4450 11150 550 
 Text Notes 5300 700  0    79   ~ 16
 Emergency Receiver
 Connection ~ 6250 1000
 Wire Wire Line
 	6250 1000 700  1000
+NoConn ~ 2400 5150
+NoConn ~ 2400 5350
+NoConn ~ 2400 5550
+NoConn ~ 2400 5650
+NoConn ~ 2400 5750
+NoConn ~ 2400 5850
+NoConn ~ 2400 5950
+NoConn ~ 2400 6050
+NoConn ~ 2400 6150
+NoConn ~ 2400 6250
+NoConn ~ 2400 6350
+NoConn ~ 2400 6450
+NoConn ~ 2400 6550
+NoConn ~ 2400 6650
+NoConn ~ 3800 6450
+NoConn ~ 3800 6350
+NoConn ~ 3800 6150
+NoConn ~ 3800 5550
+NoConn ~ 3800 5650
+NoConn ~ 3800 5750
+NoConn ~ 6950 3150
+NoConn ~ 6950 3250
+NoConn ~ 6950 3350
+NoConn ~ 6950 3450
+NoConn ~ 6950 3550
+NoConn ~ 6950 3650
+NoConn ~ 6950 3750
+NoConn ~ 6950 3850
+NoConn ~ 8350 3850
+NoConn ~ 8350 3750
+NoConn ~ 8350 3650
+NoConn ~ 8350 3550
+NoConn ~ 8350 3350
+NoConn ~ 8350 3250
+NoConn ~ 8350 3050
+NoConn ~ 8350 2850
+NoConn ~ 8350 2750
+Wire Notes Line
+	550  550  11150 550 
+Wire Notes Line
+	550  4450 11150 4450
 $EndSCHEMATC

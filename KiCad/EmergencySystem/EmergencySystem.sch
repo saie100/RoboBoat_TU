@@ -736,17 +736,6 @@ Wire Wire Line
 	1900 3200 1900 3100
 Wire Wire Line
 	2450 3200 2450 3100
-$Comp
-L RoboBoat_PowerSymbols:-BATT__14.8V #PWR01
-U 1 1 5E597989
-P 2450 3200
-F 0 "#PWR01" H 2450 3050 50  0001 C CNN
-F 1 "-BATT__14.8V" V 2450 3550 50  0000 C CNN
-F 2 "" H 2450 3200 50  0001 C CNN
-F 3 "" H 2450 3200 50  0001 C CNN
-	1    2450 3200
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	1900 3100 1750 3100
 Wire Wire Line
@@ -877,17 +866,6 @@ F 3 "" H 3350 1850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RoboBoat_PowerSymbols:-BATT__14.8V #PWR02
-U 1 1 5E7F616E
-P 1400 3200
-F 0 "#PWR02" H 1400 3050 50  0001 C CNN
-F 1 "-BATT__14.8V" V 1400 3550 50  0000 C CNN
-F 2 "" H 1400 3200 50  0001 C CNN
-F 3 "" H 1400 3200 50  0001 C CNN
-	1    1400 3200
-	-1   0    0    1   
-$EndComp
-$Comp
 L RoboBoat_PowerSymbols:+BATT_14.8V #PWR03
 U 1 1 5E7F6561
 P 1900 3200
@@ -901,11 +879,7 @@ $EndComp
 Wire Notes Line
 	550  550  550  4450
 Wire Notes Line
-	11100 4450 11100 550 
-Wire Notes Line
-	550  4450 11100 4450
-Wire Notes Line
-	550  550  11100 550 
+	11150 4450 11150 550 
 Text Notes 5300 700  0    79   ~ 16
 Emergency Receiver
 Connection ~ 6250 1000
@@ -948,4 +922,30 @@ NoConn ~ 8350 3250
 NoConn ~ 8350 3050
 NoConn ~ 8350 2850
 NoConn ~ 8350 2750
+Wire Notes Line
+	550  550  11150 550 
+Wire Notes Line
+	550  4450 11150 4450
+$Comp
+L RoboBoat_PowerSymbols:-BATT_14.8V #PWR?
+U 1 1 5E41AB6C
+P 1400 3200
+F 0 "#PWR?" H 1400 3050 50  0001 C CNN
+F 1 "-BATT_14.8V" V 1400 3550 50  0000 C CNN
+F 2 "" H 1400 3200 50  0001 C CNN
+F 3 "" H 1400 3200 50  0001 C CNN
+	1    1400 3200
+	-1   0    0    1   
+$EndComp
+$Comp
+L RoboBoat_PowerSymbols:-BATT_14.8V #PWR?
+U 1 1 5E41B5C1
+P 2450 3200
+F 0 "#PWR?" H 2450 3050 50  0001 C CNN
+F 1 "-BATT_14.8V" V 2450 3550 50  0000 C CNN
+F 2 "" H 2450 3200 50  0001 C CNN
+F 3 "" H 2450 3200 50  0001 C CNN
+	1    2450 3200
+	-1   0    0    1   
+$EndComp
 $EndSCHEMATC

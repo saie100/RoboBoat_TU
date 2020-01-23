@@ -358,11 +358,11 @@ X +BATT 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# RoboBoat_PowerSymbols_-BATT_22.2V
+# RoboBoat_PowerSymbols_-BATT_14.8V
 #
-DEF RoboBoat_PowerSymbols_-BATT_22.2V #PWR 0 0 Y Y 1 F P
+DEF RoboBoat_PowerSymbols_-BATT_14.8V #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "RoboBoat_PowerSymbols_-BATT_22.2V" 0 140 50 H V C CNN
+F1 "RoboBoat_PowerSymbols_-BATT_14.8V" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -373,11 +373,11 @@ X +BATT 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# RoboBoat_PowerSymbols_-BATT__14.8V
+# RoboBoat_PowerSymbols_-BATT_22.2V
 #
-DEF RoboBoat_PowerSymbols_-BATT__14.8V #PWR 0 0 Y Y 1 F P
+DEF RoboBoat_PowerSymbols_-BATT_22.2V #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "RoboBoat_PowerSymbols_-BATT__14.8V" 0 140 50 H V C CNN
+F1 "RoboBoat_PowerSymbols_-BATT_22.2V" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW

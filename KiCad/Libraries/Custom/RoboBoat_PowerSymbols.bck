@@ -30,32 +30,17 @@ D Power symbol creates a global label with name "+BATT"
 K power-flag battery
 $ENDCMP
 #
-$CMP +BATT_20Ah
-D Power symbol creates a global label with name "+BATT"
-K power-flag battery
-$ENDCMP
-#
 $CMP +BATT_22.2V
 D Power symbol creates a global label with name "+BATT"
 K power-flag battery
 $ENDCMP
 #
-$CMP +BATT_22.2V_5S
-D Power symbol creates a global label with name "+BATT"
-K power-flag battery
-$ENDCMP
-#
-$CMP -BATT_20Ah
+$CMP -BATT_14.8V
 D Power symbol creates a global label with name "+BATT"
 K power-flag battery
 $ENDCMP
 #
 $CMP -BATT_22.2V
-D Power symbol creates a global label with name "+BATT"
-K power-flag battery
-$ENDCMP
-#
-$CMP -BATT_22.2V_5S
 D Power symbol creates a global label with name "+BATT"
 K power-flag battery
 $ENDCMP
