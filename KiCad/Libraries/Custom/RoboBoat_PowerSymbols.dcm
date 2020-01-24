@@ -11,6 +11,11 @@ K power-flag
 $ENDCMP
 #
 $CMP +3V3_Rx
+D Power symbol creates a global label with name "-3V3"
+K power-flag
+$ENDCMP
+#
+$CMP +3V3_Teensy
 D Power symbol creates a global label with name "+3V3"
 K power-flag
 $ENDCMP
@@ -21,6 +26,11 @@ K power-flag
 $ENDCMP
 #
 $CMP +5V_Rx
+D Power symbol creates a global label with name "+5V"
+K power-flag
+$ENDCMP
+#
+$CMP +5V_USB
 D Power symbol creates a global label with name "+5V"
 K power-flag
 $ENDCMP
@@ -51,6 +61,11 @@ K power-flag
 $ENDCMP
 #
 $CMP GND_Tx
+D Power symbol creates a global label with name "GND" , ground
+K power-flag
+$ENDCMP
+#
+$CMP GND_USB
 D Power symbol creates a global label with name "GND" , ground
 K power-flag
 $ENDCMP

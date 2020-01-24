@@ -477,7 +477,7 @@ F 3 "" H 6650 1600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RoboBoat_PowerSymbols:+3V3_Rx #PWR022
+L EmergencySystem-rescue:+3V3_Rx-RoboBoat_PowerSymbols #PWR022
 U 1 1 5E3ED7E6
 P 6850 1900
 F 0 "#PWR022" H 6850 1750 50  0001 C CNN
@@ -488,7 +488,7 @@ F 3 "" H 6850 1900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RoboBoat_PowerSymbols:+3V3_Rx #PWR025
+L EmergencySystem-rescue:+3V3_Rx-RoboBoat_PowerSymbols #PWR025
 U 1 1 5E3EDF11
 P 8800 2500
 F 0 "#PWR025" H 8800 2350 50  0001 C CNN
@@ -927,10 +927,10 @@ Wire Notes Line
 Wire Notes Line
 	550  4450 11150 4450
 $Comp
-L RoboBoat_PowerSymbols:-BATT_14.8V #PWR?
+L RoboBoat_PowerSymbols:-BATT_14.8V #PWR01
 U 1 1 5E41AB6C
 P 1400 3200
-F 0 "#PWR?" H 1400 3050 50  0001 C CNN
+F 0 "#PWR01" H 1400 3050 50  0001 C CNN
 F 1 "-BATT_14.8V" V 1400 3550 50  0000 C CNN
 F 2 "" H 1400 3200 50  0001 C CNN
 F 3 "" H 1400 3200 50  0001 C CNN
@@ -938,10 +938,10 @@ F 3 "" H 1400 3200 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L RoboBoat_PowerSymbols:-BATT_14.8V #PWR?
+L RoboBoat_PowerSymbols:-BATT_14.8V #PWR02
 U 1 1 5E41B5C1
 P 2450 3200
-F 0 "#PWR?" H 2450 3050 50  0001 C CNN
+F 0 "#PWR02" H 2450 3050 50  0001 C CNN
 F 1 "-BATT_14.8V" V 2450 3550 50  0000 C CNN
 F 2 "" H 2450 3200 50  0001 C CNN
 F 3 "" H 2450 3200 50  0001 C CNN
