@@ -255,26 +255,4 @@ NoConn ~ 4150 4150
 NoConn ~ 4150 4250
 NoConn ~ 4150 4350
 NoConn ~ 4150 4950
-NoConn ~ 2950 1700
-NoConn ~ 1850 1750
-NoConn ~ 2100 1700
-NoConn ~ 3200 1600
-NoConn ~ 2000 1600
-NoConn ~ 2850 1600
-NoConn ~ 7250 1350
-NoConn ~ 7500 1250
-Entry Wire Line
-	8000 1400 8100 1500
-Entry Wire Line
-	9200 1400 9300 1500
-Entry Wire Line
-	9200 1400 9300 1500
-Entry Wire Line
-	9200 1400 9300 1500
-Entry Wire Line
-	9200 1400 9300 1500
-Entry Wire Line
-	9200 1400 9300 1500
-Entry Wire Line
-	9200 1400 9300 1500
 $EndSCHEMATC
