@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name RoboBoat_Arduino)(type Legacy)(uri C:/Users/Justin/RoboBoat_TU/KiCad/Libraries/Custom/RoboBoat_Arduino.lib)(options "")(descr ""))
+  (lib (name Schematic-rescue)(type Legacy)(uri ${KIPRJMOD}/Schematic-rescue.lib)(options "")(descr ""))
 )

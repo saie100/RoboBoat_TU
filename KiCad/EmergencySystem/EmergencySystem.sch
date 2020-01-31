@@ -8,9 +8,9 @@ Title "Emergency Transmitter and Receiver"
 Date "2020-01-23"
 Rev "1"
 Comp "Temple University College of Engineering"
-Comment1 "Senior Design Project II"
-Comment2 "RoboBoat - Team B04"
-Comment3 ""
+Comment1 "Author: Byron Gaspard"
+Comment2 "Senior Design Project II"
+Comment3 "RoboBoat - Team B04"
 Comment4 ""
 $EndDescr
 $Comp

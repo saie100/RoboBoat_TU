@@ -477,7 +477,7 @@ F 3 "" H 6650 1600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RoboBoat_PowerSymbols:+3V3_Rx #PWR022
+L EmergencySystem-rescue:+3V3_Rx-RoboBoat_PowerSymbols #PWR022
 U 1 1 5E3ED7E6
 P 6850 1900
 F 0 "#PWR022" H 6850 1750 50  0001 C CNN
@@ -488,7 +488,7 @@ F 3 "" H 6850 1900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RoboBoat_PowerSymbols:+3V3_Rx #PWR025
+L EmergencySystem-rescue:+3V3_Rx-RoboBoat_PowerSymbols #PWR025
 U 1 1 5E3EDF11
 P 8800 2500
 F 0 "#PWR025" H 8800 2350 50  0001 C CNN
