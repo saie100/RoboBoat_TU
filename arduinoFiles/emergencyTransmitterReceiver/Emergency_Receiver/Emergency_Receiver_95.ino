@@ -40,6 +40,8 @@ void measureBattery(float *measured);
 // flot variable that will store hold the battery voltage;
 float measuredvbat = 0;
 
+int16_t packetnum = 0;
+
 void setup() 
 {
   Serial.begin(115200);
@@ -62,9 +64,9 @@ void setup()
   Serial.println();
 
   // manual reset
-  digitalWrite(RFM95_RST, HIGH);
-  delay(10);
   digitalWrite(RFM95_RST, LOW);
+  delay(10);
+  digitalWrite(RFM95_RST, HIGH);
   delay(10);
   
   while (!rf95.init()) {
