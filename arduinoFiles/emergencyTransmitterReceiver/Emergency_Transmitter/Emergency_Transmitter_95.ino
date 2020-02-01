@@ -9,6 +9,19 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 
+// ================= OLED ======================
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+// =================================================
+
 /* for feather32u4 */
 #define RFM95_CS 8
 #define RFM95_RST 4
@@ -23,7 +36,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 #define E_BUTTON        12
-
+#define LED             13
 #define VBATPIN         A9  //Battery pin
 
 #define EMPTY_VOLTAGE   3   //low battery energy
@@ -103,7 +116,7 @@ void setup()
   
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM (for low power module)
   // No encryption
-  if (!rf95.setFrequency(rf95_FREQ)) {
+  if (!rf95.setFrequency(RF95_FREQ)) {
     Serial.println("setFrequency failed");
     while (1);
   }
