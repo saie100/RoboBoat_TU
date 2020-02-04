@@ -54,11 +54,11 @@ void setup()
   pinMode(CH2, OUTPUT);
   pinMode(CH3, OUTPUT);
   pinMode(CH4, OUTPUT);
-  digitalWrite(CH1, HIGH);
-  digitalWrite(CH2, LOW);   //red LED turns off initially
+  digitalWrite(CH1, HIGH);   //big relay
+  digitalWrite(CH2, HIGH);   //red LED turns off initially
   digitalWrite(CH3, HIGH);  //blue LED (auto mode) turns on
-  digitalWrite(CH4, LOW);  //amber LED turns off
-  digitalWrite(RFM95_RST, LOW);
+  digitalWrite(CH4, HIGH);  //amber LED turns off
+  digitalWrite(RFM95_RST, HIGH);
 
   Serial.println("Feather RFM95 RX Test!");
   Serial.println();
@@ -109,9 +109,9 @@ void loop() {
       //only sets relays to high if received "OK"
       if (strstr((char *)buf, "OK")) {
         digitalWrite(CH1, HIGH);
-        digitalWrite(CH2, LOW);
+        digitalWrite(CH2, HIGH);
         digitalWrite(CH3, HIGH);
-        digitalWrite(CH4, LOW);
+        digitalWrite(CH4, HIGH);
         
         // Send a reply! (send back the received words)
         rf95.send(buf, sizeof(buf));
@@ -122,19 +122,19 @@ void loop() {
       }
       //if don't receive "OK", set relays to low
       else{
-        digitalWrite(CH1, LOW);
-        digitalWrite(CH2, HIGH);
-        digitalWrite(CH3, LOW);
-        digitalWrite(CH4, LOW);
+        digitalWrite(CH1, HIGH);
+        digitalWrite(CH2, LOW);
+        digitalWrite(CH3, HIGH);
+        digitalWrite(CH4, HIGH);
       }
     } 
     // not receiving a message from transmitter >> set relays to low
     else {
       Serial.println("Receive failed");
-      digitalWrite(CH1, LOW);
-      digitalWrite(CH2, HIGH);
-      digitalWrite(CH3, LOW);
-      digitalWrite(CH4, LOW);
+      digitalWrite(CH1, HIGH);
+      digitalWrite(CH2, LOW);
+      digitalWrite(CH3, HIGH);
+      digitalWrite(CH4, HIGH);
     }
   }
   
