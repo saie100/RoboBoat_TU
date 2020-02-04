@@ -1,13 +1,14 @@
 
 float convert = 5.0 / 1023; // converts raw data to voltage
-char volts[11] = {};
+char volts[16] = {};
+int voltsCnt = 0;
 float constant[6] = { // values for scaling voltage
-  1,
-  2.196759259,
-  2.697299858,
-  4.099352052,
-  4.737104825,
-  6.690951821
+  1.0000,
+  2.1915,
+  2.6970,
+  4.1111,
+  4.7333,
+  6.6000,
 };
 int bat0Pins[] = {A0, A1, A2, A3, A4, A5};
 int bat0CellCnt = 6;
@@ -21,7 +22,12 @@ int bat3CellCnt = 3;
 
 void setup() {
   Serial.begin(9600);
+  int bat0Capacity = 0;
+  int bat1Capacity = 0;
+  int bat2Capacity = 0;
+  int bat3Capacity = 0;
 
+  int batPresent = 1; // later used to see if the batterys are connected
   //dtostrf();
 
 }
@@ -42,7 +48,8 @@ void loop() {
   measuredVoltage[bat3CellCnt];
   measure_cell(bat3Pins, bat3CellCnt, measuredVoltage);
 
-
+  Serial.print(volts);
+  delay(3000);
 
 }
 
@@ -52,56 +59,23 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
   double currentV = 0;
   double prevV = 0;
   for (int i = 0; i < pinCnt; i++) {
-    measured[i] = analogRead(pins[i]) * convert * constant[i];
-    currentV = measured[i];
+    currentV = analogRead(pins[i]) * convert * constant[i];
     currentV = currentV - prevV;
+    dtostrf(currentV, 3, 2, volts[voltsCnt]);
+    measured[i] = currentV;
     prevV = currentV;
-
-  }
-  //message(measured, pinCnt);
-  batteryStatus(pinCnt, measured);
-  Serial.println();
-  Serial.println();
-  delay(10000);
-}
-
-
-
-
-
-
-
-void message(double nums[], int len) {
-  double digits;
-  int digit;
-  int k = 0;
-  for (int i = 0; i < len; i++) {
-    for (int j = 0; j < 3; j++) {
-      if (j == 0) {
-        digits = nums[i];
-        digit = digits;
-        volts[k] = digit;
-      }
-      else if (j == 1) {
-        digits = nums[i] * 10;
-        digit = digits;
-        digit = digit % 10;
-        volts[k] = digit;
-      }
-      else if (j == 2) {
-        digits = nums[i] * 100;
-        digit = digits;
-        digit = digit % 10;
-        volts[k] = digit + 48;
-      }
-      Serial.print(volts);
-      k++;
-
+    voltsCnt++;
+    if (voltsCnt == 17) {
+      voltsCnt = 0;
     }
-    Serial.println();
   }
 
 }
+
+
+
+
+
 
 
 
@@ -114,121 +88,22 @@ void batteryStatus(int j, double voltages[]) {
     Serial.print(voltage);
     Serial.println();
 
-
-
-
-    switch (i) {
-      case 0:
-        if (voltage > 3.95) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is healthy");
-        }
-        else if (voltage > 3.55) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is moderate");
-        }
-        else {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" needs to charge");
-        }
-        break;
-      case 1:
-        if (voltage > 7.9) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is healthy");
-        }
-        else if (voltage > 7.1) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is moderate");
-        }
-        else {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" needs to charge");
-        }
-        break;
-
-      case 2:
-        if (voltage > 11.85) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is healthy");
-        }
-        else if (voltage > 10.65) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is moderate");
-        }
-        else {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" needs to charge");
-        }
-        break;
-
-      case 3:
-        if (voltage > 15.8) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is healthy");
-        }
-        else if (voltage > 14.2) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is moderate");
-        }
-        else {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" needs to charge");
-        }
-        break;
-
-      case 4:
-        if (voltage > 19.75) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is healthy");
-        }
-        else if (voltage > 17.75) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is moderate");
-        }
-        else {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" needs to charge");
-        }
-        break;
-
-      case 5: if (voltage > 23.7) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is healthy");
-        }
-        else if (voltage > 21.3) {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" is moderate");
-        }
-        else {
-          Serial.print("cell ");
-          Serial.print(i + 1);
-          Serial.print(" needs to charge");
-        }
-        break;
-
-      default:
-        Serial.println("failed");
+    if (voltage > 3.95) {
+      Serial.print("cell ");
+      Serial.print(i + 1);
+      Serial.print(" is healthy");
     }
-    Serial.println();
+    else if (voltage > 3.55) {
+      Serial.print("cell ");
+      Serial.print(i + 1);
+      Serial.print(" is moderate");
+    }
+    else {
+      Serial.print("cell ");
+      Serial.print(i + 1);
+      Serial.print(" needs to charge");
+    }
   }
 
-
+  Serial.println();
 }
