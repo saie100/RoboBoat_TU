@@ -34,6 +34,8 @@ void setup() {
 
 
 void loop() {
+  
+
 
 
   double measuredVoltage[bat0CellCnt];
@@ -64,10 +66,11 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
     dtostrf(currentV, 3, 2, volts[voltsCnt]);
     measured[i] = currentV;
     prevV = currentV;
-    voltsCnt++;
-    if (voltsCnt == 17) {
+    voltsCnt++; // index for char array
+    if (voltsCnt == 17) { // theres 16 slots
       voltsCnt = 0;
     }
+     batteryStatus(pinCnt, measured);
   }
 
 }
