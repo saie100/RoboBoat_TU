@@ -35,7 +35,9 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
-#define E_BUTTON        12
+int button_state = 1;
+const byte E_BUTTON = 0;   //interrupt pin for E-stop button
+
 #define LED             13
 #define VBATPIN         A9  //Battery pin
 
@@ -46,7 +48,6 @@ int16_t packetnum = 0;  // packet counter, we increment per xmission
 // ==================== OLED PRINTING FUNCTIONS =====================
 #define BAT_ROW        30
 #define BAT_COL        0
-
 
 void oled_displayBattery(void){
   display.setTextSize(1);      // Normal 1:1 pixel scale
@@ -76,12 +77,11 @@ void setup()
   // Clear the buffer
   display.clearDisplay();
 
-  pinMode(E_BUTTON,INPUT); //Creating the input emergency stop button
-
+  pinMode(E_BUTTON,INPUT_PULLUP); //setup e_button interrupt pin
   pinMode(VBATPIN,INPUT);
-
   pinMode(LED, OUTPUT);     
   pinMode(RFM95_RST, OUTPUT);
+  attachInterrupt(digitalPinToInterrupt(E_BUTTON), e_stop, CHANGE);
   digitalWrite(RFM95_RST, HIGH);
 
   Serial.println("Feather RFM95 TX Test!");
@@ -133,11 +133,11 @@ void loop() {
   display.setTextSize(1);      // Normal 1:1 pixel scale
   display.setTextColor(SSD1306_WHITE); // Draw white text
 
-  int button_state = digitalRead(E_BUTTON);
+  //int button_state = digitalRead(E_BUTTON);
 
   oled_displayBattery();
 
-  if(button_state == HIGH){ //Emergency functionality
+  if(button_state == 0){ //Emergency functionality
     char radiopacket[] = "STOP";
     Serial.print("Sending "); Serial.println(radiopacket);
     // Send a message!
@@ -211,4 +211,8 @@ void Blink(byte PIN, byte DELAY_MS, byte loops) {
     digitalWrite(PIN,LOW);
     delay(DELAY_MS);
   }
+}
+
+void e_stop(void){
+    button_state = !button_state;
 }
