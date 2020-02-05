@@ -2,6 +2,7 @@
 float convert = 5.0 / 1023; // converts raw data to voltage
 char volts[16] = {};
 int voltsCnt = 0;
+int batteryHealth = 1; // 1-healthy, 2-moderate, 3-low
 float constant[6] = { // values for scaling voltage
   1.0000,
   2.1915,
@@ -26,9 +27,6 @@ void setup() {
   int bat1Capacity = 0;
   int bat2Capacity = 0;
   int bat3Capacity = 0;
-
-  int batPresent = 1; // later used to see if the batterys are connected
-  //dtostrf();
 
 }
 
@@ -75,13 +73,6 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
 
 }
 
-
-
-
-
-
-
-
 void batteryStatus(int j, double voltages[]) {
   for (int i = 0; i < j; i++) {
     double voltage = voltages[i];
@@ -92,19 +83,13 @@ void batteryStatus(int j, double voltages[]) {
     Serial.println();
 
     if (voltage > 3.95) {
-      Serial.print("cell ");
-      Serial.print(i + 1);
-      Serial.print(" is healthy");
+      batteryHealth =1;  // healthy
     }
     else if (voltage > 3.55) {
-      Serial.print("cell ");
-      Serial.print(i + 1);
-      Serial.print(" is moderate");
+      batteryHealth=2; // moderate
     }
     else {
-      Serial.print("cell ");
-      Serial.print(i + 1);
-      Serial.print(" needs to charge");
+      batteryHealth=3; // Low
     }
   }
 
