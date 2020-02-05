@@ -56,7 +56,7 @@ void setup()
   pinMode(CH4, OUTPUT);
   digitalWrite(CH1, HIGH);   //big relay
   digitalWrite(CH2, HIGH);   //red LED turns off initially
-  digitalWrite(CH3, HIGH);  //blue LED (auto mode) turns on
+  digitalWrite(CH3, LOW);  //blue LED (auto mode) turns on
   digitalWrite(CH4, HIGH);  //amber LED turns off
   digitalWrite(RFM95_RST, HIGH);
 
@@ -89,6 +89,7 @@ void setup()
 
 
 void loop() {
+ 
  if (rf95.available()) {
     // Should be a message for us now   
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
@@ -110,7 +111,7 @@ void loop() {
       if (strstr((char *)buf, "OK")) {
         digitalWrite(CH1, HIGH);
         digitalWrite(CH2, HIGH);
-        digitalWrite(CH3, HIGH);
+        digitalWrite(CH3, LOW);
         digitalWrite(CH4, HIGH);
         
         // Send a reply! (send back the received words)
@@ -122,7 +123,7 @@ void loop() {
       }
       //if don't receive "OK", set relays to low
       else{
-        digitalWrite(CH1, HIGH);
+        digitalWrite(CH1, LOW);
         digitalWrite(CH2, LOW);
         digitalWrite(CH3, HIGH);
         digitalWrite(CH4, HIGH);
@@ -131,13 +132,23 @@ void loop() {
     // not receiving a message from transmitter >> set relays to low
     else {
       Serial.println("Receive failed");
-      digitalWrite(CH1, HIGH);
+      digitalWrite(CH1, LOW);
       digitalWrite(CH2, LOW);
       digitalWrite(CH3, HIGH);
       digitalWrite(CH4, HIGH);
     }
-  }
-  
+ }
+ else{
+  //lost connecting with transmitter for 5sec >> emergency mode
+  unsigned long startTime = millis();
+  while((millis() - startTime)<5000 && !(rf95.available()));
+  Serial.println("Receive failed");
+  digitalWrite(CH1, LOW);
+  digitalWrite(CH2, LOW);
+  digitalWrite(CH3, HIGH);
+  digitalWrite(CH4, HIGH);
+ }
+ 
 }
 
 void measureBattery(float *measured){
