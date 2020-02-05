@@ -36,7 +36,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 int button_state = 1;
-const byte E_BUTTON = 0;   //interrupt pin for E-stop button
+#define E_BUTTON        0   //interrupt pin for E-stop button
 
 #define LED             13
 #define VBATPIN         A9  //Battery pin
@@ -127,7 +127,7 @@ void setup()
 }
 
 void loop() {
-  delay(100);  // Wait 1 second between transmits, could also 'sleep' here!
+  delay(10);  // Wait 1 second between transmits, could also 'sleep' here!
   
   display.clearDisplay();
   display.setTextSize(1);      // Normal 1:1 pixel scale
@@ -143,7 +143,6 @@ void loop() {
     // Send a message!
     rf95.send((uint8_t *)radiopacket, strlen(radiopacket));
     rf95.waitPacketSent();
-    Blink(LED, 200, 1); //blink LED 1 times, 200ms between blinks
     display.setCursor(0, 40); 
     display.print("EMERGENCY!!!");
     display.setCursor(0, 50);
@@ -156,7 +155,6 @@ void loop() {
     // Send a message!
     rf95.send((uint8_t *)radiopacket, strlen(radiopacket));
     rf95.waitPacketSent(); 
-    //Blink(LED, 200, 1); //blink LED 1 times, 200ms between blinks
   
     display.setCursor(0, 40);     
     display.print("ALL CLEAR!!!");
@@ -183,7 +181,6 @@ void loop() {
     if (buf[0] != 0) {
       Serial.print("Got a reply: ");
       Serial.println((char*)buf);
-      Blink(LED, 50, 3); //blink LED 3 times, 50ms between blinks
       display.setCursor(0, 0);     // Start at top-left corner
       display.print("Connected");
     } else {  /*not receiving reply*/
@@ -202,17 +199,6 @@ void loop() {
   display.display();
 }
 
-
-
-void Blink(byte PIN, byte DELAY_MS, byte loops) {
-  for (byte i=0; i<loops; i++)  {
-    digitalWrite(PIN,HIGH);
-    delay(DELAY_MS);
-    digitalWrite(PIN,LOW);
-    delay(DELAY_MS);
-  }
-}
-
 void e_stop(void){
-    button_state = !button_state;
+  button_state = !button_state;
 }
