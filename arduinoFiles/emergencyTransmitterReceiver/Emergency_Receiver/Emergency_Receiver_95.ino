@@ -98,8 +98,10 @@ void loop() {
     /* print battery status*/
     measuredvbat = analogRead(VBATPIN);
     measureBattery(&measuredvbat);
-    Serial.print("VBat: " );  Serial.println(measuredvbat);
-
+    Serial.print("VBat: " ); Serial.print("%"); Serial.println(measuredvbat*100);
+    if(measuredvbat<0.1){
+      rf95.send("Receiver Low Battery", sizeof("Receiver Low Battery"));
+    }
     // receiving a message from transmitter
     if (rf95.recv(buf, &len)) {
       if (!len) return;
@@ -113,7 +115,6 @@ void loop() {
         digitalWrite(CH2, HIGH);
         digitalWrite(CH3, LOW);
         digitalWrite(CH4, HIGH);
-        
         // Send a reply! (send back the received words)
         rf95.send(buf, sizeof(buf));
         rf95.waitPacketSent();
@@ -127,6 +128,10 @@ void loop() {
         digitalWrite(CH2, LOW);
         digitalWrite(CH3, HIGH);
         digitalWrite(CH4, HIGH);
+        // Send a reply! (send back the received words)
+        rf95.send(buf, sizeof(buf));
+        rf95.waitPacketSent();
+        Serial.println("Sent a reply");
       }
     } 
     // not receiving a message from transmitter >> set relays to low
@@ -155,4 +160,6 @@ void measureBattery(float *measured){
   *measured *= 2;    // we divided by 2, so multiply back
   *measured *= 3.3;  // Multiply by 3.3V, our reference voltage
   *measured /= 1024; // convert to voltage
+  //Full power: 4.2   Empty power: 3
+  *measured = (*measured - 3)/(4.2 - 3);
 }
