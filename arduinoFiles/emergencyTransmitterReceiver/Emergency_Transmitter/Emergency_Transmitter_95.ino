@@ -183,11 +183,14 @@ void loop() {
       Serial.println((char*)buf);
       display.setCursor(0, 0);     // Start at top-left corner
       display.print("Connected");
+      display.setCursor(0, 10);
+      display.print((char*)buf);
     } else {  /*not receiving reply*/
       Serial.println("Receive failed");
       display.setCursor(0, 0);     // Start at top-left corner
       display.print("Disconnected");
     }
+    
     /*
   } 
   else {
