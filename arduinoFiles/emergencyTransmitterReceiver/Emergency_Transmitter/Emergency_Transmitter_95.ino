@@ -36,7 +36,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 int button_state = 1;
-#define E_BUTTON        0   //interrupt pin for E-stop button
+#define E_BUTTON        1   //interrupt pin for E-stop button
 
 #define LED             13
 #define VBATPIN         A9  //Battery pin
@@ -59,19 +59,13 @@ void oled_displayBattery(void){
   int charge = ( (batteryVoltage - EMPTY_VOLTAGE) / (FULL_VOLTAGE - EMPTY_VOLTAGE) ) * 100;
   display.print(charge);
   display.print("%");
-  //display.print(" (");
-  //display.print(batteryVoltage);
-  //display.print("V)");
-  //display.display();
 }
 
 void setup() 
 {
   Serial.begin(115200);
   //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  //delay(2000);
-  
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
   display.display();
   delay(2000); // Pause for 2 seconds
   // Clear the buffer
@@ -113,14 +107,12 @@ void setup()
   display.setCursor(0, 30);     // Start at top-left corner
   display.print("RFM95 radio init OK!");
   display.display();
-  
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM (for low power module)
   // No encryption
   if (!rf95.setFrequency(RF95_FREQ)) {
     Serial.println("setFrequency failed");
     while (1);
   }
-
   // If you are using a high power rf95 eg RFM95HW, you *must* set a Tx power with the
   // ishighpowermodule flag set like this:
   rf95.setTxPower(23, false);  // range from 14-20 for power, 2nd arg must be true for 69HCW
@@ -132,9 +124,7 @@ void loop() {
   display.clearDisplay();
   display.setTextSize(1);      // Normal 1:1 pixel scale
   display.setTextColor(SSD1306_WHITE); // Draw white text
-
-  //int button_state = digitalRead(E_BUTTON);
-
+  
   oled_displayBattery();
 
   if(button_state == 0){ //Emergency functionality
@@ -160,45 +150,35 @@ void loop() {
     display.print("ALL CLEAR!!!");
     display.setCursor(0, 50);
     display.print("RSSI: ");
-    display.print(rf95.lastRssi());
-    
+    display.print(rf95.lastRssi()); 
   }
   
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   buf[0] = 0;
   uint8_t len = RH_RF95_MAX_MESSAGE_LEN;
-  //Serial.println(len);
-  
-  //if (rf95.waitAvailableTimeout(1000))  { 
-    // Should be a reply message for us now   
-
-    //delay(100);
-    
-    unsigned long listenTime = millis();
-    while((millis() - listenTime) < 2000 && !(rf95.recv(buf, &len)));
-    /*received reply from receiver*/
-    if (buf[0] != 0) {
-      Serial.print("Got a reply: ");
-      Serial.println((char*)buf);
-      display.setCursor(0, 0);     // Start at top-left corner
-      display.print("Connected");
-      display.setCursor(0, 10);
-      display.print((char*)buf);
-    } else {  /*not receiving reply*/
+  unsigned long listenTime = millis();
+  while((millis() - listenTime) < 2000 && !(rf95.recv(buf, &len)));
+  /*received reply from receiver*/
+  if (buf[0] != 0) {
+    Serial.print("Got a reply: ");
+    Serial.println((char*)buf);
+    display.setCursor(0, 0);     // Start at top-left corner
+    display.print("Connected");
+    display.setCursor(0, 10);
+    display.print((char*)buf);
+  }else{  /*not receiving reply*/
+    listenTime = millis();
+    while((millis() - listenTime) < 2000);
+    if(!(rf95.recv(buf, &len))){
       Serial.println("Receive failed");
       display.setCursor(0, 0);     // Start at top-left corner
       display.print("Disconnected");
+    }else{
+      display.setCursor(0, 0);
+      display.print("Connected");
     }
-    
-    /*
-  } 
-  else {
-    Serial.println("No reply, is another RFM95 listening?");
-      display.setCursor(0, 0);     // Start at top-left corner
-      display.print("Disconnected");
   }
-  */
   display.display();
 }
 

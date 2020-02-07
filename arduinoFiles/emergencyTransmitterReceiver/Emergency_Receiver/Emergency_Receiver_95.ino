@@ -89,16 +89,18 @@ void setup()
 
 
 void loop() {
- 
+
+ /* print battery status*/
+ measuredvbat = analogRead(VBATPIN);
+ measureBattery(&measuredvbat);
+ Serial.print("VBat: " ); Serial.print("%"); Serial.println(measuredvbat*100);
+
+ /*Tx and Rx are connected*/
  if (rf95.available()) {
     // Should be a message for us now   
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
     
-    /* print battery status*/
-    measuredvbat = analogRead(VBATPIN);
-    measureBattery(&measuredvbat);
-    Serial.print("VBat: " ); Serial.print("%"); Serial.println(measuredvbat*100);
     if(measuredvbat<0.1){
       rf95.send("Receiver Low Battery", sizeof("Receiver Low Battery"));
     }
@@ -136,22 +138,25 @@ void loop() {
     } 
     // not receiving a message from transmitter >> set relays to low
     else {
-      Serial.println("Receive failed");
+      Serial.println("Receive failed >> not receiving message");
       digitalWrite(CH1, LOW);
       digitalWrite(CH2, LOW);
       digitalWrite(CH3, HIGH);
       digitalWrite(CH4, HIGH);
     }
  }
+ /*Rx lost connection with Tx*/
  else{
   //lost connecting with transmitter for 5sec >> emergency mode
   unsigned long startTime = millis();
-  while((millis() - startTime)<5000 && !(rf95.available()));
-  Serial.println("Receive failed");
-  digitalWrite(CH1, LOW);
-  digitalWrite(CH2, LOW);
-  digitalWrite(CH3, HIGH);
-  digitalWrite(CH4, HIGH);
+  while((millis() - startTime)<3000 );//&& !(rf95.available()));
+  if(!(rf95.available())){
+    Serial.println("Receive failed >> lost connection");
+    digitalWrite(CH1, LOW);
+    digitalWrite(CH2, LOW);
+    digitalWrite(CH3, HIGH);
+    digitalWrite(CH4, HIGH);
+  }
  }
  
 }
