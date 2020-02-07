@@ -36,7 +36,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 int button_state = 1;
-#define E_BUTTON        0   //interrupt pin for E-stop button
+#define E_BUTTON        1   //interrupt pin for E-stop button
 
 #define LED             13
 #define VBATPIN         A9  //Battery pin
@@ -167,10 +167,17 @@ void loop() {
     display.print("Connected");
     display.setCursor(0, 10);
     display.print((char*)buf);
-  }else {  /*not receiving reply*/
-    Serial.println("Receive failed");
-    display.setCursor(0, 0);     // Start at top-left corner
-    display.print("Disconnected");
+  }else{  /*not receiving reply*/
+    listenTime = millis();
+    while((millis() - listenTime) < 2000);
+    if(!(rf95.recv(buf, &len))){
+      Serial.println("Receive failed");
+      display.setCursor(0, 0);     // Start at top-left corner
+      display.print("Disconnected");
+    }else{
+      display.setCursor(0, 0);
+      display.print("Connected");
+    }
   }
   display.display();
 }
