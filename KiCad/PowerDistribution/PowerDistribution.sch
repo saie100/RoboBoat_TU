@@ -4,436 +4,392 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
-Comment2 ""
-Comment3 ""
+Title "Power Distribution"
+Date "2020-02-03"
+Rev "1"
+Comp "Temple University College of Engineering"
+Comment1 "Author: Byron Gaspard"
+Comment2 "Senior Design Project II"
+Comment3 "RoboBoat - Team B04"
 Comment4 ""
 $EndDescr
 $Comp
 L pspice:VSOURCE V1
 U 1 1 5E37390A
-P 1550 6950
-F 0 "V1" H 1778 6996 50  0000 L CNN
-F 1 "22.2" H 1778 6905 50  0000 L CNN
-F 2 "" H 1550 6950 50  0001 C CNN
-F 3 "~" H 1550 6950 50  0001 C CNN
-	1    1550 6950
+P 2550 6950
+F 0 "V1" H 2778 6996 50  0000 L CNN
+F 1 "22.2" H 2778 6905 50  0000 L CNN
+F 2 "" H 2550 6950 50  0001 C CNN
+F 3 "~" H 2550 6950 50  0001 C CNN
+	1    2550 6950
 	1    0    0    -1  
 $EndComp
 $Comp
 L pspice:VSOURCE V2
 U 1 1 5E374219
-P 2750 6950
-F 0 "V2" H 2978 6996 50  0000 L CNN
-F 1 "12" H 2978 6905 50  0000 L CNN
-F 2 "" H 2750 6950 50  0001 C CNN
-F 3 "~" H 2750 6950 50  0001 C CNN
-	1    2750 6950
+P 3750 6950
+F 0 "V2" H 3978 6996 50  0000 L CNN
+F 1 "12" H 3978 6905 50  0000 L CNN
+F 2 "" H 3750 6950 50  0001 C CNN
+F 3 "~" H 3750 6950 50  0001 C CNN
+	1    3750 6950
 	1    0    0    -1  
 $EndComp
 $Comp
 L pspice:VSOURCE V3
 U 1 1 5E3749D3
-P 3900 6950
-F 0 "V3" H 4128 6996 50  0000 L CNN
-F 1 "11.1" H 4128 6905 50  0000 L CNN
-F 2 "" H 3900 6950 50  0001 C CNN
-F 3 "~" H 3900 6950 50  0001 C CNN
-	1    3900 6950
+P 4900 6950
+F 0 "V3" H 5128 6996 50  0000 L CNN
+F 1 "11.1" H 5128 6905 50  0000 L CNN
+F 2 "" H 4900 6950 50  0001 C CNN
+F 3 "~" H 4900 6950 50  0001 C CNN
+	1    4900 6950
 	1    0    0    -1  
 $EndComp
+$Comp
+L pspice:0 #GND01
+U 1 1 5E3752E3
+P 2550 7450
+F 0 "#GND01" H 2550 7350 50  0001 C CNN
+F 1 "0" H 2550 7350 50  0000 C CNN
+F 2 "" H 2550 7450 50  0001 C CNN
+F 3 "~" H 2550 7450 50  0001 C CNN
+	1    2550 7450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2550 7450 2550 7250
 $Comp
 L pspice:0 #GND03
-U 1 1 5E3752E3
-P 1550 7450
-F 0 "#GND03" H 1550 7350 50  0001 C CNN
-F 1 "0" H 1550 7350 50  0000 C CNN
-F 2 "" H 1550 7450 50  0001 C CNN
-F 3 "~" H 1550 7450 50  0001 C CNN
-	1    1550 7450
+U 1 1 5E375CC6
+P 3750 7450
+F 0 "#GND03" H 3750 7350 50  0001 C CNN
+F 1 "0" H 3750 7350 50  0000 C CNN
+F 2 "" H 3750 7450 50  0001 C CNN
+F 3 "~" H 3750 7450 50  0001 C CNN
+	1    3750 7450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1550 7450 1550 7250
+	3750 7450 3750 7250
 $Comp
 L pspice:0 #GND04
-U 1 1 5E375CC6
-P 2750 7450
-F 0 "#GND04" H 2750 7350 50  0001 C CNN
-F 1 "0" H 2750 7350 50  0000 C CNN
-F 2 "" H 2750 7450 50  0001 C CNN
-F 3 "~" H 2750 7450 50  0001 C CNN
-	1    2750 7450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2750 7450 2750 7250
-$Comp
-L pspice:0 #GND05
 U 1 1 5E376288
-P 3900 7450
-F 0 "#GND05" H 3900 7350 50  0001 C CNN
-F 1 "0" H 3900 7350 50  0000 C CNN
-F 2 "" H 3900 7450 50  0001 C CNN
-F 3 "~" H 3900 7450 50  0001 C CNN
-	1    3900 7450
+P 4900 7450
+F 0 "#GND04" H 4900 7350 50  0001 C CNN
+F 1 "0" H 4900 7350 50  0000 C CNN
+F 2 "" H 4900 7450 50  0001 C CNN
+F 3 "~" H 4900 7450 50  0001 C CNN
+	1    4900 7450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3900 7450 3900 7250
-Text GLabel 1400 6500 0    50   Input ~ 0
+	4900 7450 4900 7250
+Text GLabel 2400 6500 0    50   Input ~ 0
 22.2V
 Wire Wire Line
-	1400 6500 1550 6500
+	2400 6500 2550 6500
 Wire Wire Line
-	1550 6500 1550 6650
-Text GLabel 2600 6500 0    50   Input ~ 0
+	2550 6500 2550 6650
+Text GLabel 3600 6500 0    50   Input ~ 0
 12V
 Wire Wire Line
-	2600 6500 2750 6500
+	3600 6500 3750 6500
 Wire Wire Line
-	2750 6500 2750 6650
-Text GLabel 3750 6500 0    50   Input ~ 0
+	3750 6500 3750 6650
+Text GLabel 4750 6500 0    50   Input ~ 0
 11.1V
 Wire Wire Line
-	3750 6500 3900 6500
+	4750 6500 4900 6500
 Wire Wire Line
-	3900 6500 3900 6650
-$Comp
-L Device:R_US R5
-U 1 1 5E3B367D
-P 7100 3750
-F 0 "R5" V 6900 3750 50  0000 C CNN
-F 1 "11.3V Load_2" V 7000 3750 50  0000 C CNN
-F 2 "" V 7140 3740 50  0001 C CNN
-F 3 "~" H 7100 3750 50  0001 C CNN
-F 4 "R" H 7100 3750 50  0001 C CNN "Spice_Primitive"
-F 5 "100" V 7200 3750 50  0000 C CNN "Spice_Model"
-F 6 "Y" H 7100 3750 50  0001 C CNN "Spice_Netlist_Enabled"
-	1    7100 3750
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R_US R6
-U 1 1 5E3B3686
-P 7100 4550
-F 0 "R6" V 6900 4550 50  0000 C CNN
-F 1 "22.2V Load_2" V 7000 4550 50  0000 C CNN
-F 2 "" V 7140 4540 50  0001 C CNN
-F 3 "~" H 7100 4550 50  0001 C CNN
-F 4 "R" H 7100 4550 50  0001 C CNN "Spice_Primitive"
-F 5 "100" V 7200 4550 50  0000 C CNN "Spice_Model"
-F 6 "Y" H 7100 4550 50  0001 C CNN "Spice_Netlist_Enabled"
-	1    7100 4550
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	6550 3800 6450 3800
-Wire Wire Line
-	6550 3750 6950 3750
-Wire Wire Line
-	6550 3750 6550 3800
-Wire Wire Line
-	7250 3750 7400 3750
-Text GLabel 5300 3900 0    50   Input ~ 0
-12V
-Text GLabel 5300 4400 0    50   Input ~ 0
-22.2V
-Text GLabel 5300 4700 0    50   Input ~ 0
-12V
-Wire Wire Line
-	6550 4600 6450 4600
-Wire Wire Line
-	6550 4550 6950 4550
-Wire Wire Line
-	6550 4550 6550 4600
-Wire Wire Line
-	7250 4550 7400 4550
-Wire Wire Line
-	6550 4200 6450 4200
-Wire Wire Line
-	6550 4150 6550 4200
-Wire Wire Line
-	7400 3750 7400 4150
-Wire Wire Line
-	6550 4150 7400 4150
-Wire Wire Line
-	7400 4550 7400 4150
-Connection ~ 7400 4150
-$Comp
-L pspice:0 #GND06
-U 1 1 5E3B36B1
-P 4500 4400
-F 0 "#GND06" H 4500 4300 50  0001 C CNN
-F 1 "0" H 4500 4300 50  0000 C CNN
-F 2 "" H 4500 4400 50  0001 C CNN
-F 3 "~" H 4500 4400 50  0001 C CNN
-	1    4500 4400
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5400 4150 4500 4150
-Wire Wire Line
-	4500 4150 4500 4400
-Wire Wire Line
-	5400 4150 5400 4300
-Wire Wire Line
-	6450 3900 6450 3800
-Wire Wire Line
-	5300 3900 6450 3900
-Wire Wire Line
-	6450 4300 6450 4200
-Wire Wire Line
-	5400 4300 6450 4300
-Wire Wire Line
-	6450 4700 6450 4600
-Wire Wire Line
-	5300 4700 6450 4700
+	4900 6500 4900 6650
 NoConn ~ -5350 -3900
 Wire Wire Line
-	2100 1850 2100 2000
+	2300 2450 2300 2600
 Wire Wire Line
-	1200 1850 1200 2100
+	1400 2450 1400 2700
 Wire Wire Line
-	2100 1850 1200 1850
+	2300 2450 1400 2450
 Wire Wire Line
-	2100 2000 2250 2000
-Connection ~ 2100 1850
+	2300 2600 2450 2600
+Connection ~ 2300 2450
 Wire Wire Line
-	2100 1700 2100 1850
+	2300 2300 2300 2450
 Wire Wire Line
-	2250 1700 2100 1700
-$Comp
-L pspice:0 #GND02
-U 1 1 5E398A2D
-P 1200 2100
-F 0 "#GND02" H 1200 2000 50  0001 C CNN
-F 1 "0" H 1200 2000 50  0000 C CNN
-F 2 "" H 1200 2100 50  0001 C CNN
-F 3 "~" H 1200 2100 50  0001 C CNN
-	1    1200 2100
-	1    0    0    -1  
-$EndComp
+	2450 2300 2300 2300
 Wire Wire Line
-	4100 2250 4100 1850
+	3450 2500 3350 2500
 Wire Wire Line
-	3250 1850 4100 1850
-Connection ~ 4100 1850
+	3350 2400 3450 2400
 Wire Wire Line
-	4100 1450 4100 1850
+	3450 2900 3350 2900
 Wire Wire Line
-	3250 1850 3250 1900
+	3350 2800 3450 2800
 Wire Wire Line
-	3250 1900 3150 1900
-Connection ~ 3250 1850
-Wire Wire Line
-	3250 1800 3250 1850
-Wire Wire Line
-	3150 1800 3250 1800
-Wire Wire Line
-	3950 2250 4100 2250
-Wire Wire Line
-	3250 2250 3250 2300
-Wire Wire Line
-	3250 2250 3650 2250
-Wire Wire Line
-	3250 2300 3150 2300
-Connection ~ 3250 2250
-Wire Wire Line
-	3250 2200 3250 2250
-Wire Wire Line
-	3150 2200 3250 2200
-Wire Wire Line
-	2000 2400 2250 2400
-Text GLabel 2000 2400 0    50   Input ~ 0
+	2200 3000 2450 3000
+Text GLabel 2200 3000 0    50   Input ~ 0
 12V
 Wire Wire Line
-	2000 2100 2250 2100
-Text GLabel 2000 2100 0    50   Input ~ 0
+	2200 2700 2450 2700
+Text GLabel 2200 2700 0    50   Input ~ 0
 22.2V
 Wire Wire Line
-	2000 1600 2250 1600
-Text GLabel 2000 1600 0    50   Input ~ 0
+	2200 2200 2450 2200
+Text GLabel 2200 2200 0    50   Input ~ 0
 12V
 Wire Wire Line
-	2000 1300 2250 1300
-Text GLabel 2000 1300 0    50   Input ~ 0
+	2200 1900 2450 1900
+Text GLabel 2200 1900 0    50   Input ~ 0
 11.1V
 Wire Wire Line
-	3950 1450 4100 1450
+	3450 2050 3450 2100
 Wire Wire Line
-	3250 1450 3250 1500
+	3450 2100 3350 2100
+Connection ~ 3450 2050
 Wire Wire Line
-	3250 1450 3650 1450
+	3450 2000 3450 2050
 Wire Wire Line
-	3250 1500 3150 1500
-Connection ~ 3250 1450
-Wire Wire Line
-	3250 1400 3250 1450
-Wire Wire Line
-	3150 1400 3250 1400
+	3350 2000 3450 2000
 $Comp
 L RoboBoat_Parts:ChangeoverSwitch SW1
 U 1 1 5E38CAE2
-P 2750 2100
-F 0 "SW1" H 2700 3090 50  0000 C CNN
-F 1 "ChangeoverSwitch" H 2700 2999 50  0000 C CNN
-F 2 "" H 2650 3050 50  0001 C CNN
-F 3 "http://cdn-reichelt.de/documents/datenblatt/C200/DS-Serie%23LOR.pdf" H 2650 3050 50  0001 C CNN
-F 4 "R" H 2750 2100 50  0001 C CNN "Spice_Primitive"
-F 5 "1" H 2750 2100 50  0001 C CNN "Spice_Model"
-F 6 "N" H 2750 2100 50  0001 C CNN "Spice_Netlist_Enabled"
-	1    2750 2100
+P 2950 2700
+F 0 "SW1" H 2900 3690 50  0000 C CNN
+F 1 "ChangeoverSwitch" H 2900 3599 50  0000 C CNN
+F 2 "" H 2850 3650 50  0001 C CNN
+F 3 "http://cdn-reichelt.de/documents/datenblatt/C200/DS-Serie%23LOR.pdf" H 2850 3650 50  0001 C CNN
+F 4 "R" H 2950 2700 50  0001 C CNN "Spice_Primitive"
+F 5 "1" H 2950 2700 50  0001 C CNN "Spice_Model"
+F 6 "N" H 2950 2700 50  0001 C CNN "Spice_Netlist_Enabled"
+	1    2950 2700
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R_US R4
-U 1 1 5E3784AA
-P 3800 2250
-F 0 "R4" V 3600 2250 50  0000 C CNN
-F 1 "22.2V Load_SW" V 3700 2250 50  0000 C CNN
-F 2 "" V 3840 2240 50  0001 C CNN
-F 3 "~" H 3800 2250 50  0001 C CNN
-F 4 "R" H 3800 2250 50  0001 C CNN "Spice_Primitive"
-F 5 "100" V 3900 2250 50  0000 C CNN "Spice_Model"
-F 6 "N" H 3800 2250 50  0001 C CNN "Spice_Netlist_Enabled"
-	1    3800 2250
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R_US R3
-U 1 1 5E377EB6
-P 3800 1450
-F 0 "R3" V 3600 1450 50  0000 C CNN
-F 1 "11.3V Load_SW" V 3700 1450 50  0000 C CNN
-F 2 "" V 3840 1440 50  0001 C CNN
-F 3 "~" H 3800 1450 50  0001 C CNN
-F 4 "R" H 3800 1450 50  0001 C CNN "Spice_Primitive"
-F 5 "100" V 3900 1450 50  0000 C CNN "Spice_Model"
-F 6 "N" H 3800 1450 50  0001 C CNN "Spice_Netlist_Enabled"
-	1    3800 1450
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	1900 4500 3050 4500
-Wire Wire Line
-	3050 4500 3050 4600
-Wire Wire Line
-	2000 4100 3050 4100
-Wire Wire Line
-	3050 4100 3050 4200
-Wire Wire Line
-	1900 3700 3050 3700
-Wire Wire Line
-	3050 3700 3050 3800
-Wire Wire Line
-	1100 4250 1100 4500
-Wire Wire Line
-	2000 4250 1100 4250
-Wire Wire Line
-	2000 4100 2000 4250
-$Comp
-L pspice:0 #GND01
-U 1 1 5E3A6810
-P 1100 4500
-F 0 "#GND01" H 1100 4400 50  0001 C CNN
-F 1 "0" H 1100 4400 50  0000 C CNN
-F 2 "" H 1100 4500 50  0001 C CNN
-F 3 "~" H 1100 4500 50  0001 C CNN
-	1    1100 4500
-	1    0    0    -1  
-$EndComp
-Connection ~ 4000 4250
-Wire Wire Line
-	4000 4650 4000 4250
-Wire Wire Line
-	3150 4250 4000 4250
-Wire Wire Line
-	4000 3850 4000 4250
-Wire Wire Line
-	3150 4200 3150 4250
-Wire Wire Line
-	3050 4200 3150 4200
-Wire Wire Line
-	3850 4650 4000 4650
-Wire Wire Line
-	3150 4650 3550 4650
-Wire Wire Line
-	3150 4600 3150 4650
-Wire Wire Line
-	3050 4600 3150 4600
-Text GLabel 1900 4500 0    50   Input ~ 0
-22.2V
-Text GLabel 1900 3700 0    50   Input ~ 0
-11.1V
-Wire Wire Line
-	3850 3850 4000 3850
-Wire Wire Line
-	3150 3850 3550 3850
-Wire Wire Line
-	3150 3800 3150 3850
-Wire Wire Line
-	3050 3800 3150 3800
-$Comp
-L Device:R_US R2
-U 1 1 5E3A67E5
-P 3700 4650
-F 0 "R2" V 3500 4650 50  0000 C CNN
-F 1 "22.2V Load_1" V 3600 4650 50  0000 C CNN
-F 2 "" V 3740 4640 50  0001 C CNN
-F 3 "~" H 3700 4650 50  0001 C CNN
-F 4 "R" H 3700 4650 50  0001 C CNN "Spice_Primitive"
-F 5 "100" V 3800 4650 50  0000 C CNN "Spice_Model"
-F 6 "Y" H 3700 4650 50  0001 C CNN "Spice_Netlist_Enabled"
-	1    3700 4650
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R_US R1
-U 1 1 5E3A67DC
-P 3700 3850
-F 0 "R1" V 3500 3850 50  0000 C CNN
-F 1 "11.3V Load_1" V 3600 3850 50  0000 C CNN
-F 2 "" V 3740 3840 50  0001 C CNN
-F 3 "~" H 3700 3850 50  0001 C CNN
-F 4 "R" H 3700 3850 50  0001 C CNN "Spice_Primitive"
-F 5 "100" V 3800 3850 50  0000 C CNN "Spice_Model"
-F 6 "Y" H 3700 3850 50  0001 C CNN "Spice_Netlist_Enabled"
-	1    3700 3850
-	0    1    1    0   
-$EndComp
-Wire Notes Line
-	4100 3350 4100 4850
-Wire Notes Line
-	4100 4850 1000 4850
-Wire Notes Line
-	1000 4850 1000 3350
-Wire Notes Line
-	1000 3350 4100 3350
-Wire Notes Line
-	7500 3350 7500 4850
-Wire Notes Line
-	4400 4850 4400 3350
-Wire Notes Line
-	4400 3350 7500 3350
-Wire Notes Line
-	7500 4850 4400 4850
-Text Notes 2050 3450 0    50   ~ 10
-Simulation Switch Setting 1
-Wire Notes Line
-	1100 900  4200 900 
-Text Notes 2400 1000 0    50   ~ 10
+Text Notes 5700 1400 0    50   ~ 10
 Full Schematic
+$Comp
+L Device:Fuse F8
+U 1 1 5E3B0ADA
+P 8400 2750
+F 0 "F8" V 8300 2750 50  0000 C CNN
+F 1 "3A" V 8500 2750 50  0000 C CNN
+F 2 "" V 8330 2750 50  0001 C CNN
+F 3 "~" H 8400 2750 50  0001 C CNN
+	1    8400 2750
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:Fuse F6
+U 1 1 5E3A89A3
+P 8400 2150
+F 0 "F6" V 8300 2150 50  0000 C CNN
+F 1 "7.5A" V 8500 2150 50  0000 C CNN
+F 2 "" V 8330 2150 50  0001 C CNN
+F 3 "~" H 8400 2150 50  0001 C CNN
+	1    8400 2150
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:Fuse F7
+U 1 1 5E3B04A6
+P 8400 2450
+F 0 "F7" V 8300 2450 50  0000 C CNN
+F 1 "3A" V 8500 2450 50  0000 C CNN
+F 2 "" V 8330 2450 50  0001 C CNN
+F 3 "~" H 8400 2450 50  0001 C CNN
+	1    8400 2450
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:Fuse F1
+U 1 1 5E3D99CE
+P 5200 2150
+F 0 "F1" V 5100 2150 50  0000 C CNN
+F 1 "3A" V 5300 2150 50  0000 C CNN
+F 2 "" V 5130 2150 50  0001 C CNN
+F 3 "~" H 5200 2150 50  0001 C CNN
+	1    5200 2150
+	0    1    1    0   
+$EndComp
+$Comp
+L RoboBoat_Parts:FuseBlock U1
+U 1 1 5E3D99E0
+P 5550 2450
+F 0 "U1" H 4850 3200 50  0000 C CNN
+F 1 "FuseBlock" H 5000 3100 50  0000 C CNN
+F 2 "" H 5550 2450 50  0001 C CNN
+F 3 "" H 5550 2450 50  0001 C CNN
+	1    5550 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 2400 3450 2450
+Wire Wire Line
+	3450 2850 3850 2850
+Wire Wire Line
+	3450 2800 3450 2850
+Connection ~ 3450 2850
+Wire Wire Line
+	3450 2850 3450 2900
+Wire Wire Line
+	3450 2450 3950 2450
+Wire Wire Line
+	5550 3450 5550 3150
+Connection ~ 3450 2450
+Wire Wire Line
+	3450 2450 3450 2500
+Wire Wire Line
+	8750 3450 8750 3150
+Wire Wire Line
+	3850 2850 3850 3550
+Wire Wire Line
+	8750 1600 8750 1750
+Wire Wire Line
+	5550 1600 5550 1750
+Wire Wire Line
+	3450 2050 3850 2050
+Wire Wire Line
+	3850 1600 3850 2050
+Wire Wire Line
+	3850 1600 5550 1600
+Wire Wire Line
+	3950 2450 3950 3450
+Wire Wire Line
+	3950 3450 5550 3450
+Wire Wire Line
+	5550 3450 8750 3450
+Connection ~ 5550 3450
+Wire Wire Line
+	3850 3550 10350 3550
+Wire Wire Line
+	10350 1600 8750 1600
+Wire Wire Line
+	10350 1600 10350 3550
+Text GLabel 7800 2150 0    50   Input ~ 0
+StatusLights
+Wire Wire Line
+	7800 2150 7900 2150
+Text GLabel 7800 2450 0    50   Input ~ 0
+FeatherPower
+Wire Wire Line
+	7800 2450 7900 2450
+Text GLabel 7750 2750 0    50   Input ~ 0
+MotorRelay
+Wire Wire Line
+	7750 2750 7900 2750
+$Comp
+L RoboBoat_Parts:FuseBlock U2
+U 1 1 5E397FFC
+P 8750 2450
+F 0 "U2" H 8050 3200 50  0000 C CNN
+F 1 "FuseBlock" H 8200 3100 50  0000 C CNN
+F 2 "" H 8750 2450 50  0001 C CNN
+F 3 "" H 8750 2450 50  0001 C CNN
+	1    8750 2450
+	1    0    0    -1  
+$EndComp
+Text GLabel 4600 2150 0    50   Input ~ 0
+TP-Link
+Wire Wire Line
+	4600 2150 4700 2150
+Text GLabel 4600 2450 0    50   Input ~ 0
+GL-iNet
+Wire Wire Line
+	4600 2450 4700 2450
+$Comp
+L Device:Fuse F2
+U 1 1 5E4B916C
+P 5200 2450
+F 0 "F2" V 5100 2450 50  0000 C CNN
+F 1 "3A" V 5300 2450 50  0000 C CNN
+F 2 "" V 5130 2450 50  0001 C CNN
+F 3 "~" H 5200 2450 50  0001 C CNN
+	1    5200 2450
+	0    1    1    0   
+$EndComp
+Text GLabel 4600 2750 0    50   Input ~ 0
+RPi
+Wire Wire Line
+	4600 2750 4700 2750
+$Comp
+L Device:Fuse F3
+U 1 1 5E4BBE9D
+P 5200 2750
+F 0 "F3" V 5100 2750 50  0000 C CNN
+F 1 "3A" V 5300 2750 50  0000 C CNN
+F 2 "" V 5130 2750 50  0001 C CNN
+F 3 "~" H 5200 2750 50  0001 C CNN
+	1    5200 2750
+	0    1    1    0   
+$EndComp
+Text GLabel 6500 2150 2    50   Input ~ 0
+TX2
+Wire Wire Line
+	6500 2150 6400 2150
+Text GLabel 6500 2450 2    50   Input ~ 0
+USB_Hub
+Wire Wire Line
+	6500 2450 6400 2450
+NoConn ~ 9600 2150
+NoConn ~ 9600 2450
+NoConn ~ 9600 2750
+NoConn ~ 6400 2750
+NoConn ~ 5750 2750
+NoConn ~ 6050 2750
+NoConn ~ 8950 2150
+NoConn ~ 9250 2150
+NoConn ~ 9250 2450
+NoConn ~ 8950 2450
+NoConn ~ 8950 2750
+NoConn ~ 9250 2750
+$Comp
+L power:GND #PWR01
+U 1 1 5E4E6F51
+P 1400 2700
+F 0 "#PWR01" H 1400 2450 50  0001 C CNN
+F 1 "GND" H 1405 2527 50  0000 C CNN
+F 2 "" H 1400 2700 50  0001 C CNN
+F 3 "" H 1400 2700 50  0001 C CNN
+	1    1400 2700
+	1    0    0    -1  
+$EndComp
 Wire Notes Line
-	4200 2550 1100 2550
+	10500 1300 10500 3650
 Wire Notes Line
-	4200 900  4200 2550
+	10500 3650 1250 3650
 Wire Notes Line
-	1100 900  1100 2550
-Text Notes 5450 3450 0    50   ~ 10
-Simulation Switch Setting 2
+	1250 3650 1250 1300
+Wire Notes Line
+	1250 1300 10500 1300
+Wire Notes Line
+	5350 6200 5350 7700
+Wire Notes Line
+	1950 7700 1950 6200
+Text Notes 3300 6300 0    50   ~ 10
+Simulated Sources\n
+Wire Notes Line
+	1950 7700 5350 7700
+Wire Notes Line
+	1950 6200 5350 6200
+$Comp
+L Device:Fuse F4
+U 1 1 5E3B062E
+P 5900 2150
+F 0 "F4" V 5800 2150 50  0000 C CNN
+F 1 "10A" V 6000 2150 50  0000 C CNN
+F 2 "" V 5830 2150 50  0001 C CNN
+F 3 "~" H 5900 2150 50  0001 C CNN
+	1    5900 2150
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:Fuse F9
+U 1 1 5E3B2B92
+P 5900 2450
+F 0 "F9" V 5800 2450 50  0000 C CNN
+F 1 "3A" V 6000 2450 50  0000 C CNN
+F 2 "" V 5830 2450 50  0001 C CNN
+F 3 "~" H 5900 2450 50  0001 C CNN
+	1    5900 2450
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
