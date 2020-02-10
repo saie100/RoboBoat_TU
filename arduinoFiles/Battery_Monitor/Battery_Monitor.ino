@@ -24,7 +24,7 @@ int bat2Dir = 0;
 int bat3Pins[] = {A13, A14, A15};
 int bat3CellCnt = 3;
 int bat3Dir = 1;
-
+ 
 
 void setup() {
   Serial.begin(9600);
