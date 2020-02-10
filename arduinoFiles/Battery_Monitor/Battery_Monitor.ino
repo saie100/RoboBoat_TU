@@ -5,9 +5,9 @@ char volts[16] = {};// char array that stores cell voltages
 int voltsCnt = 0;  // used to index char array
 int batteryHealth = 1; // 1-healthy, 2-moderate, 3-low
 float constant[6] = { // values for scaling voltage
-  1.0000,
-  2.1915,
-  2.6970,
+  1,
+  (470.0+560.0)/470.0,
+  (330.0+560.0)/330.0,
   4.1111,
   4.7333,
   6.6000,
@@ -28,10 +28,9 @@ int bat3Dir = 1;
 
 void setup() {
   Serial.begin(9600);
-  while(!Serial.available());
-    delay(3000);
+ // while(!Serial.available());
+    //delay(3000);
 
-  Serial.print("HERE");
 
 }
 
@@ -39,11 +38,10 @@ void setup() {
 void loop() {
 
 
-Serial.print("HERE");
 
   double measuredVoltage[bat0CellCnt];
   measure_cell(bat0Pins, bat0CellCnt, bat0Dir, measuredVoltage);
-
+/*
   measuredVoltage[bat1CellCnt];
   measure_cell(bat1Pins, bat1CellCnt, bat1Dir, measuredVoltage);
 
@@ -52,10 +50,10 @@ Serial.print("HERE");
 
   measuredVoltage[bat3CellCnt];
   measure_cell(bat3Pins, bat3CellCnt, bat3Dir, measuredVoltage);
-
+*/
   //Serial.println(volts);
   delay(3000);
-
+  Serial.println();
 }
 
 void measure_cell(const int pins[], // analog pin numbers from lowest voltage to highest voltgage
@@ -64,9 +62,10 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
                   double measured[] ) { // returning measured analog values through an array
   double currentV = 0;
   double prevV = 0;
+  double sumV =0;
   if (dir == 1) {
-    Serial.print("here");
     for (int i = 0; i < pinCnt; i++) {
+      Serial.println("error");
       currentV = analogRead(pins[i]) * convert * constant[i]; // stores voltage of a cell
       currentV = currentV - prevV; // isolates cell voltage
       Serial.println(currentV);
@@ -78,31 +77,30 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
         voltsCnt = 0;
       }
     }
-
+  }
     if (dir == 0) {
-      Serial.print("Here");
       for (int i = pinCnt - 1; i >= 0; i--) {
-        currentV = analogRead(pins[i]) * convert * constant[pinCnt - i - 1];
+        currentV = analogRead(pins[i]) * convert * constant[pinCnt - i - 1];      
         currentV = currentV - prevV;
         Serial.println(currentV);
-        dtostrf(currentV, 3, 2, volts[voltsCnt]);
-        measured[i] = currentV;
-        prevV = currentV;
-        voltsCnt++; // index for char array
-        if (voltsCnt == 17) { // theres 16 slots
-          voltsCnt = 0;
-        }
+        //dtostrf(currentV, 3, 2, volts[voltsCnt]);
+        //measured[i] = currentV;
+        prevV += currentV;
+       // voltsCnt++; // index for char array
+        //if (voltsCnt == 17) { // theres 16 slots
+          //voltsCnt = 0;
+       // }
       }
     }
 
-    batteryStatus(pinCnt, measured);
+    //batteryStatus(pinCnt, measured);
   }
 
-}
+
 
 void batteryStatus(int j, double voltages[]) {
-  for (int i = 0; i < j; i++) {
-    double voltage = voltages[i];
+  for (int m = 0; m < j; m++) {
+    double voltage = voltages[m];
 
     if (voltage > 3.95) {
       batteryHealth = 1; // healthy
