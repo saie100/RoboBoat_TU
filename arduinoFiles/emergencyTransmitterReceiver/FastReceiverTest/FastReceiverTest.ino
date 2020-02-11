@@ -20,6 +20,8 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 volatile unsigned long missCnt = 0;
 
+char okMsg[] = "TempleBoatNormal   ";
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ E-Switch Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #define PIN_EMERGENCY_SWITCH 1 /* The pin that the emergency switch is connected to */
 volatile byte EmergencyState = true;
@@ -34,9 +36,7 @@ volatile byte StateChange = true; /* Set to true so the display is updated the f
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Switch Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #define PIN_EMERGENCY_SWITCH 1
 
-
-
-
+// =====================================================================================================
 void setup()
 {
   pinMode(PIN_MOTOR_RELAY, OUTPUT);
@@ -45,15 +45,15 @@ void setup()
   pinMode(PIN_BLUE_LIGHT, OUTPUT);
 
   pinMode(PIN_EMERGENCY_SWITCH, INPUT_PULLUP);
-  
+
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Serial Monitor Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Serial.begin(9600);
   delay(2000);
   Serial.println("Feather LoRa RX Test!");
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radio Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pinMode(LED, OUTPUT);
-  
+  pinMode(LED, OUTPUT);
+
   pinMode(RFM95_RST, OUTPUT);
   /* Manual reset of the radio */
   digitalWrite(RFM95_RST, HIGH); delay(100);
@@ -63,55 +63,23 @@ pinMode(LED, OUTPUT);
 
   while (!rf95.init()) Serial.println("LoRa radio init failed");
   Serial.println("LoRa radio init OK!");
-  delay(1000);  
+  delay(1000);
 
-  
-  if (!rf95.setFrequency(RF95_FREQ)) Serial.println("setFrequency failed"); 
+
+  if (!rf95.setFrequency(RF95_FREQ)) Serial.println("setFrequency failed");
   else Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
   delay(1000);
 
   rf95.setTxPower(23, false);
-  
-   
+
 }
 
+// =====================================================================================================
 void loop()
 {
   if (rf95.waitAvailableTimeout(1000)) {
     if (rf95.available()) {
-      // Should be a message for us now
-      uint8_t buf[SIZE_radiopacket];
-      uint8_t len = sizeof(buf);
-
-      char okMsg[] = "TempleBoatNormal   ";
-
-      if (rf95.recv(buf, &len)) {
-        missCnt = 0; /* Reset the miss count if message received */
-        RH_RF95::printBuffer("Received: ", buf, len);
-
-
-        /* Compare the recieved and the known OK string */
-        int ii;
-        for (ii = 0; (okMsg[ii] == (char)buf[ii] && ((char)buf[ii] != '\0')); ii++);
-        /* The emergency state is set if the received string does not match the OK string */
-        EmergencyState = !(((char)buf[ii] == '\0') && (okMsg[ii] == '\0'));
-
-        if (!EmergencyState) blinkLED(); /* Blink LED when not in emergency mode to show connection status */
-        else digitalWrite(LED, HIGH);
-
-        Serial.print("Got: "); Serial.println((char*)buf);
-        Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
-
-        rf95.send(buf, sizeof(buf));
-        rf95.waitPacketSent();
-
-        Serial.println("Sent a reply");
-
-      }
-      else { /* if receive fails */
-        missCnt++;
-        Serial.println("Receive failed");
-      }
+      radioAvailableExecute();
     }
     else { /* if radio not available */
       missCnt++;
@@ -123,11 +91,61 @@ void loop()
     Serial.print("Radio timeout");
   }
 
-  if(missCnt > 2){ /* If three packets are missed in a row, we are now in the emergency state */
+  if (missCnt > 2) { /* If three packets are missed in a row, we are now in the emergency state */
     EmergencyState = true;
-    digitalWrite(LED, HIGH);
+    
   }
-  
+  stateHandler();
+}
+
+// ====================================================================================================
+void stateHandler() {
+  if (EmergencyState == true) {
+      digitalWrite(LED, HIGH);
+  }
+  else {
+      digitalWrite(LED, LOW);
+  }
+
+}
+
+// =====================================================================================================
+void radioAvailableExecute() {
+  // Should be a message for us now
+  uint8_t buf[SIZE_radiopacket];
+  uint8_t len = sizeof(buf);
+
+
+  if (rf95.recv(buf, &len)) {
+    missCnt = 0; /* Reset the miss count if message received */
+    RH_RF95::printBuffer("Received: ", buf, len);
+
+    /* Compare the recieved and the known OK string */
+    int ii;
+    for (ii = 0; (okMsg[ii] == (char)buf[ii] && ((char)buf[ii] != '\0')); ii++);
+    /* The emergency state is set if the received string does not match the OK string */
+    int NormalMessage = (((char)buf[ii] == '\0') && (okMsg[ii] == '\0')); // This is non-zero during normal operation
+ 
+    if (NormalMessage) {
+      EmergencyState = false;
+      blinkLED(); /* Blink LED when not in emergency mode to show connection status */
+    }
+    else{
+      EmergencyState = true;
+    }
+
+    Serial.print("Got: "); Serial.println((char*)buf);
+    Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
+
+    rf95.send(buf, sizeof(buf));
+    rf95.waitPacketSent();
+
+    Serial.println("Sent a reply");
+  }
+  else { /* if receive fails */
+    missCnt++;
+    Serial.println("Receive failed");
+  }
 }
 
 void blinkLED(void) {
