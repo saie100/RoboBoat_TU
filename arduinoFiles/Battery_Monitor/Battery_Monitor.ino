@@ -5,12 +5,21 @@ char volts[16] = {};// char array that stores cell voltages
 int voltsCnt = 0;  // used to index char array
 int batteryHealth = 1; // 1-healthy, 2-moderate, 3-low
 float constant[6] = { // values for scaling voltage
-  1,
+  1.0,
   (470.0 + 560.0) / 470.0,
   (330.0 + 560.0) / 330.0,
-  4.1111,
-  4.7333,
-  6.6000,
+  (180.0 + 560.0) / 180.0,
+  (150.0 + 560.0) / 150.0,
+  (100.0 + 560.0) / 100.0
+};
+
+const float scale6s[] = {
+.0522,
+.0075,
+.2258,
+-0.1907,
+0.1719,
+0.2047
 };
 int bat0Pins[] = {A0, A1, A2, A3, A4, A5};
 int bat0CellCnt = 6;
@@ -25,8 +34,8 @@ int bat3Pins[] = {A13, A14, A15};
 int bat3CellCnt = 3;
 int bat3Dir = 1;
 
-const int runAvgCnt = 4;
-float runAvg[runAvgCnt][6];
+const int runAvgCnt = 14;
+float runAvg[6][15];
 float runAvgRes[6];
 int runAvgIdx = 0;
 
@@ -45,6 +54,7 @@ void loop() {
 
 
   double measuredVoltage[bat0CellCnt];
+  Serial.println("6 cell battery");
   measure_cell(bat0Pins, bat0CellCnt, bat0Dir, measuredVoltage);
   /*
     measuredVoltage[bat1CellCnt];
@@ -71,7 +81,7 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
       Serial.println("error");
       currentV = analogRead(pins[i]) * convert * constant[i]; // stores voltage of a cell
       currentV = currentV - prevV; // isolates cell voltage
-      Serial.println(currentV);
+      Serial.println(currentV,4);
       //dtostrf(currentV, 3, 2, volts[voltsCnt]); // stores isolated cell value in array, voltsCnt is the index variable
       //measured[i] = currentV; // voltage is stored in an array called measured for later use to test battery health
       prevV = currentV; // current is now stored in previous
@@ -88,7 +98,7 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
         runAvgRes[j] += runAvg[j][i];
       }
       runAvgRes[j] /= runAvgCnt;
-      Serial.print("Run Average Cell "); Serial.print(j + 1); Serial.print(": "); Serial.println(runAvgRes[j]);
+      Serial.print("Run Average Cell "); Serial.print(j + 1); Serial.print(": "); Serial.println(runAvgRes[j],4);
     }
   }
 
@@ -96,26 +106,31 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
     for (int i = pinCnt - 1; i >= 0; i--) {
       currentV = analogRead(pins[i]) * convert * constant[pinCnt - i - 1];
       currentV = currentV - prevV;
-      Serial.println(currentV);
+      Serial.print("Cell "); Serial.print(i + 1); Serial.print(": ");
+      //Serial.println(currentV,4);
+      Serial.println(currentV+ scale6s[pinCnt - i - 1],4);
       //dtostrf(currentV, 3, 2, volts[voltsCnt]);
       //measured[i] = currentV;
       prevV += currentV;
-      runAvg[runAvgIdx % runAvgCnt][i] = currentV;
-
+      //runAvg[runAvgIdx % runAvgCnt][i] = currentV;
+      runAvg[i][runAvgIdx] = currentV;
     }
     runAvgIdx++;
-
-    for (int j = 0; j < runAvgCnt; j++) {
+   
+    for (int j = pinCnt-1; j >=0; j--) {
       runAvgRes[j] = 0;
-      for (int i = 0; i < pinCnt; i++) {
-        runAvgRes[i] += runAvg[j][i];
-
-        runAvgRes[i] /= runAvgCnt;
-        Serial.print("Run Average Cell "); Serial.print(j + 1); Serial.print(": "); Serial.println(runAvgRes[i]);
+      for (int i = 0; i < runAvgCnt; i++) {
+        runAvgRes[j] += runAvg[j][i];
       }
+      runAvgRes[j] /= runAvgCnt;
+
+
+      Serial.print("Run Average Cell "); Serial.print(j + 1); Serial.print(": "); Serial.println(runAvgRes[j]+scale6s[pinCnt-j-1],4);
     }
   }
-
+  if (runAvgIdx > runAvgCnt) {
+    runAvgIdx = 0;
+  }
 }
 
 
