@@ -181,7 +181,7 @@ void blinkLED(void) {
   digitalWrite(LED, LOW);
 }
 
-// =======================================Baterry Measurement=========================================
+// =========================================Baterry Measurement=========================================
 float measureBattery() {
   float measuredvbat = analogRead(VBATPIN);
   measuredvbat *= 2;    // we divided by 2, so multiply back
