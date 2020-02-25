@@ -31,9 +31,9 @@ volatile byte EmergencyState = true;
 volatile byte StateChange = true; /* Set to true so the display is updated the first go around*/
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Relay Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#define PIN_MOTOR_RELAY     18
+#define PIN_MOTOR_RELAY     20
 #define PIN_RED_LIGHT       19
-#define PIN_BLUE_LIGHT     20
+#define PIN_BLUE_LIGHT     18
 #define PIN_AMBER_LIGHT      21
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Switch Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,7 +56,7 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(PIN_EMERGENCY_SWITCH), ISR_EmergencyStateChange, CHANGE);
 
   digitalWrite(PIN_MOTOR_RELAY, HIGH);
-  digitalWrite(PIN_RED_LIGHT, HIGH);
+  digitalWrite(PIN_RED_LIGHT, LOW);
   digitalWrite(PIN_BLUE_LIGHT, HIGH);
   digitalWrite(PIN_AMBER_LIGHT, HIGH);
 
@@ -115,12 +115,16 @@ void stateHandler() {
   if (EmergencyState == true) {
       digitalWrite(LED, HIGH);
       digitalWrite(PIN_MOTOR_RELAY, HIGH);
-      digitalWrite(PIN_RED_LIGHT, LOW);
+      digitalWrite(PIN_RED_LIGHT, HIGH);
+      digitalWrite(PIN_BLUE_LIGHT, HIGH);
+      digitalWrite(PIN_AMBER_LIGHT, HIGH);
   }
   else {
       digitalWrite(LED, LOW);
       digitalWrite(PIN_MOTOR_RELAY, LOW);
-      digitalWrite(PIN_RED_LIGHT, HIGH);
+      digitalWrite(PIN_RED_LIGHT, LOW);
+      digitalWrite(PIN_BLUE_LIGHT, LOW);
+      digitalWrite(PIN_AMBER_LIGHT, LOW);
   }
 
 }
@@ -150,8 +154,9 @@ void radioAvailableExecute() {
       EmergencyState_RF = true;
     }
 
-    Serial.print("Got: "); Serial.println((char*)buf);
+    //Serial.print("Got: "); Serial.println((char*)buf);
     Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
+    /*
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~Detect Low Battery~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     float batPercent = (measureBattery()-EMPT_V) / (CHRG_V-EMPT_V);
     if (batPercent > 1) batPercent = 1;
@@ -163,9 +168,10 @@ void radioAvailableExecute() {
       rf95.send(buf, sizeof(buf));
       rf95.waitPacketSent();
     }
-    //rf95.send(buf, sizeof(buf));
-    //rf95.waitPacketSent();
-    Serial.println("Sent a reply");
+    */
+    rf95.send(buf, sizeof(buf));
+    rf95.waitPacketSent();
+    //Serial.println("Sent a reply");
   }
   else { /* if receive fails */
     missCnt++;
