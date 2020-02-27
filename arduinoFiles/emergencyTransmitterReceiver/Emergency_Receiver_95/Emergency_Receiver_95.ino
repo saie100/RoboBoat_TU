@@ -13,31 +13,55 @@
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-// Blinky on receipt
-#define LED 13
-
 #define SIZE_radiopacket 30
+
+  /* The duration of time that the radio will wait to receive a packet */
+#define RX_TIMEOUT_MS     1000
+
+  /* The number of consequitive dropped packets that signify a disconnect event */
+#define RF_DROP_PACKET_DISCONNECT   3 
 
 volatile unsigned long missCnt = 0;
 
+  /* Message that indicates a non-emergency state sent by the transmitter */
 char okMsg[] = "TempleBoatNormal   ";
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ E-Switch Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#define PIN_EMERGENCY_SWITCH 1 /* The pin that the emergency switch is connected to */
+  /* Holds the current status of the emergency state as determined by the remote kill-switch */
 volatile byte EmergencyState_RF = true;
-volatile byte EmergencyState_SW = true;
-volatile byte EmergencyState = true;
 
-volatile byte StateChange = true; /* Set to true so the display is updated the first go around*/
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ E-Switch Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /* This pin is the pin that the physical emergency switches are connected to */
+#define PIN_EMERGENCY_SWITCH  1 
+    /* if HIGH -> Emergency State
+       if LOW -> Normal State (Manual or Autonomous)  */
+
+  /* Holds the current status of the emergency state as determined by the onboard kill-switches */
+volatile byte EmergencyState_SW = true; 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Relay Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#define PIN_MOTOR_RELAY     20
-#define PIN_RED_LIGHT       19
-#define PIN_BLUE_LIGHT     18
-#define PIN_AMBER_LIGHT      21
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Switch Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#define PIN_EMERGENCY_SWITCH 1
+  /* Calculates the net emergency state given radio and button state */
+#define EMERGENCY_STATE   EmergencyState_SW || EmergencyState_RF
+//volatile byte EmergencyState = true;
+
+  /* These are the pins that the relay control signals are connected to */
+#define PIN_MOTOR_RELAY       18
+#define PIN_AMBER_LIGHT       19
+#define PIN_RED_LIGHT         20
+#define PIN_BLUE_LIGHT        21
+
+  /* These are the values to turn ON the corresponding relay devices */
+#define ON_MOTOR              LOW
+#define ON_RED                HIGH
+#define ON_BLUE               LOW
+#define ON_AMBER              LOW
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ State Select Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /* This is the pin that is connected to the Raspberry Pi 4 that determines indicated if we are in the 
+     manual control or autonomous control state so the lights can be selected accordingly */
+#define PIN_CONTROL_SELECT    13
+    /* if HIGH -> Manual Control (AMBER)
+       if LOW -> Automous Control (BLUE)  */
 
 // ======================================Battery Monitor Setup=====================================================
 #define VBATPIN              A9
@@ -46,28 +70,34 @@ volatile byte StateChange = true; /* Set to true so the display is updated the f
 
 void setup()
 {
-  pinMode(PIN_MOTOR_RELAY, OUTPUT);
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Digital I/O Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // configure the pin that congrols the main motor relays to output 
+  pinMode(PIN_MOTOR_RELAY, OUTPUT); 
+
+  // Configure the pin that controls the LEDs to output
   pinMode(PIN_RED_LIGHT, OUTPUT);
   pinMode(PIN_BLUE_LIGHT, OUTPUT);
   pinMode(PIN_AMBER_LIGHT, OUTPUT);
 
-  pinMode(PIN_EMERGENCY_SWITCH, INPUT);
-  EmergencyState_SW = digitalRead(PIN_EMERGENCY_SWITCH);
-  attachInterrupt(digitalPinToInterrupt(PIN_EMERGENCY_SWITCH), ISR_EmergencyStateChange, CHANGE);
+  // Configure the pin that controls the manual/autonomous select to input
+  pinMode(PIN_CONTROL_SELECT, INPUT_PULLUP); // Use the internal pullup resistor
 
-  digitalWrite(PIN_MOTOR_RELAY, HIGH);
-  digitalWrite(PIN_RED_LIGHT, LOW);
-  digitalWrite(PIN_BLUE_LIGHT, HIGH);
-  digitalWrite(PIN_AMBER_LIGHT, HIGH);
+  // Configure the pin that will be connected to the onboard kill-switches to be input
+  pinMode(PIN_EMERGENCY_SWITCH, INPUT); // Pullup resistor soldered onto the board
+
+  stateHandler(); // Call the state handler to put the system into the emergency state from the start
+
+  // Read the value of the onboard kill-switch pin
+  EmergencyState_SW = digitalRead(PIN_EMERGENCY_SWITCH);
+
+  // Configure the pin-change interrupt handler for the onboard kill-switches 
+  attachInterrupt(digitalPinToInterrupt(PIN_EMERGENCY_SWITCH), ISR_EmergencyStateChange, CHANGE);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Serial Monitor Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Serial.begin(9600);
-  delay(2000);
-  Serial.println("Feather LoRa RX Test!");
+  delay(500);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radio Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  pinMode(LED, OUTPUT);
-
   pinMode(RFM95_RST, OUTPUT);
   /* Manual reset of the radio */
   digitalWrite(RFM95_RST, HIGH); delay(100);
@@ -76,11 +106,9 @@ void setup()
 
   while (!rf95.init()) Serial.println("LoRa radio init failed");
   Serial.println("LoRa radio init OK!");
-  delay(1000);
 
   if (!rf95.setFrequency(RF95_FREQ)) Serial.println("setFrequency failed");
   else Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
-  delay(1000);
 
   rf95.setTxPower(23, false);
 }
@@ -88,45 +116,47 @@ void setup()
 // =====================================================================================================
 void loop()
 {
-  if (rf95.waitAvailableTimeout(1000)) {
-    if (rf95.available()) {
+  if (rf95.waitAvailableTimeout(RX_TIMEOUT_MS)) { // will execute if message is recieved before timeout
+    if (rf95.available()) {   // Will execute if the radio is able to give us the received message
       radioAvailableExecute();
     }
-    else { /* if radio not available */
-      missCnt++;
+    else {    // Will execute if the radio is not available
+      missCnt++;    // Increment the miss count to track the failed-recieves
       Serial.println("Radio not available");
     }
   }
-  else { /* if radio times-out */
-    missCnt++;
+  else {    // Will execute if the radio times-out
+    missCnt++;    // Increment the miss count to track the failed-recieves
     Serial.print("Radio timeout");
   }
 
-  if (missCnt > 2) { /* If three packets are missed in a row, we are now in the emergency state */
+  if (missCnt >= RF_DROP_PACKET_DISCONNECT)  // If three packets are missed in a row, we are now in the emergency state
     EmergencyState_RF = true;
-  }
   
-  EmergencyState = EmergencyState_SW || EmergencyState_RF;
-  stateHandler();
+  stateHandler();   // Call the state handler to update the lights and motor relays
 }
 
 // ====================================================================================================
 void stateHandler() {
-  if (EmergencyState == true) {
-      digitalWrite(LED, HIGH);
-      digitalWrite(PIN_MOTOR_RELAY, HIGH);
-      digitalWrite(PIN_RED_LIGHT, HIGH);
-      digitalWrite(PIN_BLUE_LIGHT, HIGH);
-      digitalWrite(PIN_AMBER_LIGHT, HIGH);
+  if (EMERGENCY_STATE) {    // Will be executed if we are in emergency tate
+    digitalWrite(PIN_MOTOR_RELAY, !ON_MOTOR);
+    digitalWrite(PIN_RED_LIGHT, ON_RED);
+    digitalWrite(PIN_BLUE_LIGHT, !ON_BLUE);
+    digitalWrite(PIN_AMBER_LIGHT, !ON_AMBER);
   }
-  else {
-      digitalWrite(LED, LOW);
-      digitalWrite(PIN_MOTOR_RELAY, LOW);
-      digitalWrite(PIN_RED_LIGHT, LOW);
-      digitalWrite(PIN_BLUE_LIGHT, LOW);
-      digitalWrite(PIN_AMBER_LIGHT, LOW);
+  else {    // Will be executed if we are NOT in the emergency state
+    digitalWrite(PIN_MOTOR_RELAY, ON_MOTOR);
+    digitalWrite(PIN_RED_LIGHT, !ON_RED);
+    
+    if (digitalRead(PIN_CONTROL_SELECT) == HIGH) {    // If in manual control mode
+      digitalWrite(PIN_BLUE_LIGHT, !ON_BLUE);
+      digitalWrite(PIN_AMBER_LIGHT, ON_AMBER);
+    }
+    else {    // If in autonomous control mode
+      digitalWrite(PIN_BLUE_LIGHT, ON_BLUE);
+      digitalWrite(PIN_AMBER_LIGHT, !ON_AMBER);
+    }
   }
-
 }
 
 // =====================================================================================================
@@ -134,7 +164,6 @@ void radioAvailableExecute() {
   // Should be a message for us now
   uint8_t buf[SIZE_radiopacket];
   uint8_t len = sizeof(buf);
-
 
   if (rf95.recv(buf, &len)) {
     missCnt = 0; /* Reset the miss count if message received */
@@ -145,46 +174,33 @@ void radioAvailableExecute() {
     for (ii = 0; (okMsg[ii] == (char)buf[ii] && ((char)buf[ii] != '\0')); ii++);
     /* The emergency state is set if the received string does not match the OK string */
     int NormalMessage = (((char)buf[ii] == '\0') && (okMsg[ii] == '\0')); // This is non-zero during normal operation
- 
-    if (NormalMessage) {
-      EmergencyState_RF = false;
-      blinkLED(); /* Blink LED when not in emergency mode to show connection status */
-    }
-    else{
-      EmergencyState_RF = true;
-    }
 
-    //Serial.print("Got: "); Serial.println((char*)buf);
+    if (NormalMessage) 
+      EmergencyState_RF = false; // Set EmergencyState_RF to FALSE if the recived message indicates normal operation
+    else 
+      EmergencyState_RF = true; // Set EmergencyState_RF to TRUE if the recived message indicates emergency operation
+
     Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
     /*
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~Detect Low Battery~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    float batPercent = (measureBattery()-EMPT_V) / (CHRG_V-EMPT_V);
-    if (batPercent > 1) batPercent = 1;
-    if (batPercent < 0.1){
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~Detect Low Battery~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      float batPercent = (measureBattery()-EMPT_V) / (CHRG_V-EMPT_V);
+      if (batPercent > 1) batPercent = 1;
+      if (batPercent < 0.1){
       rf95.send("Rx<10%", sizeof("Rx<10%"));
       rf95.waitPacketSent();
-    }
-    else{
+      }
+      else{
       rf95.send(buf, sizeof(buf));
       rf95.waitPacketSent();
-    }
+      }
     */
-    rf95.send(buf, sizeof(buf));
-    rf95.waitPacketSent();
-    //Serial.println("Sent a reply");
+    rf95.send(buf, sizeof(buf));    // Send a response to the transmitter
+    rf95.waitPacketSent();  // Wait until the packet has been sent before continuing
   }
   else { /* if receive fails */
     missCnt++;
     Serial.println("Receive failed");
   }
-}
-
-void blinkLED(void) {
-  digitalWrite(LED, LOW);
-  for (int ii = 0; ii < 10; ii++) delayMicroseconds(10000);
-  digitalWrite(LED, HIGH);
-  for (int ii = 0; ii < 10; ii++) delayMicroseconds(10000);
-  digitalWrite(LED, LOW);
 }
 
 // =========================================Baterry Measurement=========================================
@@ -197,10 +213,10 @@ float measureBattery() {
 }
 
 //==================On-Boat Button=============================================
-void ISR_EmergencyStateChange(void){
-  if(EmergencyState_SW != digitalRead(PIN_EMERGENCY_SWITCH)){
-    delayMicroseconds(50000);
-    if(EmergencyState_SW != digitalRead(PIN_EMERGENCY_SWITCH)){
+void ISR_EmergencyStateChange(void) {
+  if (EmergencyState_SW != digitalRead(PIN_EMERGENCY_SWITCH)) {
+    delayMicroseconds(10000);
+    if (EmergencyState_SW != digitalRead(PIN_EMERGENCY_SWITCH)) {
       EmergencyState_SW = !EmergencyState_SW;
     }
   }

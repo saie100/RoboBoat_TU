@@ -42,9 +42,6 @@ int16_t successMsgs = 0, failMsgs = 0;
 volatile unsigned long missCnt = 0; /* Counts the number of conseuctive misses */
 volatile unsigned long discCnt = 0;
 
-int     RxLowBat = 0;
-char    RxLowBat_MSG[] = "Rx<10%";
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Battery Monitor Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #define VBATPIN A9
 #define CHRG_V 4.2
@@ -121,7 +118,7 @@ void loop() {
   }
   
   updateDisplay(); /* Update the output on the display */
-  for (int ii = 0; ii < 5; ii++) {
+  for (volatile int ii = 0; ii < 5; ii++) {
     delayMicroseconds(10000);
   }
 }
@@ -147,15 +144,11 @@ void radio_Update() {
   if (digitalRead(PIN_EMERGENCY_SWITCH) == HIGH) radio_TransmitPacket("TempleBoatEmergency");
   else radio_TransmitPacket("TempleBoatNormal   ");
 
-  if (rf95.waitAvailableTimeout(2000)) {
+  if (rf95.waitAvailableTimeout(1000)) {
     if (rf95.recv(buf, &len)) { /* Should be a reply message for us now */
       rssi = rf95.lastRssi();
       successMsgs++;
       missCnt = 0;
-      /*Check if Receiver is low power (<10%)*/
-      int ii;
-      for (ii = 0; (RxLowBat_MSG[ii] == (char)buf[ii] && ((char)buf[ii] != '%')); ii++);
-      RxLowBat = (((char)buf[ii] == '%') && (RxLowBat_MSG[ii] == '%'));
       
       Serial.print("Got reply: "); Serial.println((char*)buf);
       Serial.print("RSSI: "); Serial.println(rssi, DEC);
@@ -201,17 +194,13 @@ void updateDisplay() {
   display.setCursor(100, 0); display.print((int)(batPercent * 100)); display.println("%");
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update the Radio information on the Display ~~~~~~~~~~~~~~~~~~~~~~~~
-  if (rssi < 1) {
+  
+  if(successMsgs > 0 && missCnt <= 2){
     display.setCursor(0, 0);
     display.print("RSSI: "); display.println(rssi);
-  }
-  if(missCnt <= 2){
     display.setCursor(0, 8);
     display.setTextSize(2);
-    if(RxLowBat == 1){
-      display.print(RxLowBat_MSG);
-    }
-    else  display.print("Connected");
+    display.print("Connected");
   }
   else if (rssi == 1 && missCnt > 2){ /* Ensure that we've missed at least three packets before displaying */
     display.setCursor(0, 8);
