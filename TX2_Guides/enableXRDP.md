@@ -15,8 +15,8 @@ sudo adduser xrdp ssl-cert
 ```
 
 3. Configure XDRP to use the xfce4 desktop environment we installed in Step 1.
-  * Add `exec startxfce4` to the end of the `/etc/xrdp/xrdp.ini` file.
-  * 'echo xfce4-session > ~/.xsession'
+   * Add `exec startxfce4` to the end of the `/etc/xrdp/xrdp.ini` file.
+   * `echo xfce4-session > ~/.xsession`
 
 4. Restart XRDP
 ```
