@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ChangeoverSwitch
+D 3 rotary switches with 3 positions
+K rotary switch
+$ENDCMP
+#
+#End Doc Library

@@ -1,5 +1,5 @@
 (sym_lib_table
-  (lib (name RoboBoat_Arduino)(type Legacy)(uri /Users/byron/RoboBoat_TU/KiCad/Libraries/Custom/RoboBoat_Arduino.lib)(options "")(descr ""))
+  (lib (name RoboBoat_Arduino)(type Legacy)(uri ${KIPRJMOD}/CustomLibraries/RoboBoat_Arduino.lib)(options "")(descr ""))
   (lib (name Schematic-rescue)(type Legacy)(uri ${KIPRJMOD}/Schematic-rescue.lib)(options "")(descr "")(disabled))
   (lib (name BatteryMonitor-rescue)(type Legacy)(uri ${KIPRJMOD}/BatteryMonitor-rescue.lib)(options "")(descr "")(disabled))
 )
