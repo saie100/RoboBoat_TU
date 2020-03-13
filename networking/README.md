@@ -15,3 +15,8 @@
 | roboboat-Pi4         | WiFi          | `192.168.1.102` |
 | Roboboat-TX2         | Ethernet      | `192.168.1.103` |
 | Roboboat-TX2         | Wifi          | `192.168.1.104` |
+
+
+
+## Hardware Documentation ##
+* TP-Link AC1750: [User Guide] (../RouterManuals/GL-AR750_UserGuide.pdf)
