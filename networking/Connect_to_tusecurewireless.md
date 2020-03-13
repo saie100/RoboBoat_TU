@@ -1,4 +1,5 @@
 # How to connect the boat's network to the internet #
+---
 
 1. Navigate to the admin portal (located at [192.168.0.1](http://192.168.0.1) if the router was configured using the backup provided in the [RouterBackups](RouterBackups/) folder.
 
