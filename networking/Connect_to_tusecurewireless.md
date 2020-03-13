@@ -2,6 +2,8 @@
 
 1. Navigate to the admin portal (located at [192.168.0.1](http://192.168.0.1) if the router was configured using the backup provided in the [RouterBackups](RouterBackups/) folder.
 
+---
+
 2. Click the "**Scan**" under the "**Repeater** section of the "**INTERNET**" page as can be seen below:
 
 ![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/master/networking/NetworkingImages/ConnectToTempleNetwork_1.png)
