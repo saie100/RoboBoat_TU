@@ -2,7 +2,7 @@
 
 
 
-![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/networking/NetworkingImages/ConnectToTempleNetwork_1.png)
+![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/master/networking/NetworkingImages/ConnectToTempleNetwork_1.png)
 
 ![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/blob/master/networking/NetworkingImages/ConnectToTempleNetwork_2.png)
 
