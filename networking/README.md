@@ -21,5 +21,5 @@
 ## Hardware Documentation ##
 * TP-Link AC1750 (Archer A7): | [User Guide](RouterManuals/AC1750A7_UserGuide.pdf) | [Quick Installation Guide](RouterManuals/AC1750A7_QuickInstallationGuide.pdf) | [Datasheet](RouterManuals/AC1750A7_DataSheet.pdf) |
 * TP-Link AC1200 (Archer A5): | [User Guide](RouterManuals/AC1200A5_UserGuide.pdf) | [Quick Installation Guide](RouterManuals/AC1200A5_QuickInstallationGuide.pdf) |
-* TP-Link AC1200 (Archer A5): | [Docs Website](https://docs.gl-inet.com/en/3/setup/travel_ac_router/first-time_setup/) | [Docs Website - PDF Version](RouterManuals/GL-AR750_UserGuide.pdf) | 
+* GL.iNet GL-AR750: | [Docs Website](https://docs.gl-inet.com/en/3/setup/travel_ac_router/first-time_setup/) | [Docs Website - PDF Version](RouterManuals/GL-AR750_UserGuide.pdf) | 
 
