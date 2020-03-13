@@ -18,7 +18,7 @@
 
 # Network Maintenance & Additional Information #
 ## Restoring the Network ##
-If the network is accidentally misconfigured, use the router's provided [backup files](/RouterBackups) to restore functionality. 
+If the network is accidentally misconfigured, use the router's provided [backup files](RouterBackups/) to restore functionality. 
 
 ## Connecting to the Internet ##
 The GL.iNet GL-AR750 connects all network devices to the internet. Though its management portal, a connection to the `tusecurewireless` network can be established. Follow the instructions in the [Connect_to_tusecurewireless.md](Connect_to_tusecurewireless.md) file to establish an internet connection.
