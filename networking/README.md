@@ -19,4 +19,4 @@
 
 
 ## Hardware Documentation ##
-* TP-Link AC1750: [User Guide](RouterManuals/GL-AR750_UserGuide.pdf)
+* TP-Link AC1750: | [User Guide](RouterManuals/AC1750A7_UserGuide.pdf) | [User Guide](RouterManuals/AC1750A7_UserGuide.pdf) |
