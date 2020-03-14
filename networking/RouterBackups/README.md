@@ -15,6 +15,7 @@
 ## TP-Link AC1200 ##
 
 ***Identical steps to those required for the TP-Link AC1750. Follow the steps outlined above to backup and restore this router's configuration.***
+
 This router's management portal is located at at [192.168.1.2](http://192.168.1.2) if the router was configured using the files in this directory, or [192.168.0.1](http://192.168.0.1) if the router has since been reset.
 
 ---
