@@ -1,7 +1,7 @@
 # How to restore router configuration #
 ---
 ## TP-Link AC1750 ##
-1. Select the "**Advanced**" tab at the top of the router management portal (located at [192.168.1.1](http://192.168.1.1) if the router was configured using the files in this directory.
+1. Select the "**Advanced**" tab at the top of the router management portal (located at [192.168.1.1](http://192.168.1.1) if the router was configured using the files in this directory, or [192.168.0.1](http://192.168.0.1) if the router has since been reset).
 
 2. Select the "**System Tools**" option from page categories listed on the left of the management portal. 
 
@@ -14,12 +14,13 @@
 ---
 ## TP-Link AC1200 ##
 
-***Identical steps to those required for the TP-Link AC1750. Follow the steps outlined about to backup and restore this router's configuration.***
+***Identical steps to those required for the TP-Link AC1750. Follow the steps outlined above to backup and restore this router's configuration.***
+This router's management portal is located at at [192.168.1.2](http://192.168.1.2) if the router was configured using the files in this directory, or [192.168.0.1](http://192.168.0.1) if the router has since been reset.
 
 ---
 ## GL.iNet GL-AR750 ##
 
-1. Select the "**MORE SETTINGS**" drop-down menu on the left side of the router management portal (located at [192.168.0.1](http://192.168.0.1) if the router was configured using the files in this directory.
+1. Select the "**MORE SETTINGS**" drop-down menu on the left side of the router management portal (located at [192.168.0.1](http://192.168.0.1) if the router was configured using the files in this directory, or [192.168.8.1](http://192.168.8.1) if the router has since been reset).
 
 2. Select "**Advanced**" from the drop-down meny.
 
