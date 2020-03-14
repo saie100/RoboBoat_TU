@@ -14,6 +14,8 @@
 ---
 ## TP-Link AC1200 ##
 
+***Identical steps to those required for the TP-Link AC1750. Follow the steps outlined about to backup and restore this router's configuration.***
+
 ---
 ## GL.iNet GL-AR750 ##
 
