@@ -8,7 +8,7 @@
 ---
 ## GL.iNet GL-AR750 ##
 
-1. Select the "**MORE SETTINGS**" drop-down menu on the left side of the router management portal (located at [192.168.0.1](http://192.168.0.1) if the router was configured using the files in the [RouterBackups](RouterBackups/) folder.
+1. Select the "**MORE SETTINGS**" drop-down menu on the left side of the router management portal (located at [192.168.0.1](http://192.168.0.1) if the router was configured using the files in the [RouterBackups](/RouterBackups/) folder.
 
 2. Select "**Advanced**" from the drop-down meny.
 
