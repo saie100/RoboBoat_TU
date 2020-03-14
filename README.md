@@ -3,7 +3,11 @@
 ## Table of Contents ##
 
 1. ### [Circuit Schematics](/KiCad_Schematics/) ###
-    1. 
+    1. [Schematic PDF Files & Images](KiCad_Schematics/SchematicExports/)
+    2. [Battery Monitoring System (KiCad Project)](KiCad_Schematics/BatteryMonitor)
+    3. [Emergency Transmitter/Receiver & Status Indicator Light (KiCad Project)](KiCad_Schematics/EmergencySystem)
+    4. [Power Distribution & Protection (KiCad Project)](KiCad_Schematics/PowerDistribution)
+    5. [Teensy3.2 for Motor Control, GPS, and IMU (KiCad Project)](KiCad_Schematics/TeensySchematic)
 
 2. ### [CAD Designs](/CAD_Files/) ###
     1. 
