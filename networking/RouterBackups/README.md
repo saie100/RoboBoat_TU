@@ -1,4 +1,4 @@
-# How to restore router configuration #
+# How to Backup & Restore the Boat's Network Equipment #
 ---
 ## TP-Link AC1750 ##
 1. Select the "**Advanced**" tab at the top of the router management portal (located at [192.168.1.1](http://192.168.1.1) if the router was configured using the files in this directory, or [192.168.0.1](http://192.168.0.1) if the router has since been reset).
