@@ -2,7 +2,13 @@
 
 ## Table of Contents ##
 
-1. ### [Networking](/networking/) ###
+1. ### [Circuit Schematics](/KiCad_Schematics/) ###
+    1. 
+
+2. ### [CAD Designs](/CAD_Files/) ###
+    1. 
+
+3. ### [Networking](/networking/) ###
     1. [IP Addresses for the Networking Devices](networking#network-hardware-ips)
     2. [Reserved Device IPs](networking/README.md#reserved-device-ips)
     3. [Backup & Restore the Network Equipment](networking/RouterBackups/)
