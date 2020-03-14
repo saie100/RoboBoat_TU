@@ -17,5 +17,5 @@
 4. Hover over the "**System**" drop-down menu and click the "**Backup / Flash Firmware**" option from the list. 
 
 5. Here you can either (i) backup the current configuration, or (ii) restore to a previously backed-up configuration. 
-  1. Under the "**Backup**" section of the page, click the "**Generate archive**" button. A new backup will be made that you are able to save on your local machine. 
-  2. Under the "**Restore**" section of the page, click the "**Choose file**" and upload the archive file that you wish to restore the router to. Next, click the "**Upload archive...**" button to complete the router restore process. 
+    1. Under the "**Backup**" section of the page, click the "**Generate archive**" button. A new backup will be made that you are able to save on your local machine. 
+    2. Under the "**Restore**" section of the page, click the "**Choose file**" and upload the archive file that you wish to restore the router to. Next, click the "**Upload archive...**" button to complete the router restore process. 
