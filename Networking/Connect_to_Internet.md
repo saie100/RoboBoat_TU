@@ -13,13 +13,13 @@
 
 3. Wait for the network scan to complete:
 
-![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/master/Networking/NetworkingImages/ConnectToTempleNetwork_2.png)
+![alt text](Networking/NetworkingImages/ConnectToTempleNetwork_2.png)
 
 ---
 
 4. Select the "**tusecurewireless**" network or any other network that you wish to connect to and enter your credentials or the network password.
 
-![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/master/Networking/NetworkingImages/ConnectToTempleNetwork_3.png)
+![alt text](Networking/NetworkingImages/ConnectToTempleNetwork_3.png)
 
 ---
 
