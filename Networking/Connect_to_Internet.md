@@ -7,7 +7,7 @@
 
 2. Click the "**Scan**" under the "**Repeater** section of the "**INTERNET**" page as can be seen below:
 
-![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/master/networking/NetworkingImages/ConnectToTempleNetwork_1.png)
+![alt text](https://raw.githubusercontent.com/byrongaspard/RoboBoat_TU/master/Networking/NetworkingImages/ConnectToTempleNetwork_1.png)
 
 ---
 
