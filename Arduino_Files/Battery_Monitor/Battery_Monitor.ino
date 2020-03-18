@@ -1,5 +1,4 @@
-float convert = 5.0 / 1023; // converts raw data to voltage
-int batteryHealth = 1; // 1-healthy, 2-moderate, 3-low
+float convert = 5.0 / 1024; // converts raw data to voltage
 const float constant[6] = { // values for scaling voltage
   1.0,
   (470.0 + 560.0) / 470.0,
@@ -10,10 +9,10 @@ const float constant[6] = { // values for scaling voltage
 };
 
 
-const float scale6s[] = {0.09, 0.02, 0.26, -0.11, 0.18, 0.26};
-const float scale4s[] = {0.08, 0.02, 0.22, -0.08};
-const float scale3s[] = {0.00, 0.0, 0.0};
-const float scale32s[] = {0.08, 0.0, 0.27};
+const float scale6s[] = {0.09, 0.06, 0.25, -0.11, 0.21, 0.25};
+const float scale4s[] = {0.05, 0.01, 0.18, -0.01};
+const float scale3s[] = {0.09, 0.0, 0.35};
+const float scale32s[] = {0.09, -0.01, 0.29};
 int bat0Pins[] = {A5, A4, A3, A2, A1, A0};
 int bat0CellCnt = 6;
 int bat1Pins[] = {A6, A7, A8, A9};
@@ -27,18 +26,26 @@ float runAvg[6][runAvgCnt + 1];
 float runAvgRes[6];
 int runAvgIdx = 0;
 void setup() {
+
+ 
   Serial.begin(9600);
+    setPULUP(bat0Pins, bat0CellCnt);
+    setPULUP(bat1Pins, bat1CellCnt);
+    setPULUP(bat2Pins, bat2CellCnt);
+    setPULUP(bat3Pins, bat3CellCnt);
 }
 
 
 void loop() {
-  double measuredVoltage[bat0CellCnt];
+  double measuredVoltage[6];
   Serial.println("6 cell battery");
   measure_cell(bat0Pins, bat0CellCnt, scale6s, measuredVoltage);
 
   measuredVoltage[bat1CellCnt];
   Serial.println("4 cell battery");
   measure_cell(bat1Pins, bat1CellCnt, scale4s, measuredVoltage);
+
+  delay(2000);
 
   measuredVoltage[bat2CellCnt];
   Serial.println("3 cell battery");
@@ -48,8 +55,10 @@ void loop() {
   Serial.println("3(2) cell battery");
   measure_cell(bat3Pins, bat3CellCnt, scale32s, measuredVoltage);
 
+  delay(2000);
+
   //Serial.println(volts);
-  delay(10000);
+ // delay(5000);
   Serial.println();
 }
 
@@ -58,28 +67,43 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
                   const float scale[],
                   double measured[] ) { // returning measured analog values through an array
 
-  runAvgIdx = 0;
-  for (int num = 0; num < runAvgCnt; num++) {
-    float currentV = 0;
-    float prevV = 0;
-    for (int i = 0; i < pinCnt; i++) {
-      currentV = analogRead(pins[i]) * convert * constant[i]; // stores voltage of a cell
-      currentV = currentV - prevV; // isolates cell voltage
-      //Serial.println(currentV + scale[i], 4);
-      prevV += currentV; // current is now stored in previous
-      runAvg[i][runAvgIdx] = currentV;
-      delay(1);
-    }
-    runAvgIdx++;
+  disablePULUP(pins, pinCnt);
+
+  float avg[] = {0, 0, 0, 0, 0, 0};
+  for(int j = 0; j < runAvgCnt; j++){
+      for(int i = 0; i < pinCnt; i++){
+        avg[i] += analogRead(pins[i]); // stores voltage of a cell
+      }            
+      delay(10);
   }
-  for (int j = 0; j < pinCnt; j++) {
-    runAvgRes[j] = 0;
-    for (int i = 0; i < runAvgCnt; i++) {
-      runAvgRes[j] += runAvg[j][i];
-    }
-    runAvgRes[j] /= runAvgCnt;
-    Serial.print("Run Average Cell "); Serial.print(j + 1); Serial.print(": ");
-    Serial.println(runAvgRes[j] + scale[j], 2);
+  //for(int i = 0; i < pinCnt; i++) Serial.println(avg[i]);
+
+  for(int i = 0; i < pinCnt; i++) measured[i] = (avg[i]/runAvgCnt) * convert * constant[i];
+
+  for(int i = pinCnt - 1; i > 0; i--){
+    measured[i] = measured[i] - measured[i-1];
   }
-  Serial.println();
+
+  for(int i = 0; i < pinCnt; i++){
+    // Serial.print("Run Average Cell "); Serial.print(i + 1); Serial.print(" "); Serial.print(pins[i]); Serial.print(": "); Serial.println(measured[i], 2);
+
+    Serial.print("Run Average Cell "); Serial.print(i + 1); Serial.print(" "); Serial.print(pins[i]); Serial.print(": "); Serial.println(measured[i] + scale[i], 2);
+  }
+
+  setPULUP(pins, pinCnt);
+                   
+}
+
+
+void disablePULUP(const int pins[], int pinCnt){
+  for(int i = 0; i < pinCnt; i++){
+    pinMode(pins[i], INPUT);
+  }
+}
+
+
+void setPULUP(const int pins[], int pinCnt){
+  for(int i = 0; i < pinCnt; i++){
+    pinMode(pins[i], INPUT_PULLUP);
+  }
 }
