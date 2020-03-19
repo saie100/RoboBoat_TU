@@ -1,6 +1,6 @@
 # Power Distribution #
 
-![Hardware_PowerDistribution_ExteriorBack](/Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
+![Hardware_PowerDistribution_ExteriorBack](Images/Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
 ---
 # Test Videos #
 ### Video: Temple RoboBoat 2020 - Pool Test 01a (10-27-2019) ###
