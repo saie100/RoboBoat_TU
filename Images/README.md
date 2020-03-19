@@ -1,6 +1,14 @@
 # Power Distribution #
-
-![test](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
+![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG)
+![](Hardware_PowerDistribution/Hardware_PowerDistribution_Interior.JPG)
+![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorFront.JPG)
+![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
+---
+# Battery Monitor #
+![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_Aassembled.JPG)
+![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_LowerBoard.JPG)
+![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_DisassembledTop.JPG)
+![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_DisassembledBottom.jpg)
 ---
 # Test Videos #
 ### Video: Temple RoboBoat 2020 - Pool Test 01a (10-27-2019) ###
