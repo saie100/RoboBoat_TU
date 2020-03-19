@@ -4,6 +4,10 @@
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorFront.JPG)
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
 ---
+# Motor Control, GPS, and IMU #
+![](Hardware_TeensyBoard/Hardware_TeensyBoard_Assembled.JPG)
+![](Hardware_TeensyBoard/Hardware_TeensyBoard_Disassembled.JPG)
+---
 # Battery Monitor #
 ![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_Aassembled.JPG)
 ![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_LowerBoard.JPG)
