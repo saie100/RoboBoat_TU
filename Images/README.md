@@ -1,5 +1,5 @@
 # Power Distribution #
-![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG)
+![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG | width=100)
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_Interior.JPG)
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorFront.JPG)
 ![2](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
