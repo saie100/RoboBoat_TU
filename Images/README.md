@@ -17,7 +17,7 @@
 # Emergency Transmitter #
 ![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorFront.jpg)
 ![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_Interior.JPG)
-![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorTop.JPG)
+![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorTop.jpg)
 ---
 # Emergency Receiver #
 ![](Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Front.JPG)
