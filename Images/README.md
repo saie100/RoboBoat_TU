@@ -9,19 +9,33 @@
 --->
 ---
 # Motor Control, GPS, and IMU #
+<img src="Hardware_TeensyBoard/Hardware_TeensyBoard_Assembled.JPG" width="430"> <img src="Hardware_TeensyBoard/Hardware_TeensyBoard_Disassembled.JPG" width="430">
+<!--
 ![](Hardware_TeensyBoard/Hardware_TeensyBoard_Assembled.JPG)
 ![](Hardware_TeensyBoard/Hardware_TeensyBoard_Disassembled.JPG)
+--->
 ---
 # Battery Monitor #
+<img src="Hardware_BatteryMonitor/Hardware_BatteryMonitor_Aassembled.JPG" width="430"> <img src="Hardware_BatteryMonitor/Hardware_BatteryMonitor_LowerBoard.JPG" width="430">
+<img src="Hardware_BatteryMonitor/Hardware_BatteryMonitor_DisassembledTop.JPG" width="430"> <img src="Hardware_BatteryMonitor/Hardware_BatteryMonitor_DisassembledBottom.jpg" width="430">
+
+<!--
 ![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_Aassembled.JPG)
 ![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_LowerBoard.JPG)
 ![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_DisassembledTop.JPG)
 ![](Hardware_BatteryMonitor/Hardware_BatteryMonitor_DisassembledBottom.jpg)
+--->
 ---
 # Emergency Transmitter #
+<img src="Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorFront.jpg" width="430"> <img src="Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorTop.jpg" width="430">
+<img src="Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_Interior.JPG" width="430">
+
+
+<!--
 ![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorFront.jpg)
 ![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_Interior.JPG)
 ![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorTop.jpg)
+--->
 ---
 # Emergency Receiver #
 ![](Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Front.JPG)
