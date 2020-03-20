@@ -1,12 +1,12 @@
 # Power Distribution #
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG)
 
-<img src="Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG" width="430"> <img src="Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG" width="430">
+<img src="Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG" width="430"> <img src="Hardware_PowerDistribution/Hardware_PowerDistribution_Interior.JPG" width="430">
 
 
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_Interior.JPG)
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorFront.JPG)
-![2](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
+![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorBack.JPG)
 ---
 # Motor Control, GPS, and IMU #
 ![](Hardware_TeensyBoard/Hardware_TeensyBoard_Assembled.JPG)
