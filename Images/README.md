@@ -29,8 +29,6 @@
 # Emergency Transmitter #
 <img src="Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorFront.jpg" width="430"> <img src="Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorTop.jpg" width="430">
 <img src="Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_Interior.JPG" width="430">
-
-
 <!--
 ![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_ExteriorFront.jpg)
 ![](Hardware_EmergencyTransmitter/Hardware_EmergencyTransmitter_Interior.JPG)
@@ -38,9 +36,13 @@
 --->
 ---
 # Emergency Receiver #
+<img src="Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Front.JPG" width="430"> <img src="Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Interior.JPG" width="430">
+<img src="Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Back.JPG" width="430">
+<!--
 ![](Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Front.JPG)
 ![](Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Interior.JPG)
 ![](Hardware_EmergencyReceiver/Hardware_EmergencyReceiver_Back.JPG)
+--->
 ---
 # Test Videos #
 ### Video: Temple RoboBoat 2020 - Pool Test 01a (10-27-2019) ###
