@@ -1,7 +1,7 @@
 # Power Distribution #
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG)
 
-<img src="Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG" width="400"> <img src="Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG" width="400">
+<img src="Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG" width="500"> <img src="Hardware_PowerDistribution/Hardware_PowerDistribution_ExteriorTop.JPG" width="500">
 
 
 ![](Hardware_PowerDistribution/Hardware_PowerDistribution_Interior.JPG)
