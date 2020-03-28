@@ -1,4 +1,5 @@
 # ignores all files created by OSx's automatic indexing
 .DS_Store
+# ignores microsoft database files *.db
 *.db
 ..
