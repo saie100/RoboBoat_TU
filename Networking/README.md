@@ -4,7 +4,7 @@
 | Device             | Location      | Function                                          | IP            |
 | :----------------- |:-------------:| :------------------------------------------------ | :------------:|
 | [TP-Link AC1750](https://www.tp-link.com/us/home-networking/wifi-router/archer-a7/) | On-board | Main router for the boat | `10.19.122.1`|
-| [GL.iNet GL-AR750](https://www.gl-inet.com/products/gl-ar750/) | On-board | Provide internet connection to `tusecurewireless` or another WiFi network | `192.168.0.1` |
+| [GL.iNet GL-AR750](https://www.gl-inet.com/products/gl-ar750/) | On-board | Provide internet connection to `tusecurewireless` or another WiFi network | `192.168.8.1` |
 | [TP-Link AC1200](https://www.tp-link.com/us/home-networking/wifi-router/archer-a5/) | Shore-side | Create shore-side wireless bridged network | `192.168.1.2` |
 
 ## Reserved Device IPs ##
