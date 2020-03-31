@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Downloaded from: https://github.com/RobotWebTools/roslibjs/blob/develop/build/roslib.js -->
+  <script type="text/javascript" src="roslib.js"></script>
+  <script type="text/javascript" type="text/javascript">
+    const zeroAxisButton = 8; // The start button on the Logitech Gamepad F310
+    const leftJoystickVert = 1; // The index of the left joystick's vertical axis
+    const rightJoystickVert = 4; // The index of the left joystick's vertical axis
+
+    var ros = new ROSLIB.Ros({
+      // Use the IP Address of the Raspberry Pi or the device hosting the webserver
+      // Port 9090 is the port that rosbridge server uses to interface over the network
+      url: 'ws://10.19.122.101:9090'
+    });
+    ros.on('connection', function() {
+      document.getElementById("rosConnStatus").innerHTML = "Connected";
+    });
+    ros.on('error', function(error) {
+      document.getElementById("rosConnStatus").innerHTML = "Error";
+    });
+    ros.on('close', function() {
+      document.getElementById("rosConnStatus").innerHTML = "Closed";
+    });
+
+    ard_LeftPWM_listener = new ROSLIB.Topic({
+      ros: ros,
+      name: '/ard_LeftPWM',
+      messageType: 'std_msgs/Float32'
+    });
+
+    ard_RightPWM_listener = new ROSLIB.Topic({
+      ros: ros,
+      name: '/ard_RightPWM',
+      messageType: 'std_msgs/Float32'
+    });
+
+    function move(axVal) {
+      var lScale = new ROSLIB.Message({
+        data: -axVal[leftJoystickVert]
+      });
+      var rScale = new ROSLIB.Message({
+        data: -axVal[rightJoystickVert]
+      });
+      ard_LeftPWM_listener.publish(lScale);
+      ard_RightPWM_listener.publish(rScale)
+    }
+
+    //GAME PAD OUTPUT
+    var axisOffset = [0, 0, 0, 0];
+    var gpPollInt = 100;
+    var gpidx;
+
+    function gamepadHandler(event, connecting) {
+      if (connecting) {
+        var gp = event.gamepad;
+        if (gp.id.localeCompare("Xbox 360 Wired Controller (Vendor: 046d Product: c21d)") == 0) {
+          gpidx = gp.index;
+          console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", gp.index, gp.id, gp.buttons.length, gp.axes.length);
+          zeroAxis();
+          setInterval(updateControl, gpPollInt);
+          document.getElementById("gamepad_ID").innerHTML = gp.id;
+        } else {
+          console.log("Invalid Gamepad");
+          gpidx = -1;
+          clearInterval(gpPollInt);
+        }
+      } else {
+        gpidx = -1;
+        clearInterval(gpPollInt);
+      }
+    }
+
+    function updateControl() {
+
+      var gp = navigator.getGamepads()[gpidx];
+      if (gp != null && gpidx != -1) {
+        if (gp.buttons[zeroAxisButton].pressed == true) {
+          zeroAxis();
+        }
+
+        for (var i = 0; i < gp.axes.length; i++) {
+          //We only care about one gamepad connected, so this will only apply an axis offset
+          //to a single gamepad, not multiple
+          document.getElementById("gpax$i".replace("$i", i)).innerHTML = gp.axes[i] - axisOffset[i];
+        }
+        move(gp.axes);
+      } else {
+        move([0, 0, 0, 0]);
+      }
+
+    }
+
+    function zeroAxis() {
+      var gp = navigator.getGamepads()[gpidx];
+      for (var i = 0; i < gp.axes.length; i++) {
+        axisOffset[i] = gp.axes[i];
+      }
+      console.log("Axis Zeroed");
+    }
+
+
+    const SERVCTL_StartROS = 1;
+
+    function ServerControl(opt) {
+      if (opt == SERVCTL_StartROS) { // Start ROSCore &
+        console.log("You pressed the button! %d", opt);
+      }
+    }
+
+    window.addEventListener("gamepadconnected", function(e) {
+      gamepadHandler(e, true);
+    }, false);
+    window.addEventListener("gamepaddisconnected", function(e) {
+      gamepadHandler(e, false);
+    }, false);
+  </script>
+
+
+
+</head>
+
+<style>
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+
+<body>
+  <h1>Boat Connection Interface NEW TEST</h1>
+  <p>Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
+
+  <p>Axis 0 (LStick-Hori): <span id="gpax0"></span></p>
+  <p>Axis 1 (LStick-Vert): <span id="gpax1"></span></p>
+  <p>Axis 2 (LTrigger) : <span id="gpax2"></span></p>
+  <p>Axis 3 (RStick-Hori): <span id="gpax3"></span></p>
+  <p>Axis 4 (RStick-Vert): <span id="gpax4"></span></p>
+  <p>Axis 5 (RTrigger) : <span id="gpax5"></span></p>
+  <p>Gamepad ID : <span id="gamepad_ID"></span></p>
+
+  <div class="container">
+  <h2>Basic Progress Bar</h2>
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%">
+      <span class="sr-only">70% Complete</span>
+    </div>
+  </div>
+</div>
+
+  <body style="width=" 2560"">
+    <h2>ZED Camera Raw Stream</h2>
+    <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed_node/stereo_raw/image_raw_color">
+  </body>
+
+
+</body>
+
+</html>
