@@ -1,9 +1,18 @@
+#include <ros.h>
+//#include <ArduinoTcpHardware.h>
+//#include <ArduinoHardware.h>
+
+#include <std_msgs/String.h>
+//#include <String.h>
+
 #define PRINT_6S true
 #define PRINT_4S true
 #define PRINT_3SA true
 #define PRINT_3SB true
 
-#define SEQ_DELAY 1000
+#define SEQ_DELAY 100
+
+float measured[6];
 
 float convert = 5.0 / 1024; // converts raw data to voltage
 const float constant[6] = { // values for scaling voltage
@@ -15,7 +24,7 @@ const float constant[6] = { // values for scaling voltage
   (100.0 + 560.0) / 100.0
 };
 
-// Original scale values obtained. These are applied to indivial cell voltages referenced 
+// Original scale values obtained. These are applied to indivial cell voltages referenced
 // to their immediate lower-voltage cell
 /*
   const float scale6s[] = {0.09, 0.06, 0.25, -0.11, 0.21, 0.25};
@@ -26,10 +35,10 @@ const float constant[6] = { // values for scaling voltage
 
 // Zeroed Scale - used for collecting data while testing precision/accuracy of the battery monitor
 /*
-const float scale6s[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
-const float scale4s[] = {0.00, 0.00, 0.00, 0.00};
-const float scale3s[] = {0.00, 0.00, 0.00};
-const float scale32s[] = {0.00, 0.00, 0.00};
+  const float scale6s[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
+  const float scale4s[] = {0.00, 0.00, 0.00, 0.00};
+  const float scale3s[] = {0.00, 0.00, 0.00};
+  const float scale32s[] = {0.00, 0.00, 0.00};
 */
 
 // Obtained from the averge of the diffreences between multimeter and arduino at 6 different voltages
@@ -53,9 +62,27 @@ float runAvgRes[6];
 int runAvgIdx = 0;
 
 
+ros::NodeHandle nh;
+
+std_msgs::String BatteryVoltage;
+
+
+ros::Publisher BatteryVoltage_pub("BatteryVoltage", &BatteryVoltage);
+
+
+const char* Battery_6s_Data;
+char Battery_4s_Data[100] = "";
+char Battery_3sA_Data[100] = "";
+char Battery_3sB_Data[100] = "";
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
+
+
+  nh.initNode();
   
+  nh.advertise(BatteryVoltage_pub);
+
   setPULUP(bat0Pins, bat0CellCnt);
   setPULUP(bat1Pins, bat1CellCnt);
   setPULUP(bat2Pins, bat2CellCnt);
@@ -64,41 +91,62 @@ void setup() {
 
 
 void loop() {
-  double measuredVoltage[6];
+  //double measuredVoltage[6];
+  String message = "";
+  
   if (PRINT_6S) {
     delay(SEQ_DELAY);
-    //double measuredVoltage[6];
-    Serial.println("6 cell battery");
-    measure_cell(bat0Pins, bat0CellCnt, scale6s, measuredVoltage);
+    measure_cell(bat0Pins, bat0CellCnt, scale6s);
+
+    message += "(6s)\t[";
+    for(int i = 0; i < bat0CellCnt; i++) message += String(measured[i], 2) + " ";
+    message += "]\n";
+
+
   }
 
   if (PRINT_4S) {
     delay(SEQ_DELAY);
-    //measuredVoltage[bat1CellCnt];
-    Serial.println("4 cell battery");
-    measure_cell(bat1Pins, bat1CellCnt, scale4s, measuredVoltage);
+    measure_cell(bat1Pins, bat1CellCnt, scale4s);
+    message += "(4s)\t";
+    for(int i = 0; i < bat1CellCnt; i++) message += String(measured[i], 2) + " ";
+    message += "]\n";
+
   }
 
   if (PRINT_3SA) {
+    
     delay(SEQ_DELAY);
     //measuredVoltage[bat2CellCnt];
-    Serial.println("3 cell battery");
-    measure_cell(bat2Pins, bat2CellCnt, scale3s, measuredVoltage);
+    //Serial.println("3 cell battery");
+    measure_cell(bat2Pins, bat2CellCnt, scale3s);
+    message += "(3sA)\t";
+    for(int i = 0; i < bat2CellCnt; i++) message += String(measured[i], 2) + " ";
+    message += "]\n";
+
   }
 
   if (PRINT_3SB) {
     delay(SEQ_DELAY);
     //measuredVoltage[bat3CellCnt];
-    Serial.println("3(2) cell battery");
-    measure_cell(bat3Pins, bat3CellCnt, scale32s, measuredVoltage);
+    //Serial.println("3(2) cell battery");
+    measure_cell(bat3Pins, bat3CellCnt, scale32s);
+    message += "(3sB)\t";
+    for(int i = 0; i < bat3CellCnt; i++) message += String(measured[i], 2) + " ";
+    message += "]\n";
+    
   }
 
+
+    BatteryVoltage.data = message.c_str();
+    BatteryVoltage_pub.publish(&BatteryVoltage);
+    nh.spinOnce();
 }
 
 void measure_cell(const int pins[], // analog pin numbers from lowest voltage to highest voltgage
                   int pinCnt,// number of cells
-                  const float scale[],
-                  double measured[] ) { // returning measured analog values through an array
+                  const float scale[]) {
+
 
   disablePULUP(pins, pinCnt);
 
@@ -112,13 +160,14 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
 
   for (int i = 0; i < pinCnt; i++) measured[i] = ((avg[i] / runAvgCnt) * convert * constant[i] + scale[i]);
 
-  for (int i = pinCnt - 1; i > 0; i--) measured[i] = measured[i] - measured[i-1]; // Calculating individual cell voltages 
-  
-  for (int i = 0; i < pinCnt; i++) {
-    Serial.print("Run Average Cell "); Serial.print(i + 1); Serial.print(" "); Serial.print(pins[i]); Serial.print(": "); Serial.println(measured[i], 2);
-  }
-  Serial.println("\n\n\n");
+  for (int i = pinCnt - 1; i > 0; i--) measured[i] = measured[i] - measured[i - 1]; // Calculating individual cell voltages
 
+  /*
+    for (int i = 0; i < pinCnt; i++) {
+    //Serial.print("Run Average Cell "); Serial.print(i + 1); Serial.print(" "); Serial.print(pins[i]); Serial.print(": "); Serial.println(measured[i], 2);
+    //(*ROS_MeasuredVoltage).data[i] = measured[i];
+    }
+  */
   setPULUP(pins, pinCnt);
 }
 
