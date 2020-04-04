@@ -50,6 +50,11 @@ ros::Publisher IMU_angularVelocity("IMU_angularVelocity", &IMU_angularVelocityMs
 geometry_msgs::Vector3 IMU_linearAccelerationMsg;
 ros::Publisher IMU_linearAcceleration("IMU_linearAcceleration", &IMU_linearAccelerationMsg);
 
+geometry_msgs::Vector3 IMU_absoluteOrientationMsg;
+ros::Publisher IMU_absoluteOrientation("IMU_absoluteOrientation", &IMU_absoluteOrientationMsg);
+
+
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GPS Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 sensor_msgs::NavSatFix navSat_msg;
@@ -83,7 +88,7 @@ void setup() {
   //Set the PWM value to the ESC predetermined STOP duty cycle
   analogWrite(L_ESC, STOP_PWM);
   analogWrite(R_ESC, STOP_PWM);
-  
+
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ IMU Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   while (!bno.begin());   //Wait until the BNO055 has been initialized
 
@@ -101,8 +106,8 @@ void setup() {
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ); // 1 Hz update rate
 
   // Request updates on antenna status, comment out to keep quiet
-  GPS.sendCommand(PGCMD_ANTENNA);  
-  
+  GPS.sendCommand(PGCMD_ANTENNA);
+
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ROS Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //ROS initialization of the publishers and subscribers
   nh.initNode();
@@ -110,13 +115,14 @@ void setup() {
 
   nh.subscribe(Motor_leftESC);
   nh.subscribe(Motor_rightESC);
-  
+
   nh.advertise(IMU_eulerOrientation);
   nh.advertise(IMU_angularVelocity);
   nh.advertise(IMU_linearAcceleration);
-  
+  nh.advertise(IMU_absoluteOrientation);
+
   nh.advertise(gpsPub);
-  
+
   while (!nh.connected()) {
     nh.spinOnce();
   }
@@ -131,7 +137,7 @@ void loop() {
   }
 
   // read data from the GPS in the 'main loop'
-  char c = GPS.read();  
+  char c = GPS.read();
   if (GPS.newNMEAreceived()) {
     if (!GPS.parse(GPS.lastNMEA()))
       return;
@@ -140,9 +146,9 @@ void loop() {
   //this block publishes velocity based on defined rate
   if ((millis() - publish_gps_time) >= (1000 / GPS_PUBLISH_RATE))
   {
-    navSat_msg.latitude = GPS.latitude;
-    navSat_msg.longitude = GPS.longitude;
-    navSat_msg.altitude = GPS.altitude;
+    navSat_msg.latitude = convertGPS(GPS.latitude);
+    navSat_msg.longitude = convertGPS(GPS.longitude);
+    navSat_msg.altitude = GPS.altitude * 100; // Converting to [m] from [cm]
     navSat_msg.status.status = GPS.fix;
     navSat_msg.status.service = GPS.fixquality;
     gpsPub.publish(&navSat_msg);
@@ -152,29 +158,43 @@ void loop() {
   nh.spinOnce(); // Ensure remains connected to Ros_Serial Server
 }
 
-void updateIMU(void){
-    sensors_event_t oData , aData , lData;
-    bno.getEvent(&oData, Adafruit_BNO055::VECTOR_EULER);
-    bno.getEvent(&aData, Adafruit_BNO055::VECTOR_GYROSCOPE);
-    bno.getEvent(&lData, Adafruit_BNO055::VECTOR_LINEARACCEL);
+void updateIMU(void) {
+  sensors_event_t oData , aData , lData, event;
+  bno.getEvent(&oData, Adafruit_BNO055::VECTOR_EULER);
+  bno.getEvent(&aData, Adafruit_BNO055::VECTOR_GYROSCOPE);
+  bno.getEvent(&lData, Adafruit_BNO055::VECTOR_LINEARACCEL);
+  bno.getEvent(&event);
 
-    //Updating the orientation publisher
-    IMU_eulerOrientationMsg.x = oData.orientation.x;  // values in Euler angles or 'degrees', from 0..359
-    IMU_eulerOrientationMsg.y = oData.orientation.y;  // values in Euler angles or 'degrees', from 0..359
-    IMU_eulerOrientationMsg.z = oData.orientation.z;  // values in Euler angles or 'degrees', from 0..359
+  //Updating the orientation publisher
+  IMU_eulerOrientationMsg.x = oData.orientation.x;  // values in Euler angles or 'degrees', from 0..359
+  IMU_eulerOrientationMsg.y = oData.orientation.y;  // values in Euler angles or 'degrees', from 0..359
+  IMU_eulerOrientationMsg.z = oData.orientation.z;  // values in Euler angles or 'degrees', from 0..359
 
-    //Updating the angular velocity publisher
-    IMU_angularVelocityMsg.x = aData.gyro.x;  // values in rps, radians per second
-    IMU_angularVelocityMsg.y = aData.gyro.y;  // values in rps, radians per second
-    IMU_angularVelocityMsg.z = aData.gyro.z;  // values in rps, radians per second
+  //Updating the angular velocity publisher
+  IMU_angularVelocityMsg.x = aData.gyro.x;  // values in rps, radians per second
+  IMU_angularVelocityMsg.y = aData.gyro.y;  // values in rps, radians per second
+  IMU_angularVelocityMsg.z = aData.gyro.z;  // values in rps, radians per second
 
-    //Updating the linear acceleration publisher
-    IMU_linearAccelerationMsg.x = lData.acceleration.x; // meters/second^2
-    IMU_linearAccelerationMsg.y = lData.acceleration.y; // meters/second^2
-    IMU_linearAccelerationMsg.z = lData.acceleration.z; // meters/second^2
+  //Updating the linear acceleration publisher
+  IMU_linearAccelerationMsg.x = lData.acceleration.x; // meters/second^2
+  IMU_linearAccelerationMsg.y = lData.acceleration.y; // meters/second^2
+  IMU_linearAccelerationMsg.z = lData.acceleration.z; // meters/second^2
 
-    //Publishing the orientation, angular velocity, and linear acceleration Vectors
-    IMU_eulerOrientation.publish(&IMU_eulerOrientationMsg);
-    IMU_angularVelocity.publish(&IMU_angularVelocityMsg);
-    IMU_linearAcceleration.publish(&IMU_linearAccelerationMsg);
+  //Updating the absolute orientation acceleration - the y and z values have to be switches here
+  IMU_absoluteOrientationMsg.x = event.orientation.z; // deg
+  IMU_absoluteOrientationMsg.y = event.orientation.y; // deg
+  IMU_absoluteOrientationMsg.z = event.orientation.x; // deg
+
+  //Publishing the orientation, angular velocity, and linear acceleration Vectors
+  IMU_eulerOrientation.publish(&IMU_eulerOrientationMsg);
+  IMU_angularVelocity.publish(&IMU_angularVelocityMsg);
+  IMU_linearAcceleration.publish(&IMU_linearAccelerationMsg);
+  IMU_absoluteOrientation.publish(&IMU_absoluteOrientationMsg);
+}
+
+float convertGPS(float f) {
+ int firsttwodigits = ((int)f)/100; //This assumes that f < 10000.
+ float nexttwodigits = f - (float)(firsttwodigits*100);
+ float theFinalAnswer = (float)(firsttwodigits + nexttwodigits/60.0);
+ return theFinalAnswer;
 }

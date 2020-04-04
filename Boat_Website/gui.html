@@ -4,69 +4,291 @@
 
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
   <!-- Downloaded from: https://github.com/RobotWebTools/roslibjs/blob/develop/build/roslib.js -->
-  <script type="text/javascript" src="roslib.js"></script>
-  <script type="text/javascript" type="text/javascript">
+  <script type="text/javascript" src="src/roslib.js"></script>
+
+  <script src="xeogl/build/xeogl.js"></script>
+  <script src="xeogl/examples/js/geometry/vectorTextGeometry.js"></script>
+  <script src="xeogl/examples/js/models/STLModel.js"></script>
+  <script src="xeogl/examples/js/animation/cameraFollowAnimation.js"></script>
+  <script src="xeogl/examples/js/skyboxes/skybox.js"></script>
+
+  <script src="src/Chart.js-2.9.3/dist/Chart.js"></script>
+
+  <script src="src/divTabs.js"></script>
+
+
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+
+
+  <!-- Creating Global Variables -->
+  <script type="text/javascript">
+    var scene;
+    var skybox;
+    var BoatModel;
+    var camera;
+    var followAnimation;
+
     const zeroAxisButton = 8; // The start button on the Logitech Gamepad F310
     const leftJoystickVert = 1; // The index of the left joystick's vertical axis
     const rightJoystickVert = 4; // The index of the left joystick's vertical axis
+    var axisOffset = [0, 0, 0, 0];
+    var gpPollInt = 100;
+    var gpidx;
 
-    var ros = new ROSLIB.Ros({
-      // Use the IP Address of the Raspberry Pi or the device hosting the webserver
-      // Port 9090 is the port that rosbridge server uses to interface over the network
-      url: 'ws://10.19.122.101:9090'
-    });
-    ros.on('connection', function() {
-      document.getElementById("rosConnStatus").innerHTML = "Connected";
-    });
-    ros.on('error', function(error) {
-      document.getElementById("rosConnStatus").innerHTML = "Error";
-    });
-    ros.on('close', function() {
-      document.getElementById("rosConnStatus").innerHTML = "Closed";
-    });
+    var orientation_deg = [0, 0, 0]
+    var IMU_Cnt = 0;
+    var IMU_Accel_Cnt = 0;
 
-    ard_LeftPWM_listener = new ROSLIB.Topic({
-      ros: ros,
-      name: '/ard_LeftPWM',
-      messageType: 'std_msgs/Float32'
-    });
+    var map;
+    var marker;
+    var GPS_latitude = 0;
+    var GPS_longitude = 0;
+    var GPS_altitude = 0;
+    var GPS_fix = 0;
+    var GPS_fixquality = 0;
 
-    ard_RightPWM_listener = new ROSLIB.Topic({
-      ros: ros,
-      name: '/ard_RightPWM',
-      messageType: 'std_msgs/Float32'
-    });
+    var MAX_PLOT_IDX = 100;
+  </script>
 
-    var BatteryListener = new ROSLIB.Topic({
-    ros : ros,
-    name : '/BatteryVoltage',
-    messageType : 'std_msgs/String'
-  });
+  <!-- Styles -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  BatteryListener.subscribe(function(message) {
-    console.log('Received message on ' + BatteryListener.name + ': ' + message.data);
-    BatteryReading
-    document.getElementById("BatteryReading").innerHTML = message.data;
-    //listener.unsubscribe();
-  });
+    #map {
+      height: 30vw;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Style the header */
+    .header {
+      background-color: #f1f1f1;
+      padding: 5vw;
+      text-align: center;
+      font-size: 35px;
+    }
+
+    .columnHeader {
+      background-color: #f1f1f1;
+      padding: 1vw;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    /* Container for flexboxes */
+    .row {
+      display: -webkit-flex;
+      display: flex;
+    }
+
+    /* Create three equal columns that sits next to each other */
+    .column {
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      padding: 1vw;
+
+      /* Should be removed. Only for demonstration */
+    }
+
+    /* Style the footer */
+    .footer {
+      background-color: #f1f1f1;
+      padding: 10px;
+      text-align: center;
+    }
+
+    /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+    @media (max-width: 600px) {
+      .row {
+        -webkit-flex-direction: column;
+        flex-direction: column;
+      }
+    }
+
+
+
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+      /*
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      */
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      background-color: inherit;
+      cursor: pointer;
+      transition: 0s;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      padding: 1vw;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+  </style>
+
+  <!--Not sure if I need this
+  <style>
+    video {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  -->
+
+</head>
+
+<body>
+  <h1>Boat Connection Interface NEW TEST</h1>
+  <div class="row">
+    <div class="column" style="background-color:#aaa;">
+      <div class="columnHeader">
+        ROS Status & Controller Input
+      </div>
+      <p>Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
+
+    </div>
+    <div class="column" style="background-color:#bbb;">
+      <div class="columnHeader">Controller Input</div>
+      <p>Gamepad ID : <span id="gamepad_ID"></span></p>
+      <p>Axis 0 (LStick-Hori): <span id="gpax0"></span></p>
+      <p>Axis 1 (LStick-Vert): <span id="gpax1"></span></p>
+      <p>Axis 2 (LTrigger) : <span id="gpax2"></span></p>
+      <p>Axis 3 (RStick-Hori): <span id="gpax3"></span></p>
+      <p>Axis 4 (RStick-Vert): <span id="gpax4"></span></p>
+      <p>Axis 5 (RTrigger) : <span id="gpax5"></span></p>
+    </div>
+    <div class="column" style="background-color:#ccc;">
+      <div class="columnHeader">Battery Status</div>
+      <p><span id="BatteryReading"></span></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column" style="background-color:#eee;">
+      <div class="columnHeader">IMU Data</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column" style="background-color:#aaa; align-items: center; justify-content: center;">
+      <div class="columnHeader">
+        IMU Orientation Visualization
+      </div>
+      <canvas id="myCanvas" style="position:relative;top: 0px; left: 0px;  width: 31vw; height: 30vw; "></canvas>
+    </div>
+    <div class="column" style="background-color:#bbb; -webkit-flex: 2">
+      <!-- Tab links -->
+      <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_OrientationDeg')" id = "Tab_Default_IMU">Orientation</button>
+        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_Accel')">Acceleration</button>
+      </div>
+      <!-- Tab content -->
+      <div id="Tab_IMU_OrientationDeg" class="tabcontent">
+        <canvas id="Chart_OrientationDeg"></canvas>
+      </div>
+
+      <div id="Tab_IMU_Accel" class="tabcontent" style="width: 100%">
+        <canvas id="Chart_Acceleration"></canvas>
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="column" style="background-color:#eee;">
+      <div class="columnHeader">GPS Data</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column" style="background-color:#aaa; align-items: center; justify-content: center;">
+      <div class="columnHeader">
+        GPS Topic Data
+      </div>
+      <p>GPS Fix: <span id="GPS_fix"></span></p>
+      <p>Fix Quality: <span id="GPS_fixquality"></span></p>
+      <p>Latitude: <span id="GPS_latitude"></span> [deg]</p>
+      <p>Longitude: <span id="GPS_longitude"></span> [deg]</p>
+      <p>Altitude: <span id="GPS_altitude"></span> [cm]</p>
+    </div>
+    <div class="column" style="background-color:#bbb; -webkit-flex: 2">
+      <div class="columnHeader">
+        Map
+      </div>
+      <div id="map"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column" style="background-color:#eee;">
+      <div class="columnHeader">ZED Data</div>
+      <!-- Tab links -->
+      <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'ZED_Raw')">Raw Stream</button>
+        <button class="tablinks" onclick="openCity(event, 'ZED_Depth')">Registered Depth</button>
+      </div>
+      <!-- Tab content -->
+      <div id="ZED_Raw" class="tabcontent">
+        <h3 onclick="this.parentElement.style.display='none'">ZED Camera Raw Stream (Click this to close the video stream)</h3>
+        <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/stereo_raw/image_raw_color">
+      </div>
+
+      <div id="ZED_Depth" class="tabcontent">
+        <h3 onclick="this.parentElement.style.display='none'">ZED Camera Depth Registered (Click this to close the video stream)</h3>
+        <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/depth/depth_registered">
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+  <script type="text/javascript">
+    //GAME PAD OUTPUT
+
 
     function move(axVal) {
       var lScale = new ROSLIB.Message({
-        data: -axVal[leftJoystickVert]
+        data: -axVal[1]
       });
       var rScale = new ROSLIB.Message({
-        data: -axVal[rightJoystickVert]
+        data: -axVal[4]
       });
       ard_LeftPWM_listener.publish(lScale);
       ard_RightPWM_listener.publish(rScale)
     }
-
-    //GAME PAD OUTPUT
-    var axisOffset = [0, 0, 0, 0];
-    var gpPollInt = 100;
-    var gpidx;
 
     function gamepadHandler(event, connecting) {
       if (connecting) {
@@ -89,13 +311,11 @@
     }
 
     function updateControl() {
-
       var gp = navigator.getGamepads()[gpidx];
       if (gp != null && gpidx != -1) {
         if (gp.buttons[zeroAxisButton].pressed == true) {
           zeroAxis();
         }
-
         for (var i = 0; i < gp.axes.length; i++) {
           //We only care about one gamepad connected, so this will only apply an axis offset
           //to a single gamepad, not multiple
@@ -105,7 +325,6 @@
       } else {
         move([0, 0, 0, 0]);
       }
-
     }
 
     function zeroAxis() {
@@ -114,8 +333,9 @@
         axisOffset[i] = gp.axes[i];
       }
       console.log("Axis Zeroed");
+      console.log('eye   ' + scene.camera.eye);
+      console.log('look   ' + scene.camera.look);
     }
-
 
     const SERVCTL_StartROS = 1;
 
@@ -135,48 +355,99 @@
 
 
 
-</head>
-
-<style>
-  video {
-    max-width: 100%;
-    height: auto;
-  }
-</style>
-
-<body>
-  <h1>Boat Connection Interface NEW TEST</h1>
-  <p>Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
-
-  <p>Axis 0 (LStick-Hori): <span id="gpax0"></span></p>
-  <p>Axis 1 (LStick-Vert): <span id="gpax1"></span></p>
-  <p>Axis 2 (LTrigger) : <span id="gpax2"></span></p>
-  <p>Axis 3 (RStick-Hori): <span id="gpax3"></span></p>
-  <p>Axis 4 (RStick-Vert): <span id="gpax4"></span></p>
-  <p>Axis 5 (RTrigger) : <span id="gpax5"></span></p>
-  <p>Gamepad ID : <span id="gamepad_ID"></span></p>
-
-  <body>
-    <h2>Battery Voltage</h2>
-    <p><span id="BatteryReading"></span></p>
-  </body>
+  <script src="src/OrientationAnimation.js"></script>
+  <script type='text/javascript'>
+    camera.eye = [0.06274989247322083, 25.782859802246094, 99.44140625];
+  </script>
 
 
-  <body style="width=" 2560"">
-    <h2>ZED Camera Raw Stream: /zed/zed_node/stereo_raw/image_raw_color</h2>
-    <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/stereo_raw/image_raw_color">
-  </body>
 
-  <body style="width=" 1280"">
-    <h2>ZED Camera Depth Registered: /zed/zed_node/depth/depth_registered</h2>
-    <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/depth/depth_registered">
-  </body>
-  <!--
-  <body style="width="1280"">
-    <h2>ZED Camera Confidence Map: /zed/zed_node/confidence/confidence_map</h2>
-    <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/confidence/confidence_map">
-  </body>
--->
+  <script>
+
+    document.getElementById("Tab_Default_IMU").click();
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYnlyb25nYXNwYXJkIiwiYSI6ImNrOGtudGIxMzAzdm8zZ28yNDFuMHcwdXQifQ.fY_gpP0xJ77xE-OyyH_wbg';
+    map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/outdoors-v11',
+      center: [-75.152842, 39.982492], // Set to Temple Engineering location on startup
+      zoom: 16
+    });
+
+    marker = new mapboxgl.Marker({
+      color: `rgb(255, 0, 0)`
+    }).setLngLat([-75.152842, 39.982492]).addTo(map);
+
+
+    var ctx = document.getElementById('Chart_OrientationDeg').getContext('2d');
+    var Chart_OrientationDeg = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+
+      // The data for our dataset
+      data: {
+        labels: ['0'],
+        datasets: [{
+          label: 'X',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 0, 0)',
+          data: [0]
+        }, {
+          label: 'Y',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(0, 255, 0)',
+          data: [0]
+        }, {
+          label: 'Z',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(0, 0, 255)',
+          data: [0]
+        }]
+      },
+
+      // Configuration options go here
+      options: {}
+    });
+
+    var ctx = document.getElementById('Chart_Acceleration').getContext('2d');
+    var Chart_Acceleration = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+
+      // The data for our dataset
+      data: {
+        labels: ['0'],
+        datasets: [{
+          label: 'X',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 0, 0)',
+          data: [0]
+        }, {
+          label: 'Y',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(0, 255, 0)',
+          data: [0]
+        }, {
+          label: 'Z',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(0, 0, 255)',
+          data: [0]
+        }]
+      },
+
+      // Configuration options go here
+      options: {}
+    });
+  </script>
+
+
+  <script src="src/ros_RoboBoatHandlers.js"></script>
+
+
+
+
+
+</body>
 
 
 </body>
