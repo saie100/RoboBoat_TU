@@ -28,7 +28,7 @@ volatile byte StateChange = true; /* Set to true so the display is updated the f
 RH_RF95 rf95(RFM95_CS, RFM95_INT); /* Singleton instance of the radio driver */
 #define LED 13 /* Blinky on receipt */
 
-#define SIZE_radiopacket 30
+#define SIZE_radiopacket 50
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
@@ -47,6 +47,7 @@ volatile unsigned long discCnt = 0;
 #define CHRG_V 4.2
 #define EMPT_V 3.0
 
+char *TxBattery;
 
 // =====================================================================================================
 void setup() {
@@ -142,7 +143,7 @@ void ISR_EmergencyStateChange() {
 // =====================================================================================================
 void radio_Update() {
   if (digitalRead(PIN_EMERGENCY_SWITCH) == HIGH) radio_TransmitPacket("TempleBoatEmergency");
-  else radio_TransmitPacket("TempleBoatNormal   ");
+  else radio_TransmitPacket("TempleBoatNormal");
 
   if (rf95.waitAvailableTimeout(1000)) {
     if (rf95.recv(buf, &len)) { /* Should be a reply message for us now */
@@ -152,6 +153,9 @@ void radio_Update() {
       
       Serial.print("Got reply: "); Serial.println((char*)buf);
       Serial.print("RSSI: "); Serial.println(rssi, DEC);
+
+      TxBattery = strtok (buf," ");
+      TxBattery = strtok (NULL, " ");
     }
     else {
       rssi = 1; /* Invalid RSSI value to indicate no connection */
@@ -189,15 +193,18 @@ void updateDisplay() {
   display.setTextColor(WHITE);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update the Battery Information on the Display ~~~~~~~~~~~~~~~~~~~~~~~~~
-  float batPercent = (measureBattery()-EMPT_V) / (CHRG_V-EMPT_V);
-  if (batPercent > 1) batPercent = 1;
-  display.setCursor(100, 0); display.print((int)(batPercent * 100)); display.println("%");
+  float batPercent = 100*(measureBattery()-EMPT_V) / (CHRG_V-EMPT_V);
+  if (batPercent > 100) batPercent = 100;
+  
+  display.setCursor(55, 0); 
+  display.print("R"); display.print(TxBattery); display.print("%");
+  display.print(" T"); display.print((int)(batPercent)); display.print("%");
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update the Radio information on the Display ~~~~~~~~~~~~~~~~~~~~~~~~
   
   if(successMsgs > 0 && missCnt <= 2){
     display.setCursor(0, 0);
-    display.print("RSSI: "); display.println(rssi);
+    display.print("SI:"); display.println(rssi);
     display.setCursor(0, 8);
     display.setTextSize(2);
     display.print("Connected");

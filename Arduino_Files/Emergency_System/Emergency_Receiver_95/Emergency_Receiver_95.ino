@@ -1,5 +1,8 @@
 #include <SPI.h>
 #include <RH_RF95.h>
+#include <string.h>
+#include <stdio.h> 
+#include <math.h> 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Radio Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /* for Feather32u4 RFM9x */
@@ -13,7 +16,7 @@
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-#define SIZE_radiopacket 30
+#define SIZE_radiopacket 50
 
   /* The duration of time that the radio will wait to receive a packet */
 #define RX_TIMEOUT_MS     1000
@@ -24,7 +27,8 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 volatile unsigned long missCnt = 0;
 
   /* Message that indicates a non-emergency state sent by the transmitter */
-char okMsg[] = "TempleBoatNormal   ";
+char okMsg[] = "TempleBoatNormal";
+char batReading[20];
 
   /* Holds the current status of the emergency state as determined by the remote kill-switch */
 volatile byte EmergencyState_RF = true;
@@ -132,6 +136,9 @@ void loop()
 
   if (missCnt >= RF_DROP_PACKET_DISCONNECT)  // If three packets are missed in a row, we are now in the emergency state
     EmergencyState_RF = true;
+
+  itoa(100*measureBattery()/4.2, batReading, 10);
+  Serial.println(batReading);
   
   stateHandler();   // Call the state handler to update the lights and motor relays
 }
@@ -149,12 +156,12 @@ void stateHandler() {
     digitalWrite(PIN_RED_LIGHT, !ON_RED);
     
     if (digitalRead(PIN_CONTROL_SELECT) == HIGH) {    // If in manual control mode
-      digitalWrite(PIN_BLUE_LIGHT, !ON_BLUE);
-      digitalWrite(PIN_AMBER_LIGHT, ON_AMBER);
-    }
-    else {    // If in autonomous control mode
       digitalWrite(PIN_BLUE_LIGHT, ON_BLUE);
       digitalWrite(PIN_AMBER_LIGHT, !ON_AMBER);
+    }
+    else {    // If in autonomous control mode
+      digitalWrite(PIN_BLUE_LIGHT, !ON_BLUE);
+      digitalWrite(PIN_AMBER_LIGHT, ON_AMBER);
     }
   }
 }
@@ -194,6 +201,13 @@ void radioAvailableExecute() {
       rf95.waitPacketSent();
       }
     */
+    strcat(buf, " ");
+    float batPercent = 100*(measureBattery()-EMPT_V) / (CHRG_V-EMPT_V);
+    if (batPercent > 100) batPercent = 100;
+    itoa(batPercent, batReading, 10);
+    strcat(buf, batReading);
+    Serial.println(batReading);
+    
     rf95.send(buf, sizeof(buf));    // Send a response to the transmitter
     rf95.waitPacketSent();  // Wait until the packet has been sent before continuing
   }
