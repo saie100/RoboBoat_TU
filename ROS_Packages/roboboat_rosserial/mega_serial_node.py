@@ -46,7 +46,7 @@ if __name__=="__main__":
     rospy.loginfo("MEGA2560 ROS Serial Python Node (Battery Monitor)") # Changed by Byron Gaspard
 
     # port_name = rospy.get_param('~port','/dev/ttyUSB0')
-    port_name = rospy.get_param('~port','/dev/ttyACM0') # Changed by Byron Gaspard
+    port_name = rospy.get_param('~port','/dev/ttyACM0') # Changed by Byron Gaspard - this is the port of the arduino
     baud = int(rospy.get_param('~baud','57600'))
 
     # Number of seconds of sync failure after which Arduino is auto-reset.
