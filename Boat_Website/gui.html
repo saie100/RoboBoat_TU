@@ -19,10 +19,10 @@
 
   <script src="src/divTabs.js"></script>
 
-
-  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
-
+<!-- Downloaded from: https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js -->
+<script src='src/mapbox/mapbox-gl.js'></script>
+<!-- Downloaded from: https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css -->
+<link href='src/mapbox-gl.css' rel='stylesheet' />
 
   <!-- Creating Global Variables -->
   <script type="text/javascript">
@@ -32,7 +32,7 @@
     var camera;
     var followAnimation;
 
-    const zeroAxisButton = 8; // The start button on the Logitech Gamepad F310
+    const zeroAxisButton = 9; // The start button on the Logitech Gamepad F310
     const leftJoystickVert = 1; // The index of the left joystick's vertical axis
     const rightJoystickVert = 4; // The index of the left joystick's vertical axis
     var axisOffset = [0, 0, 0, 0];
@@ -52,10 +52,24 @@
     var GPS_fixquality = 0;
 
     var MAX_PLOT_IDX = 100;
+
+    var bat_6s;
+    var bat_4s;
+    var bat_3sa;
+    var bat_3sb;
   </script>
 
   <!-- Styles -->
   <style>
+    #canvas-holder {
+      background-color: #FFFFFF;
+      position: relative;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -78,9 +92,9 @@
 
     .columnHeader {
       background-color: #f1f1f1;
-      padding: 1vw;
+      padding: 3px;
       text-align: center;
-      font-size: 30px;
+      font-size: 20px;
     }
 
     /* Container for flexboxes */
@@ -177,7 +191,7 @@
 
 <body>
   <h1>Boat Connection Interface NEW TEST</h1>
-  <div class="row">
+  <div class="row" height>
     <div class="column" style="background-color:#aaa;">
       <div class="columnHeader">
         ROS Status & Controller Input
@@ -185,19 +199,23 @@
       <p>Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
 
     </div>
-    <div class="column" style="background-color:#bbb;">
+    <div class="column" height="115px" style="background-color:#bbb; min-width: 0; min-height: 0;">
       <div class="columnHeader">Controller Input</div>
-      <p>Gamepad ID : <span id="gamepad_ID"></span></p>
-      <p>Axis 0 (LStick-Hori): <span id="gpax0"></span></p>
-      <p>Axis 1 (LStick-Vert): <span id="gpax1"></span></p>
-      <p>Axis 2 (LTrigger) : <span id="gpax2"></span></p>
-      <p>Axis 3 (RStick-Hori): <span id="gpax3"></span></p>
-      <p>Axis 4 (RStick-Vert): <span id="gpax4"></span></p>
-      <p>Axis 5 (RTrigger) : <span id="gpax5"></span></p>
+      <canvas id="Chart_Controller"></canvas>
+      <span id="gamepad_ID"></span>
     </div>
-    <div class="column" style="background-color:#ccc;">
-      <div class="columnHeader">Battery Status</div>
-      <p><span id="BatteryReading"></span></p>
+    <div class="column" height="115px" style="background-color:#ccc; min-width: 0; min-height: 0;">
+      <div class="columnHeader">Battery Charge</div>
+      <canvas id="Chart_Battery"></canvas>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column" style="background-color:#eee;">
+      <div class="columnHeader">ZED Stream</div>
+      <div id="ZED_Raw">
+        <h3 onclick="this.parentElement.style.display='none'">ZED Camera Raw Stream (Click this to close the video stream)</h3>
+        <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/stereo_raw/image_raw_color">
+      </div>
     </div>
   </div>
   <div class="row">
@@ -206,25 +224,22 @@
     </div>
   </div>
   <div class="row">
-    <div class="column" style="background-color:#aaa; align-items: center; justify-content: center;">
-      <div class="columnHeader">
-        IMU Orientation Visualization
-      </div>
-      <canvas id="myCanvas" style="position:relative;top: 0px; left: 0px;  width: 31vw; height: 30vw; "></canvas>
+    <div class="column" width="25vw" style="background-color:#aaa; align-items: center; justify-content: center;">
+      <canvas id="myCanvas" style="position:relative;top: 0px; left: 0px;  width: 25vw; height: 30vw;"></canvas>
     </div>
-    <div class="column" style="background-color:#bbb; -webkit-flex: 2">
+    <div class="column" style="background-color:#bbb; -webkit-flex: 3; min-width: 0; min-height: 0">
       <!-- Tab links -->
       <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_OrientationDeg')" id = "Tab_Default_IMU">Orientation</button>
+        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_OrientationDeg')" id="Tab_Default_IMU">Orientation</button>
         <button class="tablinks" onclick="openCity(event, 'Tab_IMU_Accel')">Acceleration</button>
       </div>
       <!-- Tab content -->
       <div id="Tab_IMU_OrientationDeg" class="tabcontent">
-        <canvas id="Chart_OrientationDeg"></canvas>
+        <canvas id="Chart_OrientationDeg" height="115vw"></canvas>
       </div>
 
-      <div id="Tab_IMU_Accel" class="tabcontent" style="width: 100%">
-        <canvas id="Chart_Acceleration"></canvas>
+      <div id="Tab_IMU_Accel" class="tabcontent">
+        <canvas id="Chart_Acceleration" height="115vw"></canvas>
       </div>
 
     </div>
@@ -252,27 +267,7 @@
       <div id="map"></div>
     </div>
   </div>
-  <div class="row">
-    <div class="column" style="background-color:#eee;">
-      <div class="columnHeader">ZED Data</div>
-      <!-- Tab links -->
-      <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'ZED_Raw')">Raw Stream</button>
-        <button class="tablinks" onclick="openCity(event, 'ZED_Depth')">Registered Depth</button>
-      </div>
-      <!-- Tab content -->
-      <div id="ZED_Raw" class="tabcontent">
-        <h3 onclick="this.parentElement.style.display='none'">ZED Camera Raw Stream (Click this to close the video stream)</h3>
-        <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/stereo_raw/image_raw_color">
-      </div>
-
-      <div id="ZED_Depth" class="tabcontent">
-        <h3 onclick="this.parentElement.style.display='none'">ZED Camera Depth Registered (Click this to close the video stream)</h3>
-        <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/depth/depth_registered">
-      </div>
-
-    </div>
-  </div>
+  
   </div>
 
   <script type="text/javascript">
@@ -287,13 +282,26 @@
         data: -axVal[4]
       });
       ard_LeftPWM_listener.publish(lScale);
-      ard_RightPWM_listener.publish(rScale)
+      ard_RightPWM_listener.publish(rScale);
+
+      Chart_Controller.data.datasets[0].data = [{
+        x: -2 + axVal[0],
+        y: -axVal[1],
+        r: 15
+      }];
+      Chart_Controller.data.datasets[1].data = [{
+        x: 2 + axVal[2],
+        y: -axVal[3],
+        r: 15
+      }];
+      Chart_Controller.update(0);
     }
 
     function gamepadHandler(event, connecting) {
       if (connecting) {
         var gp = event.gamepad;
-        if (gp.id.localeCompare("Xbox 360 Wired Controller (Vendor: 046d Product: c21d)") == 0) {
+        console.log(gp.id);
+        if (gp.id.localeCompare("Xbox One Wired Controller (STANDARD GAMEPAD Vendor: 045e Product: 02d1)") == 0) {
           gpidx = gp.index;
           console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", gp.index, gp.id, gp.buttons.length, gp.axes.length);
           zeroAxis();
@@ -319,7 +327,7 @@
         for (var i = 0; i < gp.axes.length; i++) {
           //We only care about one gamepad connected, so this will only apply an axis offset
           //to a single gamepad, not multiple
-          document.getElementById("gpax$i".replace("$i", i)).innerHTML = gp.axes[i] - axisOffset[i];
+          //document.getElementById("gpax$i".replace("$i", i)).innerHTML = gp.axes[i] - axisOffset[i];
         }
         move(gp.axes);
       } else {
@@ -333,8 +341,6 @@
         axisOffset[i] = gp.axes[i];
       }
       console.log("Axis Zeroed");
-      console.log('eye   ' + scene.camera.eye);
-      console.log('look   ' + scene.camera.look);
     }
 
     const SERVCTL_StartROS = 1;
@@ -361,11 +367,9 @@
   </script>
 
 
-
   <script>
-
     document.getElementById("Tab_Default_IMU").click();
-
+    /*
     mapboxgl.accessToken = 'pk.eyJ1IjoiYnlyb25nYXNwYXJkIiwiYSI6ImNrOGtudGIxMzAzdm8zZ28yNDFuMHcwdXQifQ.fY_gpP0xJ77xE-OyyH_wbg';
     map = new mapboxgl.Map({
       container: 'map',
@@ -377,7 +381,7 @@
     marker = new mapboxgl.Marker({
       color: `rgb(255, 0, 0)`
     }).setLngLat([-75.152842, 39.982492]).addTo(map);
-
+    */
 
     var ctx = document.getElementById('Chart_OrientationDeg').getContext('2d');
     var Chart_OrientationDeg = new Chart(ctx, {
@@ -406,14 +410,24 @@
       },
 
       // Configuration options go here
-      options: {}
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Orientation [deg]'
+            },
+          }]
+        }
+      }
     });
 
     var ctx = document.getElementById('Chart_Acceleration').getContext('2d');
     var Chart_Acceleration = new Chart(ctx, {
       // The type of chart we want to create
       type: 'line',
-
       // The data for our dataset
       data: {
         labels: ['0'],
@@ -434,18 +448,139 @@
           data: [0]
         }]
       },
-
       // Configuration options go here
-      options: {}
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Acceleration [m/(s^2)]'
+            },
+          }]
+        }
+      }
+    });
+
+    var ctx = document.getElementById('Chart_Battery').getContext('2d');
+    var Chart_Battery = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'horizontalBar',
+      // The data for our dataset
+      data: {
+        labels: ['6 Cell', '4 Cell', '3 Cell (A)', '3 Cell (B)'],
+        datasets: [{
+          backgroundColor: 'rgb(20, 33, 77)',
+          label: 'Cell 1',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          data: [0]
+        }, {
+          backgroundColor: 'rgb(24, 96, 147)',
+          label: 'Cell 2',
+          data: [0]
+        }, {
+          backgroundColor: 'rgb(28, 160, 214)',
+          label: 'Cell 3',
+          data: [0]
+        }, {
+          backgroundColor: 'rgb(31, 193, 224)',
+          label: 'Cell 4',
+          data: [0]
+        }, {
+          backgroundColor: 'rgb(33, 205, 205)',
+          label: 'Cell 5',
+          data: [0]
+        }, {
+          backgroundColor: 'rgb(36, 223, 182)',
+          label: 'Cell 6',
+          data: [0]
+        }]
+      },
+      // Configuration options go here
+      options: {
+        tooltips: {
+          mode: 'index',
+          intersect: true
+        },
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          xAxes: [{
+            ticks: {
+              beginAtZero: true
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Voltage [V]'
+            },
+            stacked: true
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            },
+            stacked: true
+          }]
+        }
+      }
+    });
+
+    var ctx = document.getElementById('Chart_Controller').getContext('2d');
+    var Chart_Controller = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'bubble',
+      // The data for our dataset
+
+      data: {
+        datasets: [{
+          backgroundColor: 'rgb(255, 0, 0)',
+          label: 'Left Joystick',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          data: [{
+            x: -2,
+            y: 0,
+            r: 15
+          }]
+        }, {
+          backgroundColor: 'rgb(0, 255, 0)',
+          label: 'Right Joystick',
+          //backgroundColor: 'rgb(255, 99, 132)',
+          data: [{
+            x: 2,
+            y: 0,
+            r: 15
+          }]
+        }]
+      },
+      // Configuration options go here
+      options: {
+        tooltips: {
+          mode: 'index',
+          intersect: true
+        },
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          xAxes: [{
+            ticks: {
+              min: -3.5,
+              max: 3.5
+            },
+          }],
+          yAxes: [{
+            ticks: {
+              min: -1.5,
+              max: 1.5
+            },
+          }]
+        }
+      }
     });
   </script>
 
 
   <script src="src/ros_RoboBoatHandlers.js"></script>
-
-
-
-
 
 </body>
 

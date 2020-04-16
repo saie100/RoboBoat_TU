@@ -50,8 +50,25 @@ var GPS_Coordinates = new ROSLIB.Topic({
 });
 
 BatteryListener.subscribe(function(message) {
-  console.log('Received message on ' + BatteryListener.name + ': ' + message.data);
-  document.getElementById("BatteryReading").innerHTML = message.data;
+  var separateBattery = message.data.split(",");
+  bat_6s = separateBattery[0].split(" ").map(Number);
+  bat_4s = separateBattery[1].split(" ").map(Number);
+  bat_3sa = separateBattery[2].split(" ").map(Number);
+  bat_3sb = separateBattery[3].split(" ").map(Number);
+
+  Chart_Battery.data.datasets[0].data = [bat_6s[0], bat_4s[0], bat_3sa[0], bat_3sb[0]];
+  Chart_Battery.data.datasets[1].data = [bat_6s[1], bat_4s[1], bat_3sa[1], bat_3sb[1]];
+  Chart_Battery.data.datasets[2].data = [bat_6s[2], bat_4s[2], bat_3sa[2], bat_3sb[2]];
+  Chart_Battery.data.datasets[3].data = [bat_6s[3], bat_4s[3], 0, 0];
+  Chart_Battery.data.datasets[4].data = [bat_6s[4], 0, 0, 0];
+  Chart_Battery.data.datasets[5].data = [bat_6s[5], 0, 0, 0];
+  Chart_Battery.update(0);
+  /*
+  console.log('bat_6s ' + bat_6s);
+  console.log('bat_4s ' + bat_4s);
+  console.log('bat_3sa ' + bat_3sa);
+  console.log('bat_3sb ' + bat_3sb);
+  */
 });
 
 IMU_AbsOrientationListener.subscribe(function(message) {
@@ -75,19 +92,18 @@ IMU_AbsOrientationListener.subscribe(function(message) {
 
 IMU_AccelerationListener.subscribe(function(message) {
   accel = [message.x, message.y, message.z];
-
   updateChart(Chart_Acceleration, accel, IMU_Accel_Cnt)
   IMU_Accel_Cnt++;
 });
 
 function updateChart(chart, newData, count){
   if (IMU_Accel_Cnt < MAX_PLOT_IDX) {
-    chart.data.labels.push(IMU_Accel_Cnt);
+    chart.data.labels.push(count);
     chart.data.datasets.forEach((dataset, index) => {
       dataset.data.push(newData[index]);
     });
   } else {
-    chart.data.labels.push(IMU_Accel_Cnt);
+    chart.data.labels.push(count);
     chart.data.datasets.forEach((dataset, index) => {
       dataset.data.push(newData[index]);
       dataset.data.splice(0, 1); // remove first data point
@@ -112,7 +128,7 @@ GPS_Coordinates.subscribe(function(message) {
   document.getElementById("GPS_altitude").innerHTML = GPS_altitude;
 
   console.log("GPS_fix" + GPS_fix);
-
+  /*
   if (GPS_fix == 1 && GPS_fixquality != 0) { // If there is a valid connection (GPS_fixquality != 0), update map
     map.setCenter([GPS_longitude, GPS_latitude]);
     marker.remove();
@@ -125,7 +141,9 @@ GPS_Coordinates.subscribe(function(message) {
     marker = new mapboxgl.Marker({
       color: `rgb(255, 0, 0)`
     }).setLngLat(tmp).addTo(map);
+
   }
+  */
 
   document.getElementById("GPS_fix").innerHTML = GPS_fix;
   document.getElementById("GPS_fixquality").innerHTML = GPS_fixquality;
