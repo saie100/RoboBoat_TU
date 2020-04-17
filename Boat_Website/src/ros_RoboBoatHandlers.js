@@ -1,3 +1,5 @@
+
+/*
 var ros = new ROSLIB.Ros({
   // Use the IP Address of the Raspberry Pi or the device hosting the webserver
   // Port 9090 is the port that rosbridge server uses to interface over the network
@@ -13,17 +15,24 @@ ros.on('close', function() {
   document.getElementById("rosConnStatus").innerHTML = "Closed";
 });
 
-ard_LeftPWM_listener = new ROSLIB.Topic({
+var ard_LeftPWM_listener = new ROSLIB.Topic({
   ros: ros,
   name: '/Motor_LeftPWM',
   messageType: 'std_msgs/Float32'
 });
 
-ard_RightPWM_listener = new ROSLIB.Topic({
+var ard_RightPWM_listener = new ROSLIB.Topic({
   ros: ros,
   name: '/Motor_RightPWM',
   messageType: 'std_msgs/Float32'
 });
+
+ var ControlMode = new ROSLIB.Topic({
+  ros: ros,
+  name: '/status_light_manual_mode',
+  messageType: 'std_msgs/Bool'
+});
+
 
 var BatteryListener = new ROSLIB.Topic({
   ros: ros,
@@ -48,6 +57,7 @@ var GPS_Coordinates = new ROSLIB.Topic({
   name: '/gps',
   messageType: 'sensor_msgs/NavSatFix'
 });
+*/
 
 BatteryListener.subscribe(function(message) {
   var separateBattery = message.data.split(",");
@@ -128,7 +138,7 @@ GPS_Coordinates.subscribe(function(message) {
   document.getElementById("GPS_altitude").innerHTML = GPS_altitude;
 
   console.log("GPS_fix" + GPS_fix);
-  /*
+
   if (GPS_fix == 1 && GPS_fixquality != 0) { // If there is a valid connection (GPS_fixquality != 0), update map
     map.setCenter([GPS_longitude, GPS_latitude]);
     marker.remove();
@@ -143,15 +153,15 @@ GPS_Coordinates.subscribe(function(message) {
     }).setLngLat(tmp).addTo(map);
 
   }
-  */
+
 
   document.getElementById("GPS_fix").innerHTML = GPS_fix;
   document.getElementById("GPS_fixquality").innerHTML = GPS_fixquality;
 
   if (GPS_fix == 1) {
-    document.getElementById("GPS_fix").innerHTML = "Fix Acquired";
+    document.getElementById("GPS_fix").innerHTML = "Acquired";
   } else {
-    document.getElementById("GPS_fix").innerHTML = "No Acquired";
+    document.getElementById("GPS_fix").innerHTML = "Searching";
   }
 
   if (GPS_fixquality == 1) {
