@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name RoboBoat_Parts)(type Legacy)(uri ${KIPRJMOD}/CustomLibraries/RoboBoat_Parts.lib)(options "")(descr ""))
   (lib (name PowerDistribution-rescue)(type Legacy)(uri ${KIPRJMOD}/PowerDistribution-rescue.lib)(options "")(descr ""))
+  (lib (name RoboBoat_PowerSymbols)(type Legacy)(uri ${KIPRJMOD}/CustomLibraries/RoboBoat_PowerSymbols.lib)(options "")(descr ""))
 )

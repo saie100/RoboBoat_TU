@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 1 1
 Title "Emergency Transmitter and Receiver"
 Date "2020-02-03"
-Rev "3"
+Rev "4"
 Comp "Temple University College of Engineering"
 Comment1 "Author: Byron Gaspard"
 Comment2 "Senior Design Project II"
@@ -1175,6 +1175,7 @@ Wire Wire Line
 	10750 4950 11000 4950
 Wire Wire Line
 	11000 4950 11000 5600
+Connection ~ 11000 5600
 Wire Bus Line
 	8350 3150 8350 3300
 Wire Bus Line
@@ -1185,5 +1186,4 @@ Wire Bus Line
 	7850 950  7850 1350
 Wire Bus Line
 	6450 4750 6450 5750
-Connection ~ 11000 5600
 $EndSCHEMATC

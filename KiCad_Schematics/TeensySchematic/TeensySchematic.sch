@@ -5,16 +5,16 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Teensy Motor Control, GPS, and IMU Board"
-Date "2020-01-31"
-Rev "1"
+Date "2020-04-23"
+Rev "2"
 Comp "Temple University College of Engineering"
 Comment1 "Author: Byron Gaspard"
 Comment2 "Senior Design Project II"
-Comment3 "RoboBoat - TeamB04"
+Comment3 "RoboBoat - Team B04"
 Comment4 ""
 $EndDescr
 $Comp
-L TeensySchematic-rescue:BNO055-AdafruitBoards U2
+L TeensySchematic-rescue:BNO055-AdafruitBoards-TeensySchematic-rescue U2
 U 1 1 5E279D74
 P 8200 3900
 F 0 "U2" H 8225 4375 50  0000 C CNN
@@ -163,7 +163,7 @@ F 3 "" H 7050 3150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MCU_Module:Adafruit_Ultimate_GPS U3
+L TeensySchematic-rescue:Adafruit_Ultimate_GPS-MCU_Module U3
 U 1 1 5E2C4F7F
 P 3450 4900
 F 0 "U3" H 3050 5500 50  0000 L CNN
@@ -174,7 +174,7 @@ F 3 "" H 2950 5450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L TeensySchematic-rescue:Teensy3.2-Teensy U1
+L TeensySchematic-rescue:Teensy3.2-Teensy-TeensySchematic-rescue U1
 U 1 1 5E27E1D1
 P 6300 3250
 F 0 "U1" H 5925 3475 50  0000 C CNN
