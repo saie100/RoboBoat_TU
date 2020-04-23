@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 1 1
 Title "Emergency Transmitter and Receiver"
 Date "2020-02-03"
-Rev "3"
+Rev "4"
 Comp "Temple University College of Engineering"
 Comment1 "Author: Byron Gaspard"
 Comment2 "Senior Design Project II"
@@ -1155,6 +1155,26 @@ Wire Notes Line
 	11050 4450 5750 4450
 Wire Notes Line
 	5750 6400 11050 6400
+$Comp
+L pspice:DIODE D1
+U 1 1 5E983D34
+P 10550 4950
+F 0 "D1" H 10550 4685 50  0000 C CNN
+F 1 "1N5406RLG" H 10550 4776 50  0000 C CNN
+F 2 "" H 10550 4950 50  0001 C CNN
+F 3 "~" H 10550 4950 50  0001 C CNN
+	1    10550 4950
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	10350 4950 10100 4950
+Wire Wire Line
+	10100 4950 10100 5150
+Connection ~ 10100 5150
+Wire Wire Line
+	10750 4950 11000 4950
+Wire Wire Line
+	11000 4950 11000 5600
 Wire Bus Line
 	8350 3150 8350 3300
 Wire Bus Line
@@ -1165,4 +1185,5 @@ Wire Bus Line
 	7850 950  7850 1350
 Wire Bus Line
 	6450 4750 6450 5750
+Connection ~ 11000 5600
 $EndSCHEMATC
