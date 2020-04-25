@@ -1,7 +1,7 @@
 #include <ros.h>
 #include <std_msgs/String.h>
 
-float convert = 5.0 / 1024; // converts raw data to voltage
+float convert = 5.0 / 1023; // converts raw data to voltage
 const float scale[6] = { // values for scaling voltage
   1.0,
   (470.0 + 560.0) / 470.0,
