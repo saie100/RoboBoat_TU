@@ -58,22 +58,6 @@ X A 1 0 -200 100 U 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
-# Device_CircuitBreaker_1P_US
-#
-DEF Device_CircuitBreaker_1P_US CB 0 20 Y Y 1 F N
-F0 "CB" 125 -50 50 H V L CNN
-F1 "Device_CircuitBreaker_1P_US" 125 25 50 H V L CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-A -225 0 335 266 -266 0 1 0 N 75 150 75 -150
-C 0 -175 25 0 1 0 N
-C 0 175 25 0 1 0 N
-X ~ 1 0 300 100 D 50 50 1 1 P
-X ~ 2 0 -300 100 U 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
 # Device_R_Small_US
 #
 DEF Device_R_Small_US R 0 10 N N 1 F N

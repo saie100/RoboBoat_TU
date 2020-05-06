@@ -11,14 +11,6 @@ const float scale[6] = { // values for scaling voltage
   (100.0 + 560.0) / 100.0
 };
 
-// Zeroed Scale - used for collecting data while testing precision/accuracy of the battery monitor
-/*
-  const float scale6s[] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
-  const float scale4s[] = {0.00, 0.00, 0.00, 0.00};
-  const float scale3s[] = {0.00, 0.00, 0.00};
-  const float scale32s[] = {0.00, 0.00, 0.00};
-*/
-
 // Obtained from the averge of the diffreences between multimeter and arduino at 6 different voltages
 // These are applied to the voltage measurement reference to ground (negative terminal) of the battery
 const float offset_6s[] = {0.0688, 0.1050, 0.3200, 0.2000, 0.3817, 0.6283};
@@ -109,7 +101,7 @@ void measure_cell(const int pins[], // analog pin numbers from lowest voltage to
   float avg[] = {0, 0, 0, 0, 0, 0}; // Holds the running-average
   for (int j = 0; j < runAvgCnt; j++) { // Loop over the number of average samples
     for (int i = 0; i < pinCnt; i++) {  // Loop over the number of pins in the battery we are measuring
-      avg[i] += analogRead(pins[i]); // Add the readings on the pins into an array to calculate running-average
+      avg[i] += analogRead(pins[i]); // Add ADC readings to  an array to calculate running-average
     }
     delay(SAMPLE_DELAY); //  Wait between each collection of analog readings
   }

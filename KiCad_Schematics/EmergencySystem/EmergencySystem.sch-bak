@@ -5,8 +5,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Emergency Transmitter and Receiver"
-Date "2020-02-03"
-Rev "4"
+Date "2020-04-30"
+Rev "5"
 Comp "Temple University College of Engineering"
 Comment1 "Author: Byron Gaspard"
 Comment2 "Senior Design Project II"
@@ -999,12 +999,12 @@ $EndComp
 $Comp
 L RoboBoat_PowerSymbols:+BATT_14.8V #PWR027
 U 1 1 5EDD33F6
-P 7450 6000
-F 0 "#PWR027" H 7450 5850 50  0001 C CNN
-F 1 "+BATT_14.8V" H 7465 6173 50  0000 C CNN
-F 2 "" H 7450 6000 50  0001 C CNN
-F 3 "" H 7450 6000 50  0001 C CNN
-	1    7450 6000
+P 8000 6000
+F 0 "#PWR027" H 8000 5850 50  0001 C CNN
+F 1 "+BATT_14.8V" H 8015 6173 50  0000 C CNN
+F 2 "" H 8000 6000 50  0001 C CNN
+F 3 "" H 8000 6000 50  0001 C CNN
+	1    8000 6000
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1051,27 +1051,6 @@ Wire Notes Line
 	500  500  9100 500 
 Wire Notes Line
 	500  4400 9100 4400
-$Comp
-L Device:CircuitBreaker_1P_US CB1
-U 1 1 5E6B42EB
-P 8000 6000
-F 0 "CB1" V 7775 6000 50  0000 C CNN
-F 1 "30A_Breaker" V 7866 6000 50  0000 C CNN
-F 2 "" H 8000 6000 50  0001 C CNN
-F 3 "~" H 8000 6000 50  0001 C CNN
-	1    8000 6000
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	7700 6000 7650 6000
-Wire Wire Line
-	7650 6000 7650 6250
-Wire Wire Line
-	7450 6000 7450 6250
-Wire Wire Line
-	7450 6250 7650 6250
-Wire Wire Line
-	8350 6000 8300 6000
 Wire Wire Line
 	10100 5150 10100 5600
 $Comp
@@ -1093,38 +1072,6 @@ Wire Wire Line
 	10250 5600 10100 5600
 Wire Wire Line
 	7200 5850 6550 5850
-$Comp
-L RoboBoat_PowerSymbols:+BATT_14.8V #PWR029
-U 1 1 5E80EB81
-P 9350 6000
-F 0 "#PWR029" H 9350 5850 50  0001 C CNN
-F 1 "+BATT_14.8V" H 9365 6173 50  0000 C CNN
-F 2 "" H 9350 6000 50  0001 C CNN
-F 3 "" H 9350 6000 50  0001 C CNN
-	1    9350 6000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:CircuitBreaker_1P_US CB2
-U 1 1 5E80EB87
-P 9900 6000
-F 0 "CB2" V 9675 6000 50  0000 C CNN
-F 1 "30A_Breaker" V 9766 6000 50  0000 C CNN
-F 2 "" H 9900 6000 50  0001 C CNN
-F 3 "~" H 9900 6000 50  0001 C CNN
-	1    9900 6000
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	9600 6000 9550 6000
-Wire Wire Line
-	9550 6000 9550 6250
-Wire Wire Line
-	9350 6000 9350 6250
-Wire Wire Line
-	9350 6250 9550 6250
-Wire Wire Line
-	10250 6000 10200 6000
 Wire Wire Line
 	7200 6350 9100 6350
 Wire Wire Line
@@ -1160,7 +1107,7 @@ L pspice:DIODE D1
 U 1 1 5E983D34
 P 10550 4950
 F 0 "D1" H 10550 4685 50  0000 C CNN
-F 1 "1N5406RLG" H 10550 4776 50  0000 C CNN
+F 1 "IN4004" H 10550 4776 50  0000 C CNN
 F 2 "" H 10550 4950 50  0001 C CNN
 F 3 "~" H 10550 4950 50  0001 C CNN
 	1    10550 4950
@@ -1176,6 +1123,23 @@ Wire Wire Line
 Wire Wire Line
 	11000 4950 11000 5600
 Connection ~ 11000 5600
+Text Notes 9850 4900 0    50   ~ 0
+Flyback Diode
+Wire Wire Line
+	8000 6000 8350 6000
+$Comp
+L RoboBoat_PowerSymbols:+BATT_14.8V #PWR?
+U 1 1 5EAB3009
+P 9900 6000
+F 0 "#PWR?" H 9900 5850 50  0001 C CNN
+F 1 "+BATT_14.8V" H 9915 6173 50  0000 C CNN
+F 2 "" H 9900 6000 50  0001 C CNN
+F 3 "" H 9900 6000 50  0001 C CNN
+	1    9900 6000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9900 6000 10250 6000
 Wire Bus Line
 	8350 3150 8350 3300
 Wire Bus Line

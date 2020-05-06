@@ -1,4 +1,4 @@
-#include <Adafruit_SleepyDog.h> // Adds watchdog timer that will reset the transmitter if it stops for 10 seconds
+#include <Adafruit_SleepyDog.h> // reset the transmitter if it stops for 10 seconds
 #include <Adafruit_SSD1306.h> // Adds OLED display support 
 #include <Wire.h> // Adds I2C Oled Support
 #include <RH_RF95.h> // Adds support for the LoRa Radio
@@ -171,7 +171,7 @@ void radio_Update() {
       Rx_E_Switch = atoi(strtok_prt);
 
     }
-    else { // This shouldn't be encountered as rf95.recv will only execute if there is a message available
+    else { // shouldn't be encountered as rf95.recv will only execute if there is a message available
       TxRssi = 1; // Invalid TxRssi value to indicate no connection
       failMsgs++;
       missCnt++; // Counts the number of conseuctive misses
@@ -204,22 +204,32 @@ void updateDisplay() {
   display.setTextColor(WHITE); // Clear the font color to white
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update the Battery/Rssi Information on the Display ~~~~~~~~~~~~~~~~~~~~
-  display.setCursor(0, 0); display.print("Tx-RSSI:"); display.print(TxRssi); // display the transmitter's RSSI
-  display.setCursor(85, 0); display.print("Tx:"); display.print(measureBattery()); display.print("%"); // display the transmitter's battery
+  // display the transmitter's RSSI
+  display.setCursor(0, 0); display.print("Tx-RSSI:"); display.print(TxRssi);
+  // display the transmitter's batter
+  display.setCursor(85, 0); display.print("Tx:"); display.print(measureBattery()); display.print("%"); y
 
   // Draw the line to separate the Rx and Tx Battery/Rssi Information
   display.drawFastHLine(0, 8, 128, WHITE);
 
-  display.setCursor(0, 10); display.print("Rx-RSSI:"); display.print(RxRssi); // display the receivers's RSSI
-  display.setCursor(85, 10); display.print("Rx:"); display.print(RxBattery); display.print("%"); // Display the receiver's battery
+  // display the receivers's RSSI
+  display.setCursor(0, 10); display.print("Rx-RSSI:"); display.print(RxRssi); 
+  // Display the receiver's battery
+  display.setCursor(85, 10); display.print("Rx:"); display.print(RxBattery); display.print("%"); 
 
   // Draw the line to separate the Battery/Rssi Information from the packet information table
-  display.drawFastHLine(0, 18, 128, WHITE); display.drawFastHLine(0, 19, 128, WHITE); display.drawFastHLine(0, 20, 128, WHITE);
+  display.drawFastHLine(0, 18, 128, WHITE); 
+  display.drawFastHLine(0, 19, 128, WHITE); 
+  display.drawFastHLine(0, 20, 128, WHITE);
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update the Packet information on the Display ~~~~~~~~~~~~~~~~~~~~~
   display.drawFastHLine(0, 30, 128, WHITE); // Draw middle row line for the packet table
-  display.drawFastVLine(27, 20, 24, WHITE); display.drawFastVLine(28, 20, 24, WHITE); // Draw first column for packet table
-  display.drawFastVLine(65, 20, 24, WHITE); display.drawFastVLine(66, 20, 24, WHITE); // Draw second column for packet table
+  // Draw first column for packet table
+  display.drawFastVLine(27, 20, 24, WHITE); 
+  display.drawFastVLine(28, 20, 24, WHITE); 
+  // Draw second column for packet table
+  display.drawFastVLine(65, 20, 24, WHITE); 
+  display.drawFastVLine(66, 20, 24, WHITE); 
 
   // Add the column titles for the packet table
   display.setCursor(0, 22); display.print("Disc");
@@ -233,8 +243,9 @@ void updateDisplay() {
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update the Switch/Emergency Information on the Display ~~~~~~~~~~~~~~~~~~
   // Draw the boundary for the switch/connection state table
-  display.drawFastHLine(0, 43, 128, WHITE); display.drawFastHLine(0, 44, 128, WHITE); display.drawFastHLine(0, 45, 128, WHITE);
-  display.drawFastVLine(113, 45, 19, WHITE); display.drawFastVLine(112, 45, 19, WHITE); display.drawFastVLine(111, 45, 19, WHITE);
+  display.drawFastHLine(0, 43, 128, WHITE); display.drawFastHLine(0, 44, 128, WHITE); 
+  display.drawFastHLine(0, 45, 128, WHITE); display.drawFastVLine(113, 45, 19, WHITE); 
+  display.drawFastVLine(112, 45, 19, WHITE); display.drawFastVLine(111, 45, 19, WHITE);
 
   display.setTextSize(2);
   display.setCursor(0, 48);
@@ -245,9 +256,11 @@ void updateDisplay() {
 
   display.setCursor(116, 48);
   // Print the conenction status on the display
-  if (successMsgs > 0 && missCnt < RF_DROP_PACKET_DISCONNECT) display.print("C"); // Print that we're connected
-  else if (TxRssi == 1 && missCnt >= RF_DROP_PACKET_DISCONNECT) display.print("T"); // Ensure that we've missed at least three packets before displaying
-  else if (TxRssi == 2 && missCnt >= RF_DROP_PACKET_DISCONNECT) display.print("N"); // Ensure that we've missed at least three packets before displaying
+  if (successMsgs > 0 && missCnt < RF_DROP_PACKET_DISCONNECT) display.print("C"); // Print if connected
+  // Ensure that we've missed at least three packets before displaying
+  else if (TxRssi == 1 && missCnt >= RF_DROP_PACKET_DISCONNECT) display.print("T"); 
+  // Ensure that we've missed at least three packets before displaying
+  else if (TxRssi == 2 && missCnt >= RF_DROP_PACKET_DISCONNECT) display.print("N"); 
   else display.print("E"); // Handles undefined error condition
 
   display.display(); // Update the display */

@@ -4,9 +4,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "ROS Battery Monitoring System"
-Date "2020-01-31"
-Rev "1"
+Title "Battery Monitor"
+Date "2020-04-25"
+Rev "2"
 Comp "Temple University College of Engineering"
 Comment1 "Author: Byron Gaspard"
 Comment2 "Senior Design Project II"
