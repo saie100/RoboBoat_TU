@@ -12,9 +12,9 @@
 2. ### [CAD Designs](/CAD_Files/) ###
     1. 
 
-3. ### [Networking](/networking/) ###
-    1. [IP Addresses for the Networking Devices](networking#network-hardware-ips)
-    2. [Reserved Device IPs](networking/README.md#reserved-device-ips)
-    3. [Backup & Restore the Network Equipment](networking/RouterBackups/)
-    4. [Connecting the Boat to the Internet](networking/Connect_to_Internet.md)
-    5. [Documentation from the Manufacturers](networking/README.md#hardware-documentation)
+3. ### [Networking](/Networking/) ###
+    1. [IP Addresses for the Networking Devices](Networking#network-hardware-ips)
+    2. [Reserved Device IPs](Networking/README.md#reserved-device-ips)
+    3. [Backup & Restore the Network Equipment](Networking/RouterBackups/)
+    4. [Connecting the Boat to the Internet](Networking/Connect_to_Internet.md)
+    5. [Documentation from the Manufacturers](Networking/README.md#hardware-documentation)
