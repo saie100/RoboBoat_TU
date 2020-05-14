@@ -42,6 +42,8 @@
     var orientation_deg = [0, 0, 0]
     var IMU_Cnt = 0;
     var IMU_Accel_Cnt = 0;
+    var IMU_AngVel_Cnt = 0;
+    var IMU_MagVec_Cnt = 0;
 
     var map;
     var marker;
@@ -52,6 +54,7 @@
     var GPS_fixquality = 0;
 
     var MAX_PLOT_IDX = 100;
+    var PLOT_UPDATE_FREQUENCY = 10; // Hz
 
     var bat_6s;
     var bat_4s;
@@ -63,9 +66,16 @@
     var ard_RightPWM_listener;
     var BatteryListener;
     var IMU_AbsOrientationListener;
-    var IMU_AccelerationListener;
+    var IMU_LinearAccelerationListener;
+    var IMU_AngularVelocityListener;
+    var IMU_MagnetometerListener;
     var GPS_Coordinates;
     var ControlMode;
+
+    var IMU_OrientationLastUpdateTime = 0;
+    var IMU_LinearAccelerationLastUpdateTime = 0;
+    var IMU_AngularVelocityLastUpdateTime = 0;
+    var IMU_MagnetometerLastUpdateTime = 0;
 
     function updateControlMode() {
       var Bool_msg = new ROSLIB.Message({
@@ -199,19 +209,6 @@
       border-top: none;
     }
 
-
-
-
-
-
-
-
-
-
-
-    /* Switch Yes No
-==========================*/
-
     .switch {
       position: relative;
       display: block;
@@ -320,8 +317,6 @@
       box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
     }
 
-    /* Transition
-========================== */
     .switch-label,
     .switch-handle {
       transition: All 0.3s ease;
@@ -388,14 +383,6 @@
 
   </style>
 
-  <!--Not sure if I need this
-  <style>
-    video {
-      max-width: 100%;
-      height: auto;
-    }
-  </style>
-  -->
 
 </head>
 
@@ -404,7 +391,7 @@
   <div class="row" height>
     <div class="column" style="background-color:#aaa;">
       <div class="columnHeader">
-        ROS Status & Controller Input
+        ROS Status
       </div>
       <p align="center">Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
       <br>
@@ -448,7 +435,10 @@
       <!-- Tab links -->
       <div class="tab">
         <button class="tablinks" onclick="openCity(event, 'Tab_IMU_OrientationDeg')" id="Tab_Default_IMU">Orientation</button>
-        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_Accel')">Acceleration</button>
+        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_Accel')">Linear Acceleration</button>
+        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_AngVel')">Angular Velocity</button>
+        <button class="tablinks" onclick="openCity(event, 'Tab_IMU_Magnetometer')">Vector Magnetometer</button>
+
       </div>
       <!-- Tab content -->
       <div id="Tab_IMU_OrientationDeg" class="tabcontent">
@@ -457,6 +447,14 @@
 
       <div id="Tab_IMU_Accel" class="tabcontent">
         <canvas id="Chart_Acceleration" height="115vw"></canvas>
+      </div>
+
+      <div id="Tab_IMU_AngVel" class="tabcontent">
+        <canvas id="Chart_AngVel" height="115vw"></canvas>
+      </div>
+
+      <div id="Tab_IMU_Magnetometer" class="tabcontent">
+        <canvas id="Chart_Magnetometer" height="115vw"></canvas>
       </div>
 
     </div>
@@ -585,6 +583,8 @@
     camera.eye = [0.06274989247322083, 25.782859802246094, 99.44140625];
   </script>
 
+  <script src="src/chart_create.js"></script>
+
 
   <script>
     document.getElementById("Tab_Default_IMU").click();
@@ -601,208 +601,11 @@
       color: `rgb(255, 0, 0)`
     }).setLngLat([-75.152842, 39.982492]).addTo(map);
 
-
-    var ctx = document.getElementById('Chart_OrientationDeg').getContext('2d');
-    var Chart_OrientationDeg = new Chart(ctx, {
-      // The type of chart we want to create
-      type: 'line',
-
-      // The data for our dataset
-      data: {
-        labels: ['0'],
-        datasets: [{
-          label: 'X',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 0, 0)',
-          data: [0]
-        }, {
-          label: 'Y',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(0, 255, 0)',
-          data: [0]
-        }, {
-          label: 'Z',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(0, 0, 255)',
-          data: [0]
-        }]
-      },
-
-      // Configuration options go here
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        scales: {
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Orientation [deg]'
-            },
-          }]
-        }
-      }
-    });
-
-    var ctx = document.getElementById('Chart_Acceleration').getContext('2d');
-    var Chart_Acceleration = new Chart(ctx, {
-      // The type of chart we want to create
-      type: 'line',
-      // The data for our dataset
-      data: {
-        labels: ['0'],
-        datasets: [{
-          label: 'X',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 0, 0)',
-          data: [0]
-        }, {
-          label: 'Y',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(0, 255, 0)',
-          data: [0]
-        }, {
-          label: 'Z',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(0, 0, 255)',
-          data: [0]
-        }]
-      },
-      // Configuration options go here
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        scales: {
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Acceleration [m/(s^2)]'
-            },
-          }]
-        }
-      }
-    });
-
-    var ctx = document.getElementById('Chart_Battery').getContext('2d');
-    var Chart_Battery = new Chart(ctx, {
-      // The type of chart we want to create
-      type: 'horizontalBar',
-      // The data for our dataset
-      data: {
-        labels: ['6 Cell', '4 Cell', '3 Cell (A)', '3 Cell (B)'],
-        datasets: [{
-          backgroundColor: 'rgb(20, 33, 77)',
-          label: 'Cell 1',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          data: [0]
-        }, {
-          backgroundColor: 'rgb(24, 96, 147)',
-          label: 'Cell 2',
-          data: [0]
-        }, {
-          backgroundColor: 'rgb(28, 160, 214)',
-          label: 'Cell 3',
-          data: [0]
-        }, {
-          backgroundColor: 'rgb(31, 193, 224)',
-          label: 'Cell 4',
-          data: [0]
-        }, {
-          backgroundColor: 'rgb(33, 205, 205)',
-          label: 'Cell 5',
-          data: [0]
-        }, {
-          backgroundColor: 'rgb(36, 223, 182)',
-          label: 'Cell 6',
-          data: [0]
-        }]
-      },
-      // Configuration options go here
-      options: {
-        tooltips: {
-          mode: 'index',
-          intersect: true
-        },
-        responsive: true,
-        maintainAspectRatio: true,
-        scales: {
-          xAxes: [{
-            ticks: {
-              beginAtZero: true
-            },
-            scaleLabel: {
-              display: true,
-              labelString: 'Voltage [V]'
-            },
-            stacked: true
-          }],
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            },
-            stacked: true
-          }]
-        }
-      }
-    });
-
-    var ctx = document.getElementById('Chart_Controller').getContext('2d');
-    var Chart_Controller = new Chart(ctx, {
-      // The type of chart we want to create
-      type: 'bubble',
-      // The data for our dataset
-
-      data: {
-        datasets: [{
-          backgroundColor: 'rgb(255, 0, 0)',
-          label: 'Left Joystick',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          data: [{
-            x: -2,
-            y: 0,
-            r: 15
-          }]
-        }, {
-          backgroundColor: 'rgb(0, 255, 0)',
-          label: 'Right Joystick',
-          //backgroundColor: 'rgb(255, 99, 132)',
-          data: [{
-            x: 2,
-            y: 0,
-            r: 15
-          }]
-        }]
-      },
-      // Configuration options go here
-      options: {
-        tooltips: {
-          mode: 'index',
-          intersect: true
-        },
-        responsive: true,
-        maintainAspectRatio: true,
-        scales: {
-          xAxes: [{
-            ticks: {
-              min: -3.5,
-              max: 3.5
-            },
-          }],
-          yAxes: [{
-            ticks: {
-              min: -1.5,
-              max: 1.5
-            },
-          }]
-        }
-      }
-    });
   </script>
-
 
   <script src="src/ros_RoboBoatHandlers.js"></script>
 
 </body>
-
 
 </body>
 

@@ -1,7 +1,7 @@
 
 #include <ros.h>
 #include <std_msgs/Float32.h>
-#include <geometry_msgs/Vector3.h>
+#include <geometry_msgs/Vector3Stamped.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <sensor_msgs/Imu.h>
 
@@ -21,15 +21,21 @@ ros::NodeHandle nh;
 #define STOP_PWM 4915
 #define RANGEPWM 1311
 
+#define MIN_UPDATE_RATE 1000
+
+unsigned long motor_update = millis();
+
 //Callback function for updating the left ESC
 void leftESC_Change( const std_msgs::Float32& msg) {
   float scale = msg.data; //value between -1 and 1 to allow for forward & reverse
   analogWrite(L_ESC, (unsigned short)(STOP_PWM + RANGEPWM * scale));
+  motor_update = millis(); // Record the time that the motor was updated
 }
 //Callback function for updating the right ESC
 void rightESC_Change( const std_msgs::Float32& msg) {
   float scale = msg.data; //value between -1 and 1 to allow for forward & reverse
   analogWrite(R_ESC, (unsigned short)(STOP_PWM + RANGEPWM * scale));
+  motor_update = millis(); // Record the time that the motor was updated
 }
 
 ros::Subscriber<std_msgs::Float32> Motor_leftESC("Motor_leftPWM", leftESC_Change);
@@ -41,19 +47,22 @@ void updateIMU(void);
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28); //Initializing the Adafruit BNO055 Sensor
 
-geometry_msgs::Vector3 IMU_eulerOrientationMsg;
+geometry_msgs::Vector3Stamped IMU_eulerOrientationMsg;
 ros::Publisher IMU_eulerOrientation("IMU_eulerOrientation", &IMU_eulerOrientationMsg);
 
-geometry_msgs::Vector3 IMU_angularVelocityMsg;
+geometry_msgs::Vector3Stamped IMU_angularVelocityMsg;
 ros::Publisher IMU_angularVelocity("IMU_angularVelocity", &IMU_angularVelocityMsg);
 
-geometry_msgs::Vector3 IMU_linearAccelerationMsg;
+geometry_msgs::Vector3Stamped IMU_linearAccelerationMsg;
 ros::Publisher IMU_linearAcceleration("IMU_linearAcceleration", &IMU_linearAccelerationMsg);
 
-geometry_msgs::Vector3 IMU_absoluteOrientationMsg;
+geometry_msgs::Vector3Stamped IMU_absoluteOrientationMsg;
 ros::Publisher IMU_absoluteOrientation("IMU_absoluteOrientation", &IMU_absoluteOrientationMsg);
 
+geometry_msgs::Vector3Stamped IMU_magVecMsg;
+ros::Publisher IMU_magVec("IMU_magVec", &IMU_magVecMsg);
 
+#define IMU_PUBLISH_RATE 100 //hz
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GPS Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -68,7 +77,6 @@ Adafruit_GPS GPS(&GPSSerial);   // Connect to the GPS on the hardware port
 uint32_t publish_imu_time = 0;
 uint32_t publish_gps_time = 0;
 
-#define IMU_PUBLISH_RATE 10 //hz
 #define GPS_PUBLISH_RATE 1 //hz
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Setup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -120,6 +128,7 @@ void setup() {
   nh.advertise(IMU_angularVelocity);
   nh.advertise(IMU_linearAcceleration);
   nh.advertise(IMU_absoluteOrientation);
+  nh.advertise(IMU_magVec);
 
   nh.advertise(gpsPub);
 
@@ -130,7 +139,7 @@ void setup() {
 
 void loop() {
   //Collecting the data from the BNO055
-  if ((millis() - publish_imu_time) >= 1000 / IMU_PUBLISH_RATE)
+  if (((millis() - publish_imu_time) >= 1000 / IMU_PUBLISH_RATE))
   {
     updateIMU();
     publish_imu_time = millis();
@@ -155,43 +164,71 @@ void loop() {
 
     publish_gps_time = millis();
   }
+
+  
   nh.spinOnce(); // Ensure remains connected to Ros_Serial Server
+
+  if(millis() - motor_update > MIN_UPDATE_RATE){ // Stop the motors if they haven't been updated in 1 second 
+    analogWrite(R_ESC, (unsigned short)(STOP_PWM));
+    analogWrite(L_ESC, (unsigned short)(STOP_PWM));
+  }
+  
 }
 
 void updateIMU(void) {
   sensors_event_t oData , aData , lData, event;
+  
   bno.getEvent(&oData, Adafruit_BNO055::VECTOR_EULER);
+  IMU_eulerOrientationMsg.header.stamp = nh.now();
+  
   bno.getEvent(&aData, Adafruit_BNO055::VECTOR_GYROSCOPE);
+  IMU_angularVelocityMsg.header.stamp = nh.now();
+  
   bno.getEvent(&lData, Adafruit_BNO055::VECTOR_LINEARACCEL);
-  bno.getEvent(&event);
+  IMU_linearAccelerationMsg.header.stamp = nh.now();
+  
+  // Get absolute orientation
+  bno.getEvent(&event); 
+  IMU_absoluteOrientationMsg.header.stamp = nh.now();
+
+  imu::Vector<3> magnet = bno.getVector(Adafruit_BNO055::VECTOR_MAGNETOMETER);
+  IMU_magVecMsg.header.stamp = nh.now();
 
   //Updating the orientation publisher
-  IMU_eulerOrientationMsg.x = oData.orientation.x;  // values in Euler angles or 'degrees', from 0..359
-  IMU_eulerOrientationMsg.y = oData.orientation.y;  // values in Euler angles or 'degrees', from 0..359
-  IMU_eulerOrientationMsg.z = oData.orientation.z;  // values in Euler angles or 'degrees', from 0..359
+  IMU_eulerOrientationMsg.vector.x = oData.orientation.x;  // values in Euler angles or 'degrees', from 0..359
+  IMU_eulerOrientationMsg.vector.y = oData.orientation.y;  // values in Euler angles or 'degrees', from 0..359
+  IMU_eulerOrientationMsg.vector.z = oData.orientation.z;  // values in Euler angles or 'degrees', from 0..359
 
   //Updating the angular velocity publisher
-  IMU_angularVelocityMsg.x = aData.gyro.x;  // values in rps, radians per second
-  IMU_angularVelocityMsg.y = aData.gyro.y;  // values in rps, radians per second
-  IMU_angularVelocityMsg.z = aData.gyro.z;  // values in rps, radians per second
+  IMU_angularVelocityMsg.vector.x = aData.gyro.x;  // values in rps, radians per second
+  IMU_angularVelocityMsg.vector.y = aData.gyro.y;  // values in rps, radians per second
+  IMU_angularVelocityMsg.vector.z = aData.gyro.z;  // values in rps, radians per second
 
   //Updating the linear acceleration publisher
-  IMU_linearAccelerationMsg.x = lData.acceleration.x; // meters/second^2
-  IMU_linearAccelerationMsg.y = lData.acceleration.y; // meters/second^2
-  IMU_linearAccelerationMsg.z = lData.acceleration.z; // meters/second^2
+  IMU_linearAccelerationMsg.vector.x = lData.acceleration.x; // meters/second^2
+  IMU_linearAccelerationMsg.vector.y = lData.acceleration.y; // meters/second^2
+  IMU_linearAccelerationMsg.vector.z = lData.acceleration.z; // meters/second^2
 
   //Updating the absolute orientation acceleration - the y and z values have to be switches here
-  IMU_absoluteOrientationMsg.x = event.orientation.z; // deg
-  IMU_absoluteOrientationMsg.y = event.orientation.y; // deg
-  IMU_absoluteOrientationMsg.z = event.orientation.x; // deg
+  IMU_absoluteOrientationMsg.vector.x = event.orientation.z; // deg
+  IMU_absoluteOrientationMsg.vector.y = event.orientation.y; // deg
+  IMU_absoluteOrientationMsg.vector.z = (event.orientation.x > 180) ? (event.orientation.x - 360) : (event.orientation.x); // deg
+
+  //Updating the linear acceleration publisher
+  IMU_magVecMsg.vector.x = magnet.x(); // uT
+  IMU_magVecMsg.vector.y = magnet.y(); // uT
+  IMU_magVecMsg.vector.z = magnet.z(); // uT
+  
 
   //Publishing the orientation, angular velocity, and linear acceleration Vectors
   IMU_eulerOrientation.publish(&IMU_eulerOrientationMsg);
   IMU_angularVelocity.publish(&IMU_angularVelocityMsg);
   IMU_linearAcceleration.publish(&IMU_linearAccelerationMsg);
   IMU_absoluteOrientation.publish(&IMU_absoluteOrientationMsg);
+  IMU_magVec.publish(&IMU_magVecMsg);
 }
 
+// Converts the GPS coordinates into degrees from degrees/minutes/secondss
 float convertGPS(float f) {
  int firsttwodigits = ((int)f)/100; //This assumes that f < 10000.
  float nexttwodigits = f - (float)(firsttwodigits*100);

@@ -1,64 +1,3 @@
-
-/*
-var ros = new ROSLIB.Ros({
-  // Use the IP Address of the Raspberry Pi or the device hosting the webserver
-  // Port 9090 is the port that rosbridge server uses to interface over the network
-  url: 'ws://10.19.122.101:9090'
-});
-ros.on('connection', function() {
-  document.getElementById("rosConnStatus").innerHTML = "Connected";
-});
-ros.on('error', function(error) {
-  document.getElementById("rosConnStatus").innerHTML = "Error";
-});
-ros.on('close', function() {
-  document.getElementById("rosConnStatus").innerHTML = "Closed";
-});
-
-var ard_LeftPWM_listener = new ROSLIB.Topic({
-  ros: ros,
-  name: '/Motor_LeftPWM',
-  messageType: 'std_msgs/Float32'
-});
-
-var ard_RightPWM_listener = new ROSLIB.Topic({
-  ros: ros,
-  name: '/Motor_RightPWM',
-  messageType: 'std_msgs/Float32'
-});
-
- var ControlMode = new ROSLIB.Topic({
-  ros: ros,
-  name: '/status_light_manual_mode',
-  messageType: 'std_msgs/Bool'
-});
-
-
-var BatteryListener = new ROSLIB.Topic({
-  ros: ros,
-  name: '/BatteryVoltage',
-  messageType: 'std_msgs/String'
-});
-
-var IMU_AbsOrientationListener = new ROSLIB.Topic({
-  ros: ros,
-  name: '/IMU_absoluteOrientation',
-  messageType: 'geometry_msgs/Vector3'
-});
-
-var IMU_AccelerationListener = new ROSLIB.Topic({
-  ros: ros,
-  name: '/IMU_linearAcceleration',
-  messageType: 'geometry_msgs/Vector3'
-});
-
-var GPS_Coordinates = new ROSLIB.Topic({
-  ros: ros,
-  name: '/gps',
-  messageType: 'sensor_msgs/NavSatFix'
-});
-*/
-
 BatteryListener.subscribe(function(message) {
   var separateBattery = message.data.split(",");
   bat_6s = separateBattery[0].split(" ").map(Number);
@@ -73,47 +12,75 @@ BatteryListener.subscribe(function(message) {
   Chart_Battery.data.datasets[4].data = [bat_6s[4], 0, 0, 0];
   Chart_Battery.data.datasets[5].data = [bat_6s[5], 0, 0, 0];
   Chart_Battery.update(0);
-  /*
-  console.log('bat_6s ' + bat_6s);
-  console.log('bat_4s ' + bat_4s);
-  console.log('bat_3sa ' + bat_3sa);
-  console.log('bat_3sb ' + bat_3sb);
-  */
 });
 
 IMU_AbsOrientationListener.subscribe(function(message) {
-  if (IMU_Cnt == 0) {
-    X_zero = message.x;
-    Y_zero = message.y;
-    Z_zero = message.z;
+
+  msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
+
+  if (msgTime - IMU_OrientationLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
+    IMU_OrientationLastUpdateTime = msgTime;
+    orientation_deg = [message.vector.x, message.vector.y, message.vector.z];
+    var rotation = BoatModel.rotation;
+
+    rotation[0] = orientation_deg[0] - 90;
+    rotation[1] = orientation_deg[1];
+    rotation[2] = orientation_deg[2];
+    BoatModel.rotation = rotation;
+
+    updateChart(Chart_OrientationDeg, orientation_deg, msgTime, IMU_Cnt);
+    IMU_Cnt++;
   }
 
-  orientation_deg = [message.x - X_zero, message.y - Y_zero, message.z - Z_zero];
-  var rotation = BoatModel.rotation;
-
-  rotation[0] = orientation_deg[0] - 90;
-  rotation[1] = orientation_deg[1];
-  rotation[2] = orientation_deg[2];
-  BoatModel.rotation = rotation;
-
-  updateChart(Chart_OrientationDeg, orientation_deg, IMU_Cnt);
-  IMU_Cnt++;
 });
 
-IMU_AccelerationListener.subscribe(function(message) {
-  accel = [message.x, message.y, message.z];
-  updateChart(Chart_Acceleration, accel, IMU_Accel_Cnt)
-  IMU_Accel_Cnt++;
+IMU_LinearAccelerationListener.subscribe(function(message) {
+
+  msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
+  if (msgTime - IMU_LinearAccelerationLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
+    IMU_LinearAccelerationLastUpdateTime = msgTime;
+    accel = [message.vector.x, message.vector.y, message.vector.z];
+
+    updateChart(Chart_Acceleration, accel, msgTime, IMU_Accel_Cnt);
+    IMU_Accel_Cnt++;
+  }
+
 });
 
-function updateChart(chart, newData, count){
-  if (IMU_Accel_Cnt < MAX_PLOT_IDX) {
-    chart.data.labels.push(count);
+IMU_AngularVelocityListener.subscribe(function(message) {
+
+  msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
+  if (msgTime - IMU_AngularVelocityLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
+    IMU_AngularVelocityLastUpdateTime = msgTime;
+    angVel = [message.vector.x, message.vector.y, message.vector.z];
+
+    updateChart(Chart_AngularVelocity, angVel, msgTime, IMU_AngVel_Cnt);
+    IMU_AngVel_Cnt++;
+  }
+
+});
+
+IMU_MagnetometerListener.subscribe(function(message) {
+
+  msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
+  if (msgTime - IMU_MagnetometerLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
+    IMU_MagnetometerLastUpdateTime = msgTime;
+    magVec = [message.vector.x, message.vector.y, message.vector.z];
+
+    updateChart(Chart_Magnetometer, magVec, msgTime, IMU_MagVec_Cnt);
+    IMU_MagVec_Cnt++;
+  }
+
+});
+
+function updateChart(chart, newData, name, count) {
+  if (count < MAX_PLOT_IDX) {
+    chart.data.labels.push(name);
     chart.data.datasets.forEach((dataset, index) => {
       dataset.data.push(newData[index]);
     });
   } else {
-    chart.data.labels.push(count);
+    chart.data.labels.push(name);
     chart.data.datasets.forEach((dataset, index) => {
       dataset.data.push(newData[index]);
       dataset.data.splice(0, 1); // remove first data point
@@ -137,7 +104,6 @@ GPS_Coordinates.subscribe(function(message) {
   document.getElementById("GPS_longitude").innerHTML = GPS_longitude;
   document.getElementById("GPS_altitude").innerHTML = GPS_altitude;
 
-  console.log("GPS_fix" + GPS_fix);
 
   if (GPS_fix == 1 && GPS_fixquality != 0) { // If there is a valid connection (GPS_fixquality != 0), update map
     map.setCenter([GPS_longitude, GPS_latitude]);
@@ -153,7 +119,6 @@ GPS_Coordinates.subscribe(function(message) {
     }).setLngLat(tmp).addTo(map);
 
   }
-
 
   document.getElementById("GPS_fix").innerHTML = GPS_fix;
   document.getElementById("GPS_fixquality").innerHTML = GPS_fixquality;

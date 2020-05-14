@@ -41,13 +41,25 @@ BatteryListener = new ROSLIB.Topic({
 IMU_AbsOrientationListener = new ROSLIB.Topic({
   ros: ros,
   name: '/IMU_absoluteOrientation',
-  messageType: 'geometry_msgs/Vector3'
+  messageType: 'geometry_msgs/Vector3Stamped'
 });
 
-IMU_AccelerationListener = new ROSLIB.Topic({
+IMU_LinearAccelerationListener = new ROSLIB.Topic({
   ros: ros,
   name: '/IMU_linearAcceleration',
-  messageType: 'geometry_msgs/Vector3'
+  messageType: 'geometry_msgs/Vector3Stamped'
+});
+
+IMU_AngularVelocityListener = new ROSLIB.Topic({
+  ros: ros,
+  name: '/IMU_angularVelocity',
+  messageType: 'geometry_msgs/Vector3Stamped'
+});
+
+IMU_MagnetometerListener = new ROSLIB.Topic({
+  ros: ros,
+  name: '/IMU_magVec',
+  messageType: 'geometry_msgs/Vector3Stamped'
 });
 
 GPS_Coordinates = new ROSLIB.Topic({
