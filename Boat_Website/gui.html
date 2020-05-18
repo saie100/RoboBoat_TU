@@ -85,7 +85,7 @@
     }
   </script>
 
-  <script src="src/ros_RoboBoatSetup.js"></script>
+  <script src="src/ros_setup.js"></script>
 
 
   <!-- Styles -->
@@ -379,6 +379,17 @@
       transform: rotateY(0)
     }
 
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      padding: 5px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
 
 
   </style>
@@ -396,16 +407,25 @@
       <p align="center">Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
       <br>
       <p align="center">Control Mode</p>
-        <label class="switch switch-yes-no" style="margin: auto;">
-          <input class="switch-input" type="checkbox" id="controlCheck" onclick="ControlMode.publish(new ROSLIB.Message({data: !document.getElementById('controlCheck').checked}));"/>
-          <span class="switch-label" data-on="Autonomous" data-off="Manual"></span>
-          <span class="switch-handle"></span>
-        </label>
-
+      <label class="switch switch-yes-no" style="margin: auto;">
+        <input class="switch-input" type="checkbox" id="controlCheck" onclick="ControlMode.publish(new ROSLIB.Message({data: !document.getElementById('controlCheck').checked}));" />
+        <span class="switch-label" data-on="Autonomous" data-off="Manual"></span>
+        <span class="switch-handle"></span>
+      </label>
     </div>
     <div class="column" height="115px" style="background-color:#bbb; min-width: 0; min-height: 0;">
       <div class="columnHeader">Controller Input<span id="gamepad_connection"></span></div>
-      <canvas id="Chart_Controller"></canvas>
+      <canvas id="Chart_Controller" height="110vw"></canvas>
+      <table>
+        <tr>
+          <th>Left Joystick Value</th>
+          <th>Right Joystick Value</th>
+        </tr>
+        <tr>
+          <td><span id="lJoystickVal"></span></td>
+          <td><span id="rJoystickVal"></span></td>
+        </tr>
+      </table>
 
     </div>
     <div class="column" height="115px" style="background-color:#ccc; min-width: 0; min-height: 0;">
@@ -414,12 +434,22 @@
     </div>
   </div>
   <div class="row">
-    <div class="column" style="background-color:#eee;">
+    <div class="column" style="background-color:#eee; -webkit-flex: 3; min-width: 0; min-height: 0">
       <div class="columnHeader">ZED Camera Stream</div>
       <br>
       <div id="ZED_Raw">
         <img style="max-width: 100%; height: auto; margin: auto;" src="http://10.19.122.102:8080/stream?topic=/zed/zed_node/stereo_raw/image_raw_color">
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column" style="background-color:#aaa; min-width: 0; min-height: 0;">
+      <div class="columnHeader">LIDAR Info</div>
+    </div>
+    <div class="column" style="background-color:#bbb; -webkit-flex: 3; min-width: 0; min-height: 0;">
+      <div class="columnHeader">LIDAR Data</div>
+      <br>
+      <canvas id="Chart_LIDAR" height="90vw"></canvas>
     </div>
   </div>
   <div class="row">
@@ -469,11 +499,31 @@
       <div class="columnHeader">
         GPS Topic Data
       </div>
-      <p>GPS Fix: <span id="GPS_fix"></span></p>
-      <p>Fix Quality: <span id="GPS_fixquality"></span></p>
-      <p>Latitude: <span id="GPS_latitude"></span> [deg]</p>
-      <p>Longitude: <span id="GPS_longitude"></span> [deg]</p>
-      <p>Altitude: <span id="GPS_altitude"></span> [cm]</p>
+      <br>
+      <br>
+      <br>
+      <table>
+        <tr>
+          <th>GPS Fix</th>
+          <td><span id="GPS_fix"></span></td>
+        </tr>
+        <tr>
+          <th>Fix Quality</th>
+          <td><span id="GPS_fixquality"></span></td>
+        </tr>
+        <tr>
+          <th>Latitude [deg]</th>
+          <td><span id="GPS_latitude"></span></td>
+        </tr>
+        <tr>
+          <th>Longitude [deg]</th>
+          <td><span id="GPS_longitude"></span></td>
+        </tr>
+        <tr>
+          <th>Altitude [cm]</th>
+          <td><span id="GPS_altitude"></span></td>
+        </tr>
+      </table>
     </div>
     <div class="column" style="background-color:#bbb; -webkit-flex: 2">
       <div class="columnHeader">
@@ -485,140 +535,114 @@
 
   </div>
 
-  <script type="text/javascript">
-    //GAME PAD OUTPUT
+</body>
 
 
-    function move(axVal) {
-      var lScale = new ROSLIB.Message({
-        data: -(axVal[1]-axisOffset[1])
-      });
-      var rScale = new ROSLIB.Message({
-        data: -(axVal[4]-axisOffset[4])
-      });
-      ard_LeftPWM_listener.publish(lScale);
-      ard_RightPWM_listener.publish(rScale);
+<script src="src/OrientationAnimation.js"></script>
+<script src="src/chart_create.js"></script>
+<script src="src/chart_update.js"></script>
+<script src="src/mapbox_setup.js"></script>
+<script src="src/ros_handlers.js"></script>
 
-      Chart_Controller.data.datasets[0].data = [{
-        x: -2 + (axVal[0]-axisOffset[0]),
-        y: -(axVal[1]-axisOffset[1]),
-        r: 15
-      }];
-      Chart_Controller.data.datasets[1].data = [{
-        x: 2 + (axVal[3]-axisOffset[3]),
-        y: -(axVal[4]-axisOffset[4]),
-        r: 15
-      }];
-      Chart_Controller.update(0);
-    }
 
-    function gamepadHandler(event, connecting) {
-      if (connecting) {
-        var gp = event.gamepad;
-        console.log(gp.id);
-        if (gp.id.localeCompare("Xbox 360 Wired Controller (Vendor: 046d Product: c21d)") == 0) {
-          gpidx = gp.index;
-          console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", gp.index, gp.id, gp.buttons.length, gp.axes.length);
-          zeroAxis();
-          setInterval(updateControl, gpPollInt);
-          document.getElementById("gamepad_connection").innerHTML = " - Connected";
-        } else {
-          document.getElementById("gamepad_connection").innerHTML = " - Invalid";
-          console.log("Invalid Gamepad");
-          gpidx = -1;
-          clearInterval(gpPollInt);
-        }
+<script type="text/javascript">
+  //GAME PAD OUTPUT
+
+
+  function move(axVal) {
+    var lScale = new ROSLIB.Message({
+      data: -(axVal[1] - axisOffset[1])
+    });
+    var rScale = new ROSLIB.Message({
+      data: -(axVal[4] - axisOffset[4])
+    });
+    ard_LeftPWM_listener.publish(lScale);
+    ard_RightPWM_listener.publish(rScale);
+  }
+
+  function gamepadHandler(event, connecting) {
+    if (connecting) {
+      var gp = event.gamepad;
+      console.log(gp.id);
+      if (gp.id.localeCompare("Xbox 360 Wired Controller (Vendor: 046d Product: c21d)") == 0) {
+        gpidx = gp.index;
+        console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", gp.index, gp.id, gp.buttons.length, gp.axes.length);
+        zeroAxis();
+        setInterval(updateControl, gpPollInt);
+        document.getElementById("gamepad_connection").innerHTML = " - Connected";
       } else {
+        document.getElementById("gamepad_connection").innerHTML = " - Invalid";
+        console.log("Invalid Gamepad");
         gpidx = -1;
         clearInterval(gpPollInt);
-        document.getElementById("gamepad_connection").innerHTML = " - Disconnected";
       }
+    } else {
+      gpidx = -1;
+      clearInterval(gpPollInt);
+      document.getElementById("gamepad_connection").innerHTML = " - Disconnected";
     }
+  }
 
-    function updateControl() {
-      var gp = navigator.getGamepads()[gpidx];
-      if (gp != null && gpidx != -1) {
-        if (gp.buttons[zeroAxisButton].pressed == true) {
-          zeroAxis();
-        }
-        for (var i = 0; i < gp.axes.length; i++) {
-          //We only care about one gamepad connected, so this will only apply an axis offset
-          //to a single gamepad, not multiple
-          //document.getElementById("gpax$i".replace("$i", i)).innerHTML = gp.axes[i] - axisOffset[i];
-        }
-        move(gp.axes);
-      } else {
-        move([0, 0, 0, 0]);
+  function updateControl() {
+    var gp = navigator.getGamepads()[gpidx];
+    if (gp != null && gpidx != -1) {
+      if (gp.buttons[zeroAxisButton].pressed == true) {
+        zeroAxis();
       }
-    }
-
-    function zeroAxis() {
-      var gp = navigator.getGamepads()[gpidx];
       for (var i = 0; i < gp.axes.length; i++) {
-        axisOffset[i] = gp.axes[i];
+        //We only care about one gamepad connected, so this will only apply an axis offset
+        //to a single gamepad, not multiple
+        //document.getElementById("gpax$i".replace("$i", i)).innerHTML = gp.axes[i] - axisOffset[i];
       }
-      console.log("Axis Zeroed");
+      move(gp.axes);
+    } else {
+      move([0, 0, 0, 0]);
     }
+  }
 
-    const SERVCTL_StartROS = 1;
-
-    function ServerControl(opt) {
-      if (opt == SERVCTL_StartROS) { // Start ROSCore &
-        console.log("You pressed the button! %d", opt);
-      }
+  function zeroAxis() {
+    var gp = navigator.getGamepads()[gpidx];
+    for (var i = 0; i < gp.axes.length; i++) {
+      axisOffset[i] = gp.axes[i];
     }
+    console.log("Axis Zeroed");
+  }
 
-    window.addEventListener("gamepadconnected", function(e) {
-      gamepadHandler(e, true);
-    }, false);
-    window.addEventListener("gamepaddisconnected", function(e) {
-      gamepadHandler(e, false);
-    }, false);
-  </script>
+  const SERVCTL_StartROS = 1;
+
+  function ServerControl(opt) {
+    if (opt == SERVCTL_StartROS) { // Start ROSCore &
+      console.log("You pressed the button! %d", opt);
+    }
+  }
+
+  window.addEventListener("gamepadconnected", function(e) {
+    gamepadHandler(e, true);
+  }, false);
+  window.addEventListener("gamepaddisconnected", function(e) {
+    gamepadHandler(e, false);
+  }, false);
+</script>
 
 
 
-  <script src="src/OrientationAnimation.js"></script>
-  <script type='text/javascript'>
-    camera.eye = [0.06274989247322083, 25.782859802246094, 99.44140625];
-  </script>
 
-  <script src="src/chart_create.js"></script>
-
-
-  <script>
-    document.getElementById("Tab_Default_IMU").click();
-
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYnlyb25nYXNwYXJkIiwiYSI6ImNrOGtudGIxMzAzdm8zZ28yNDFuMHcwdXQifQ.fY_gpP0xJ77xE-OyyH_wbg';
-    map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/outdoors-v11',
-      center: [-75.152842, 39.982492], // Set to Temple Engineering location on startup
-      zoom: 16
-    });
-
-    marker = new mapboxgl.Marker({
-      color: `rgb(255, 0, 0)`
-    }).setLngLat([-75.152842, 39.982492]).addTo(map);
-
-  </script>
-
-  <script src="src/ros_RoboBoatHandlers.js"></script>
-
-</body>
-
-</body>
 
 <style>
   /* We're working with the body tag, and so with the WHOLE page */
   head {
-    background-color: black; /* The page background will be black */
-    color: white; /* The page text will be white */
+    background-color: black;
+    /* The page background will be black */
+    color: white;
+    /* The page text will be white */
   }
+
   /* We're working with the body tag, and so with the WHOLE page */
   body {
-    background-color: black; /* The page background will be black */
-    color: white; /* The page text will be white */
+    background-color: black;
+    /* The page background will be black */
+    color: white;
+    /* The page text will be white */
   }
 </style>
 

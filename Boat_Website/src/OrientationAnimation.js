@@ -43,6 +43,10 @@ followAnimation = new xeogl.CameraFollowAnimation(scene,{
 
 
 
+camera.eye = [0.06274989247322083, 25.782859802246094, 99.44140625];
+
+
+
 
 /*
 var scene = new xeogl.Scene({

@@ -67,3 +67,9 @@ GPS_Coordinates = new ROSLIB.Topic({
   name: '/gps',
   messageType: 'sensor_msgs/NavSatFix'
 });
+
+LIDAR_Scan = new ROSLIB.Topic({
+  ros: ros,
+  name: '/scan',
+  messageType: 'sensor_msgs/LaserScan'
+});

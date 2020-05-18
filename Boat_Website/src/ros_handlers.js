@@ -1,3 +1,15 @@
+ard_LeftPWM_listener.subscribe(function(message) {
+  updateGamepadChart(0, message.data)
+  document.getElementById("lJoystickVal").innerHTML =  Math.round(message.data*1000)/1000;
+
+});
+
+ard_RightPWM_listener.subscribe(function(message) {
+  updateGamepadChart(1, message.data)
+  document.getElementById("rJoystickVal").innerHTML = Math.round(message.data*1000)/1000;
+});
+
+
 BatteryListener.subscribe(function(message) {
   var separateBattery = message.data.split(",");
   bat_6s = separateBattery[0].split(" ").map(Number);
@@ -73,24 +85,6 @@ IMU_MagnetometerListener.subscribe(function(message) {
 
 });
 
-function updateChart(chart, newData, name, count) {
-  if (count < MAX_PLOT_IDX) {
-    chart.data.labels.push(name);
-    chart.data.datasets.forEach((dataset, index) => {
-      dataset.data.push(newData[index]);
-    });
-  } else {
-    chart.data.labels.push(name);
-    chart.data.datasets.forEach((dataset, index) => {
-      dataset.data.push(newData[index]);
-      dataset.data.splice(0, 1); // remove first data point
-    });
-    chart.data.labels.splice(0, 1);
-  }
-
-  chart.update(0);
-}
-
 GPS_Coordinates.subscribe(function(message) {
   //console.log('Received message on ' + GPS_Coordinates.name + ': ' + message.status.status);
 
@@ -137,3 +131,47 @@ GPS_Coordinates.subscribe(function(message) {
     document.getElementById("GPS_fixquality").innerHTML = "Invalid";
   }
 });
+
+
+LIDAR_Scan.subscribe(function(message) {
+  console.log('lidar message received');
+
+  var ang = message.angle_min;
+  var catesian_data = [];
+  var i;
+  for (i = 0; i < message.ranges.length; i++) {
+  if(message.ranges[i] != Infinity){
+    var xc = message.ranges[i] * Math.cos(ang);
+    var yc = message.ranges[i] * Math.sin(ang);
+    if(-xc > 0){
+      catesian_data.push({ x: yc, y: -xc});
+    }
+  }
+    ang = ang + message.angle_increment;
+  }
+
+
+  Chart_LIDAR.data.datasets[0].data = catesian_data;
+  Chart_LIDAR.update(0);
+  //console.log(Chart_LIDAR.data.datasets[0].data)
+});
+
+
+
+function updateChart(chart, newData, name, count) {
+  if (count < MAX_PLOT_IDX) {
+    chart.data.labels.push(name);
+    chart.data.datasets.forEach((dataset, index) => {
+      dataset.data.push(newData[index]);
+    });
+  } else {
+    chart.data.labels.push(name);
+    chart.data.datasets.forEach((dataset, index) => {
+      dataset.data.push(newData[index]);
+      dataset.data.splice(0, 1); // remove first data point
+    });
+    chart.data.labels.splice(0, 1);
+  }
+
+  chart.update(0);
+}

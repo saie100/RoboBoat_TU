@@ -154,27 +154,27 @@ var Chart_Battery = new Chart(ctx, {
     datasets: [{
       backgroundColor: 'rgb(20, 33, 77)',
       label: 'Cell 1',
-      data: [0]
+      data: []
     }, {
       backgroundColor: 'rgb(24, 96, 147)',
       label: 'Cell 2',
-      data: [0]
+      data: []
     }, {
       backgroundColor: 'rgb(28, 160, 214)',
       label: 'Cell 3',
-      data: [0]
+      data: []
     }, {
       backgroundColor: 'rgb(31, 193, 224)',
       label: 'Cell 4',
-      data: [0]
+      data: []
     }, {
       backgroundColor: 'rgb(33, 205, 205)',
       label: 'Cell 5',
-      data: [0]
+      data: []
     }, {
       backgroundColor: 'rgb(36, 223, 182)',
       label: 'Cell 6',
-      data: [0]
+      data: []
     }]
   },
   // Configuration options go here
@@ -188,7 +188,9 @@ var Chart_Battery = new Chart(ctx, {
     scales: {
       xAxes: [{
         ticks: {
-          beginAtZero: true
+          min: 0,
+          max: 26,
+          stepSize: 1
         },
         scaleLabel: {
           display: true,
@@ -218,7 +220,7 @@ var Chart_Controller = new Chart(ctx, {
       label: 'Left Joystick',
       //backgroundColor: 'rgb(255, 99, 132)',
       data: [{
-        x: -2,
+        x: -1,
         y: 0,
         r: 15
       }]
@@ -227,7 +229,7 @@ var Chart_Controller = new Chart(ctx, {
       label: 'Right Joystick',
       //backgroundColor: 'rgb(255, 99, 132)',
       data: [{
-        x: 2,
+        x: 1,
         y: 0,
         r: 15
       }]
@@ -244,8 +246,8 @@ var Chart_Controller = new Chart(ctx, {
     scales: {
       xAxes: [{
         ticks: {
-          min: -3.5,
-          max: 3.5
+          min: -2,
+          max: 2
         },
       }],
       yAxes: [{
@@ -256,4 +258,45 @@ var Chart_Controller = new Chart(ctx, {
       }]
     }
   }
+});
+
+var ctx = document.getElementById('Chart_LIDAR').getContext('2d');
+var Chart_LIDAR = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Scatter Dataset',
+            backgroundColor: 'rgb(255, 0, 0)',
+            data: [{
+                x: 0,
+                y: 0
+            }]
+        }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        xAxes: [{
+          ticks: {
+            min: -4,
+            max: 4
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Distance [m]'
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            min: 0,
+            max: 2
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Distance [m]'
+          }
+        }]
+      }
+    }
 });
