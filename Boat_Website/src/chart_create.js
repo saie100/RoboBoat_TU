@@ -22,6 +22,8 @@ var Chart_OrientationDeg = new Chart(ctx, {
   },
 
   // Configuration options go here
+  // Look at this link for time configuration
+  // https://www.chartjs.org/docs/latest/axes/cartesian/time.html#display-formats
   options: {
     responsive: true,
     maintainAspectRatio: true,
@@ -262,41 +264,41 @@ var Chart_Controller = new Chart(ctx, {
 
 var ctx = document.getElementById('Chart_LIDAR').getContext('2d');
 var Chart_LIDAR = new Chart(ctx, {
-    type: 'scatter',
-    data: {
-        datasets: [{
-            label: 'Scatter Dataset',
-            backgroundColor: 'rgb(255, 0, 0)',
-            data: [{
-                x: 0,
-                y: 0
-            }]
-        }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        xAxes: [{
-          ticks: {
-            min: -4,
-            max: 4
-          },
-          scaleLabel: {
-            display: true,
-            labelString: 'Distance [m]'
-          }
-        }],
-        yAxes: [{
-          ticks: {
-            min: 0,
-            max: 2
-          },
-          scaleLabel: {
-            display: true,
-            labelString: 'Distance [m]'
-          }
-        }]
-      }
+  type: 'scatter',
+  data: {
+    datasets: [{
+      label: 'Scatter Dataset',
+      backgroundColor: 'rgb(255, 0, 0)',
+      data: [{
+        x: 0,
+        y: 0
+      }]
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    scales: {
+      xAxes: [{
+        ticks: {
+          min: -4,
+          max: 4
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Distance [m]'
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          min: 0,
+          max: 2
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Distance [m]'
+        }
+      }]
     }
+  }
 });

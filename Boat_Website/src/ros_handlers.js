@@ -1,11 +1,10 @@
 ard_LeftPWM_listener.subscribe(function(message) {
-  updateGamepadChart(0, message.data)
-  document.getElementById("lJoystickVal").innerHTML =  Math.round(message.data*1000)/1000;
-
+  updateGamepadChart(0, message.data);
+  document.getElementById("lJoystickVal").innerHTML = Math.round(message.data*1000)/1000;
 });
 
 ard_RightPWM_listener.subscribe(function(message) {
-  updateGamepadChart(1, message.data)
+  updateGamepadChart(1, message.data);
   document.getElementById("rJoystickVal").innerHTML = Math.round(message.data*1000)/1000;
 });
 
@@ -134,8 +133,8 @@ GPS_Coordinates.subscribe(function(message) {
 
 
 LIDAR_Scan.subscribe(function(message) {
-  console.log('lidar message received');
-
+  var range_min = 100;
+  var range_max = 0;
   var ang = message.angle_min;
   var catesian_data = [];
   var i;
@@ -145,15 +144,30 @@ LIDAR_Scan.subscribe(function(message) {
     var yc = message.ranges[i] * Math.sin(ang);
     if(-xc > 0){
       catesian_data.push({ x: yc, y: -xc});
+      if(message.ranges[i] < range_min){
+        range_min = message.ranges[i];
+      }
+      else if(message.ranges[i] > range_max){
+        range_max = message.ranges[i];
+      }
     }
   }
     ang = ang + message.angle_increment;
   }
 
+  var f_secs = Math.round(message.header.stamp.nsecs / Math.pow(10,5)); // Fractional seconds
+  var myDate = new Date(message.header.stamp.secs * 1000);
+
+  var options = { hour12: false, fractionalSecondDigits: 3};
+
+  document.getElementById("LIDAR_range_min").innerHTML = Math.round(range_min*1000)/1000;
+  document.getElementById("LIDAR_range_max").innerHTML = Math.round(range_max*1000)/1000;
+  document.getElementById("LIDAR_time_increment").innerHTML = Math.round(message.time_increment*1000*1000)/1000;
+  document.getElementById("LIDAR_scan_time").innerHTML = Math.round(message.scan_time*1000*1000)/1000;
+  document.getElementById("LIDAR_last_measured_Time").innerHTML = myDate.toLocaleString("en-US", options) + "." + f_secs;
 
   Chart_LIDAR.data.datasets[0].data = catesian_data;
   Chart_LIDAR.update(0);
-  //console.log(Chart_LIDAR.data.datasets[0].data)
 });
 
 

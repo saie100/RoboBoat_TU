@@ -9,12 +9,14 @@
   <!-- Downloaded from: https://github.com/RobotWebTools/roslibjs/blob/develop/build/roslib.js -->
   <script type="text/javascript" src="src/roslib.js"></script>
 
-  <script src="xeogl/build/xeogl.js"></script>
-  <script src="xeogl/examples/js/geometry/vectorTextGeometry.js"></script>
-  <script src="xeogl/examples/js/models/STLModel.js"></script>
-  <script src="xeogl/examples/js/animation/cameraFollowAnimation.js"></script>
-  <script src="xeogl/examples/js/skyboxes/skybox.js"></script>
+  <!-- Downloaded from: https://github.com/xeolabs/xeogl/archive/master.zip -->
+  <script src="src/xeogl-master/build/xeogl.js"></script>
+  <script src="src/xeogl-master/examples/js/geometry/vectorTextGeometry.js"></script>
+  <script src="src/xeogl-master/examples/js/models/STLModel.js"></script>
+  <script src="src/xeogl-master/examples/js/animation/cameraFollowAnimation.js"></script>
+  <script src="src/xeogl-master/examples/js/skyboxes/skybox.js"></script>
 
+  <!-- Downloaded from: https://github.com/chartjs/Chart.js/releases/tag/v2.9.3 -->
   <script src="src/Chart.js-2.9.3/dist/Chart.js"></script>
 
   <script src="src/divTabs.js"></script>
@@ -32,12 +34,14 @@
     var camera;
     var followAnimation;
 
-    const zeroAxisButton = 9; // The start button on the Logitech Gamepad F310
+    const zeroAxisButton = 8; // The start button on the Logitech Gamepad F310
     const leftJoystickVert = 1; // The index of the left joystick's vertical axis
     const rightJoystickVert = 4; // The index of the left joystick's vertical axis
     var axisOffset = [0, 0, 0, 0, 0, 0];
     var gpPollInt = 100;
     var gpidx;
+    var controlPolling;
+    var axisZeroed = false;
 
     var orientation_deg = [0, 0, 0]
     var IMU_Cnt = 0;
@@ -76,6 +80,15 @@
     var IMU_LinearAccelerationLastUpdateTime = 0;
     var IMU_AngularVelocityLastUpdateTime = 0;
     var IMU_MagnetometerLastUpdateTime = 0;
+
+    var timeFormatter = new Intl.DateTimeFormat('en-us', {
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      fractionalSecondDigits: 3,
+      hour12: true,
+      timeZone: 'UTC'
+    });
 
     function updateControlMode() {
       var Bool_msg = new ROSLIB.Message({
@@ -209,174 +222,83 @@
       border-top: none;
     }
 
-    .switch {
+    .onoffswitch {
       position: relative;
-      display: block;
-      vertical-align: top;
-      width: 200px;
-      height: 58px;
-      padding: 0px;
-      margin: auto;
-      background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
-      background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
-      border-radius: 18px;
-      box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-      box-sizing: content-box;
+      width: 157px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
 
-    .switch-input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      box-sizing: content-box;
-    }
-
-    .switch-label {
-      position: relative;
-      display: block;
-      height: inherit;
-      font-size: 22px;
-      text-transform: uppercase;
-      background: #eceeef;
-      border-radius: inherit;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
-      box-sizing: content-box;
-    }
-
-    .switch-label:before,
-    .switch-label:after {
-      position: absolute;
-      top: 50%;
-      margin-top: -.5em;
-      line-height: 1;
-      -webkit-transition: inherit;
-      -moz-transition: inherit;
-      -o-transition: inherit;
-      transition: inherit;
-      box-sizing: content-box;
-    }
-
-    .switch-label:before {
-      content: attr(data-off);
-      right: 11px;
-      color: #000000;
-      text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-    }
-
-    .switch-label:after {
-      content: attr(data-on);
-      left: 11px;
-      color: #000000;
-      text-shadow: 0 1px rgba(0, 0, 0, 0.2);
-      opacity: 0;
-    }
-
-    .switch-input:checked~.switch-label {
-      background: #E1B42B;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
-    }
-
-    .switch-input:checked~.switch-label:before {
-      opacity: 0;
-    }
-
-    .switch-input:checked~.switch-label:after {
-      opacity: 1;
-    }
-
-    .switch-handle {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
-      background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
-      border-radius: 100%;
-      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .switch-handle:before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin: -6px 0 0 -6px;
-      width: 12px;
-      height: 12px;
-      background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
-      background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
-      border-radius: 6px;
-      box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
-    }
-
-    .switch-input:checked~.switch-handle {
-      left: 74px;
-      box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .switch-label,
-    .switch-handle {
-      transition: All 0.3s ease;
-      -webkit-transition: All 0.3s ease;
-      -moz-transition: All 0.3s ease;
-      -o-transition: All 0.3s ease;
-    }
-
-    .switch-yes-no {
-      padding: 0;
-      margin: 15px 0 0;
-      background: #FFF;
-      border-radius: 0;
-      background-image: none;
-    }
-
-    .switch-yes-no .switch-label {
-      box-shadow: none;
-      background: none;
-    }
-
-    .switch-yes-no .switch-label:after,
-    .switch-yes-no .switch-label:before {
-      width: 100%;
-      height: 70%;
-      top: 5px;
-      left: 0;
-      text-align: center;
-      padding-top: 10%;
-      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .switch-yes-no .switch-label:after {
-      color: #000000;
-      /* background: #32CD32; */
-      background: #3a86c2;
-      backface-visibility: hidden;
-      transform: rotateY(180deg);
-    }
-
-    .switch-yes-no .switch-label:before {
-      background: #E9E600;
-      backface-visibility: hidden;
-    }
-
-    .switch-yes-no .switch-handle {
+    .onoffswitch-checkbox {
       display: none;
     }
 
-    .switch-yes-no .switch-input:checked~.switch-label {
-      background: #FFF;
-      border-color: #0088cc;
+    .onoffswitch-label {
+      display: block;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid #999999;
+      border-radius: 20px;
     }
 
-    .switch-yes-no .switch-input:checked~.switch-label:before {
-      transform: rotateY(180deg)
+    .onoffswitch-inner {
+      display: block;
+      width: 200%;
+      margin-left: -100%;
+      transition: margin 0.3s ease-in 0s;
     }
 
-    .switch-yes-no .switch-input:checked~.switch-label:after {
-      transform: rotateY(0)
+    .onoffswitch-inner:before,
+    .onoffswitch-inner:after {
+      display: block;
+      float: left;
+      width: 50%;
+      height: 33px;
+      padding: 0;
+      line-height: 33px;
+      font-size: 14px;
+      color: white;
+      font-family: Trebuchet, Arial, sans-serif;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    .onoffswitch-inner:before {
+      content: "MANUAL";
+      padding-left: 10px;
+      background-color: #FFFF00;
+      color: #000000;
+    }
+
+    .onoffswitch-inner:after {
+      content: "AUTONOMOUS";
+      padding-right: 10px;
+      background-color: #00DDFF;
+      color: #000000;
+      text-align: right;
+    }
+
+    .onoffswitch-switch {
+      display: block;
+      width: 23px;
+      margin: 5px;
+      background: #FFFFFF;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 120px;
+      border: 2px solid #999999;
+      border-radius: 20px;
+      transition: all 0.3s ease-in 0s;
+    }
+
+    .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-inner {
+      margin-left: 0;
+    }
+
+    .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
+      right: 0px;
     }
 
     table {
@@ -386,12 +308,50 @@
 
     th,
     td {
-      padding: 5px;
+      padding: 15px;
       text-align: center;
       border-bottom: 1px solid #ddd;
     }
 
+    th.thin {
+      padding: 5px;
+    }
 
+    td.thin {
+      padding: 5px;
+    }
+
+    th.right {
+      text-align: right;
+    }
+
+    td.right {
+      text-align: right;
+    }
+
+    th.left {
+      text-align: left;
+    }
+
+    td.left {
+      text-align: left;
+    }
+
+    /* We're working with the body tag, and so with the WHOLE page */
+    head {
+      background-color: black;
+      /* The page background will be black */
+      color: white;
+      /* The page text will be white */
+    }
+
+    /* We're working with the body tag, and so with the WHOLE page */
+    body {
+      background-color: black;
+      /* The page background will be black */
+      color: white;
+      /* The page text will be white */
+    }
   </style>
 
 
@@ -399,34 +359,49 @@
 
 <body>
   <h1>Temple University RoboBoat - Control Interface</h1>
-  <div class="row" height>
+  <div class="row">
     <div class="column" style="background-color:#aaa;">
       <div class="columnHeader">
         ROS Status
       </div>
-      <p align="center">Rosbridge Connection Status: <span id="rosConnStatus"></span></p>
+
       <br>
-      <p align="center">Control Mode</p>
-      <label class="switch switch-yes-no" style="margin: auto;">
-        <input class="switch-input" type="checkbox" id="controlCheck" onclick="ControlMode.publish(new ROSLIB.Message({data: !document.getElementById('controlCheck').checked}));" />
-        <span class="switch-label" data-on="Autonomous" data-off="Manual"></span>
-        <span class="switch-handle"></span>
-      </label>
+      <table>
+        <tr>
+          <th class="left">Rosbridge Connection Status</th>
+          <td><span id="rosConnStatus"></span></td>
+        </tr>
+        <tr>
+          <th class="left">Control Mode</th>
+          <td>
+            <div class="onoffswitch">
+              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="controlCheck" onclick="ControlMode.publish(new ROSLIB.Message({data: document.getElementById('controlCheck').checked}));" checked>
+              <label class="onoffswitch-label" for="controlCheck">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+
     </div>
+
+
     <div class="column" height="115px" style="background-color:#bbb; min-width: 0; min-height: 0;">
       <div class="columnHeader">Controller Input<span id="gamepad_connection"></span></div>
       <canvas id="Chart_Controller" height="110vw"></canvas>
       <table>
         <tr>
-          <th>Left Joystick Value</th>
-          <th>Right Joystick Value</th>
+          <th class="thin">Left Joystick Reading</th>
+          <th class="thin">Right Joystick Reading</th>
         </tr>
         <tr>
-          <td><span id="lJoystickVal"></span></td>
-          <td><span id="rJoystickVal"></span></td>
+          <td class="thin"><span id="lJoystickVal"></span></td>
+          <td class="thin"><span id="rJoystickVal"></span></td>
         </tr>
       </table>
-
     </div>
     <div class="column" height="115px" style="background-color:#ccc; min-width: 0; min-height: 0;">
       <div class="columnHeader">Battery Charge</div>
@@ -445,6 +420,29 @@
   <div class="row">
     <div class="column" style="background-color:#aaa; min-width: 0; min-height: 0;">
       <div class="columnHeader">LIDAR Info</div>
+      <br>
+      <table>
+        <tr>
+          <th class="left">Last Measured Time</th>
+          <td class="right"><span id="LIDAR_last_measured_Time"></span></td>
+        </tr>
+        <tr>
+          <th class="left">Minimum Displayed Range</th>
+          <td class="right"><span id="LIDAR_range_min"></span> [m]</td>
+        </tr>
+        <tr>
+          <th class="left">Maximum Displayed Range</th>
+          <td class="right"><span id="LIDAR_range_max"></span> [m]</td>
+        </tr>
+        <tr>
+          <th class="left">Time Between Point Measurements</th>
+          <td class="right"><span id="LIDAR_time_increment"></span> [ms]</td>
+        </tr>
+        <tr>
+          <th class="left">Time Between Complete Scans</th>
+          <td class="right"><span id="LIDAR_scan_time"></span> [ms]</td>
+        </tr>
+      </table>
     </div>
     <div class="column" style="background-color:#bbb; -webkit-flex: 3; min-width: 0; min-height: 0;">
       <div class="columnHeader">LIDAR Data</div>
@@ -504,24 +502,24 @@
       <br>
       <table>
         <tr>
-          <th>GPS Fix</th>
-          <td><span id="GPS_fix"></span></td>
+          <th class="left">GPS Fix</th>
+          <td class="right"><span id="GPS_fix"></span></td>
         </tr>
         <tr>
-          <th>Fix Quality</th>
-          <td><span id="GPS_fixquality"></span></td>
+          <th class="left">Fix Quality</th>
+          <td class="right"><span id="GPS_fixquality"></span></td>
         </tr>
         <tr>
-          <th>Latitude [deg]</th>
-          <td><span id="GPS_latitude"></span></td>
+          <th class="left">Latitude</th>
+          <td class="right"><span id="GPS_latitude"></span> [deg]</td>
         </tr>
         <tr>
-          <th>Longitude [deg]</th>
-          <td><span id="GPS_longitude"></span></td>
+          <th class="left">Longitude</th>
+          <td class="right"><span id="GPS_longitude"></span> [deg]</td>
         </tr>
         <tr>
-          <th>Altitude [cm]</th>
-          <td><span id="GPS_altitude"></span></td>
+          <th class="left">Altitude</th>
+          <td class="right"><span id="GPS_altitude"></span> [cm]</td>
         </tr>
       </table>
     </div>
@@ -532,118 +530,18 @@
       <div id="map"></div>
     </div>
   </div>
-
-  </div>
-
 </body>
-
 
 <script src="src/OrientationAnimation.js"></script>
 <script src="src/chart_create.js"></script>
 <script src="src/chart_update.js"></script>
 <script src="src/mapbox_setup.js"></script>
 <script src="src/ros_handlers.js"></script>
-
-
-<script type="text/javascript">
-  //GAME PAD OUTPUT
-
-
-  function move(axVal) {
-    var lScale = new ROSLIB.Message({
-      data: -(axVal[1] - axisOffset[1])
-    });
-    var rScale = new ROSLIB.Message({
-      data: -(axVal[4] - axisOffset[4])
-    });
-    ard_LeftPWM_listener.publish(lScale);
-    ard_RightPWM_listener.publish(rScale);
-  }
-
-  function gamepadHandler(event, connecting) {
-    if (connecting) {
-      var gp = event.gamepad;
-      console.log(gp.id);
-      if (gp.id.localeCompare("Xbox 360 Wired Controller (Vendor: 046d Product: c21d)") == 0) {
-        gpidx = gp.index;
-        console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", gp.index, gp.id, gp.buttons.length, gp.axes.length);
-        zeroAxis();
-        setInterval(updateControl, gpPollInt);
-        document.getElementById("gamepad_connection").innerHTML = " - Connected";
-      } else {
-        document.getElementById("gamepad_connection").innerHTML = " - Invalid";
-        console.log("Invalid Gamepad");
-        gpidx = -1;
-        clearInterval(gpPollInt);
-      }
-    } else {
-      gpidx = -1;
-      clearInterval(gpPollInt);
-      document.getElementById("gamepad_connection").innerHTML = " - Disconnected";
-    }
-  }
-
-  function updateControl() {
-    var gp = navigator.getGamepads()[gpidx];
-    if (gp != null && gpidx != -1) {
-      if (gp.buttons[zeroAxisButton].pressed == true) {
-        zeroAxis();
-      }
-      for (var i = 0; i < gp.axes.length; i++) {
-        //We only care about one gamepad connected, so this will only apply an axis offset
-        //to a single gamepad, not multiple
-        //document.getElementById("gpax$i".replace("$i", i)).innerHTML = gp.axes[i] - axisOffset[i];
-      }
-      move(gp.axes);
-    } else {
-      move([0, 0, 0, 0]);
-    }
-  }
-
-  function zeroAxis() {
-    var gp = navigator.getGamepads()[gpidx];
-    for (var i = 0; i < gp.axes.length; i++) {
-      axisOffset[i] = gp.axes[i];
-    }
-    console.log("Axis Zeroed");
-  }
-
-  const SERVCTL_StartROS = 1;
-
-  function ServerControl(opt) {
-    if (opt == SERVCTL_StartROS) { // Start ROSCore &
-      console.log("You pressed the button! %d", opt);
-    }
-  }
-
-  window.addEventListener("gamepadconnected", function(e) {
-    gamepadHandler(e, true);
-  }, false);
-  window.addEventListener("gamepaddisconnected", function(e) {
-    gamepadHandler(e, false);
-  }, false);
-</script>
-
-
-
+<script src="src/gamepad_control.js"></script>
 
 
 <style>
-  /* We're working with the body tag, and so with the WHOLE page */
-  head {
-    background-color: black;
-    /* The page background will be black */
-    color: white;
-    /* The page text will be white */
-  }
 
-  /* We're working with the body tag, and so with the WHOLE page */
-  body {
-    background-color: black;
-    /* The page background will be black */
-    color: white;
-    /* The page text will be white */
-  }
 </style>
 
 </html>
