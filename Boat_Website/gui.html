@@ -18,6 +18,10 @@
 
   <!-- Downloaded from: https://github.com/chartjs/Chart.js/releases/tag/v2.9.3 -->
   <script src="src/Chart.js-2.9.3/dist/Chart.js"></script>
+  <!-- Downloaded from: https://hammerjs.github.io/dist/hammer.min.js -->
+  <script src="src/hammer.min.js"></script>
+  <!-- Downloaded from: https://github.com/chartjs/chartjs-plugin-zoom/tree/v0.7.7 -->
+  <script src="src/chartjs-plugin-zoom-0.7.7/dist/chartjs-plugin-zoom.js"></script>
 
   <script src="src/divTabs.js"></script>
 
@@ -336,6 +340,30 @@
     td.left {
       text-align: left;
     }
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 8px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50;
+}
+
+.button1:hover {
+  background-color: #4CAF50;
+  color: white;
+}
 
     /* We're working with the body tag, and so with the WHOLE page */
     head {
@@ -384,11 +412,7 @@
           </td>
         </tr>
       </table>
-
-
     </div>
-
-
     <div class="column" height="115px" style="background-color:#bbb; min-width: 0; min-height: 0;">
       <div class="columnHeader">Controller Input<span id="gamepad_connection"></span></div>
       <canvas id="Chart_Controller" height="110vw"></canvas>
@@ -443,10 +467,15 @@
           <td class="right"><span id="LIDAR_scan_time"></span> [ms]</td>
         </tr>
       </table>
+      <table>
+        <tr>
+          <td class="thin"><button class="button button1" onclick="Chart_LIDAR.resetZoom();">Reset Pan/Zoom</button></td>
+        </tr>
+      </table>
+
     </div>
     <div class="column" style="background-color:#bbb; -webkit-flex: 3; min-width: 0; min-height: 0;">
       <div class="columnHeader">LIDAR Data</div>
-      <br>
       <canvas id="Chart_LIDAR" height="90vw"></canvas>
     </div>
   </div>

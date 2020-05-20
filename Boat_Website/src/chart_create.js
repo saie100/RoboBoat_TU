@@ -281,8 +281,8 @@ var Chart_LIDAR = new Chart(ctx, {
     scales: {
       xAxes: [{
         ticks: {
-          min: -4,
-          max: 4
+          min: -6,
+          max: 6
         },
         scaleLabel: {
           display: true,
@@ -292,13 +292,51 @@ var Chart_LIDAR = new Chart(ctx, {
       yAxes: [{
         ticks: {
           min: 0,
-          max: 2
+          max: 4
         },
         scaleLabel: {
           display: true,
           labelString: 'Distance [m]'
         }
       }]
+    },
+    legend: {
+        display: false,
+    },
+    plugins: {
+      zoom: {
+        pan: {
+          enabled: true,
+           mode: "xy",
+           speed: 10,
+           threshold: 10,
+           rangeMin: {
+             // Format of min zoom range depends on scale type
+             x: -25,
+             y: 0
+           },
+           rangeMax: {
+             // Format of max zoom range depends on scale type
+             x: 25,
+             y: 25
+           }
+        },
+        zoom: {
+          enabled: true,
+          drag: false,
+          mode: 'xy',
+          rangeMin: {
+            // Format of min zoom range depends on scale type
+            x: -25,
+            y: 0
+          },
+          rangeMax: {
+            // Format of max zoom range depends on scale type
+            x: 25,
+            y: 25
+          }
+        }
+      }
     }
   }
 });
