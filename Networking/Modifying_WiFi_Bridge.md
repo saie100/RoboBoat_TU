@@ -1,4 +1,4 @@
-# Changing the channel and/or frequency of the bridged network#
+# Changing the channel and/or frequency of the bridged network #
 ---
 ## Background ##
 
