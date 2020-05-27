@@ -25,9 +25,20 @@ var Chart_OrientationDeg = new Chart(ctx, {
   // Look at this link for time configuration
   // https://www.chartjs.org/docs/latest/axes/cartesian/time.html#display-formats
   options: {
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
     responsive: true,
     maintainAspectRatio: true,
     scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Measured Time'
+        },
+      }],
       yAxes: [{
         scaleLabel: {
           display: true,
@@ -61,9 +72,20 @@ var Chart_Acceleration = new Chart(ctx, {
   },
   // Configuration options go here
   options: {
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
     responsive: true,
     maintainAspectRatio: true,
     scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Measured Time'
+        },
+      }],
       yAxes: [{
         scaleLabel: {
           display: true,
@@ -97,9 +119,20 @@ var Chart_AngularVelocity = new Chart(ctx, {
   },
   // Configuration options go here
   options: {
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
     responsive: true,
     maintainAspectRatio: true,
     scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Measured Time'
+        },
+      }],
       yAxes: [{
         scaleLabel: {
           display: true,
@@ -133,9 +166,20 @@ var Chart_Magnetometer = new Chart(ctx, {
   },
   // Configuration options go here
   options: {
+    plugins: {
+      datalabels: {
+        display: false
+      }
+    },
     responsive: true,
     maintainAspectRatio: true,
     scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Measured Time'
+        },
+      }],
       yAxes: [{
         scaleLabel: {
           display: true,
@@ -154,27 +198,27 @@ var Chart_Battery = new Chart(ctx, {
   data: {
     labels: ['6 Cell', '4 Cell', '3 Cell (A)', '3 Cell (B)'],
     datasets: [{
-      backgroundColor: 'rgb(20, 33, 77)',
+      backgroundColor: '#003f5c',
       label: 'Cell 1',
       data: []
     }, {
-      backgroundColor: 'rgb(24, 96, 147)',
+      backgroundColor: '#444e86',
       label: 'Cell 2',
       data: []
     }, {
-      backgroundColor: 'rgb(28, 160, 214)',
+      backgroundColor: '#955196',
       label: 'Cell 3',
       data: []
     }, {
-      backgroundColor: 'rgb(31, 193, 224)',
+      backgroundColor: '#dd5182',
       label: 'Cell 4',
       data: []
     }, {
-      backgroundColor: 'rgb(33, 205, 205)',
+      backgroundColor: '#ff6e54',
       label: 'Cell 5',
       data: []
     }, {
-      backgroundColor: 'rgb(36, 223, 182)',
+      backgroundColor: '#ffa600',
       label: 'Cell 6',
       data: []
     }]
@@ -184,6 +228,17 @@ var Chart_Battery = new Chart(ctx, {
     tooltips: {
       mode: 'index',
       intersect: true
+    },
+    plugins: {
+      datalabels: {
+        color: 'white',
+        display: function(context) {
+          return context.dataset.data[context.dataIndex] > 0;
+        },
+        font: {
+          weight: 'bold'
+        }
+      }
     },
     responsive: true,
     maintainAspectRatio: true,
@@ -224,7 +279,7 @@ var Chart_Controller = new Chart(ctx, {
       data: [{
         x: -1,
         y: 0,
-        r: 15
+        r: 20
       }]
     }, {
       backgroundColor: 'rgb(0, 255, 0)',
@@ -233,20 +288,25 @@ var Chart_Controller = new Chart(ctx, {
       data: [{
         x: 1,
         y: 0,
-        r: 15
+        r: 20
       }]
     }]
   },
   // Configuration options go here
   options: {
+    plugins: {
+      datalabels: {
+        display: false 
+      }
+    },
     tooltips: {
-      mode: 'index',
-      intersect: true
+      enabled: false
     },
     responsive: true,
     maintainAspectRatio: true,
     scales: {
       xAxes: [{
+        display: false,
         ticks: {
           min: -2,
           max: 2
@@ -301,25 +361,28 @@ var Chart_LIDAR = new Chart(ctx, {
       }]
     },
     legend: {
-        display: false,
+      display: false,
     },
     plugins: {
+      datalabels: {
+        display: false
+      },
       zoom: {
         pan: {
           enabled: true,
-           mode: "xy",
-           speed: 10,
-           threshold: 10,
-           rangeMin: {
-             // Format of min zoom range depends on scale type
-             x: -25,
-             y: 0
-           },
-           rangeMax: {
-             // Format of max zoom range depends on scale type
-             x: 25,
-             y: 25
-           }
+          mode: "xy",
+          speed: 10,
+          threshold: 10,
+          rangeMin: {
+            // Format of min zoom range depends on scale type
+            x: -25,
+            y: 0
+          },
+          rangeMax: {
+            // Format of max zoom range depends on scale type
+            x: 25,
+            y: 25
+          }
         },
         zoom: {
           enabled: true,

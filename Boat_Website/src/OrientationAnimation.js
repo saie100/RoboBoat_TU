@@ -14,9 +14,9 @@
   rotation: [-90, 0, 0]
 });
 
-new xeogl.CameraControl(scene);
+var cameraControl = new xeogl.CameraControl(scene);
 
- camera = scene.camera;
+camera = scene.camera;
 
 camera.worldAxis = [
   1, 0, 0, // Right
@@ -24,9 +24,6 @@ camera.worldAxis = [
   0, 0, 1 // Forward
 ];
 
-// Position camera with "up" pointing along World +Z axis
-//camera.up = [0, 0, 1]; // +Z is up
-//camera.eye = [0.06274989247322083,25.782859802246094,99.44140625];
 camera.look = [0.0000324249267578125,11.829302787780762,53.18818664550781];
 camera.projection = "perspective";
 
@@ -45,8 +42,7 @@ followAnimation = new xeogl.CameraFollowAnimation(scene,{
 
 camera.eye = [0.06274989247322083, 25.782859802246094, 99.44140625];
 
-
-
+cameraControl.active = false;
 
 /*
 var scene = new xeogl.Scene({
