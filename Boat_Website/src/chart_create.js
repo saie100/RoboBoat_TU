@@ -196,7 +196,7 @@ var Chart_Battery = new Chart(ctx, {
   type: 'horizontalBar',
   // The data for our dataset
   data: {
-    labels: ['6 Cell', '4 Cell', '3 Cell (A)', '3 Cell (B)'],
+    labels: ['6-Cell', '4-Cell', '3-Cell (A)', '3-Cell (B)'],
     datasets: [{
       backgroundColor: '#003f5c',
       label: 'Cell 1',
@@ -296,7 +296,7 @@ var Chart_Controller = new Chart(ctx, {
   options: {
     plugins: {
       datalabels: {
-        display: false 
+        display: false
       }
     },
     tooltips: {

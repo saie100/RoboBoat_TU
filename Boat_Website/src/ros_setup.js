@@ -1,4 +1,5 @@
-  ros = new ROSLIB.Ros({
+
+ros = new ROSLIB.Ros({
   // Use the IP Address of the Raspberry Pi or the device hosting the webserver
   // Port 9090 is the port that rosbridge server uses to interface over the network
   url: 'ws://10.19.122.101:9090'
@@ -16,8 +17,8 @@ ros.on('close', function() {
 
 ControlMode = new ROSLIB.Topic({
   ros: ros,
-  name: '/status_light_manual_mode',
-  messageType: 'std_msgs/Bool'
+  name: '/ControlMode',
+  messageType: 'std_msgs/Float32'
 });
 
 ard_LeftPWM_listener = new ROSLIB.Topic({

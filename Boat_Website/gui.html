@@ -25,8 +25,10 @@
   <!-- Downloaded from: https://github.com/chartjs/chartjs-plugin-datalabels/tree/v0.7.0 -->
   <script src="src/chartjs-plugin-datalabels-0.7.0/dist/chartjs-plugin-datalabels.js"></script>
 
-
   <script src="src/divTabs.js"></script>
+
+  <!-- Downloaded from: https://github.com/HubSpot/offline/tree/v0.7.19 -->
+  <script src="src/offline-0.7.19/js/offline.js"></script>
 
   <!-- Downloaded from: https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js -->
   <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
@@ -66,6 +68,7 @@
 
     var MAX_PLOT_IDX = 100;
     var PLOT_UPDATE_FREQUENCY = 10; // Hz
+    var LIDAR_UPDATE_FREQUENCY = 5; // Hz
 
     var bat_6s;
     var bat_4s;
@@ -87,6 +90,7 @@
     var IMU_LinearAccelerationLastUpdateTime = 0;
     var IMU_AngularVelocityLastUpdateTime = 0;
     var IMU_MagnetometerLastUpdateTime = 0;
+    var LIDAR_LastUpdateTime = 0;
 
     var timeFormatter = new Intl.DateTimeFormat('en-us', {
       hour: 'numeric',
@@ -98,10 +102,17 @@
     });
 
     function updateControlMode() {
-      var Bool_msg = new ROSLIB.Message({
-        data: !document.getElementById('controlCheck').checked
-      });
-      ControlMode.publish(Bool_msg);
+      var controlMsg;
+      if (document.getElementById('controlCheck').checked) {
+        controlMsg = new ROSLIB.Message({
+          data: 0
+        });
+      } else {
+        controlMsg = new ROSLIB.Message({
+          data: parseInt(document.getElementById('AutonomousCourseSelection').value, 10)
+        });
+      }
+      ControlMode.publish(controlMsg);
     }
   </script>
 
@@ -310,7 +321,7 @@
 
     table {
       border-collapse: collapse;
-      table-layout:fixed;
+      table-layout: fixed;
       width: 100%;
     }
 
@@ -346,7 +357,8 @@
     }
 
     .button {
-      background-color: #4CAF50; /* Green */
+      background-color: #4CAF50;
+      /* Green */
       border: none;
       color: white;
       padding: 8px 32px;
@@ -370,6 +382,19 @@
       color: white;
     }
 
+
+    #AutonomousCourseSelection {
+      font-size: 14px;
+      font-weight: bold;
+      overflow: hidden;
+      width: auto;
+      height: 33px;
+      -moz-border-radius: 9px 9px 9px 9px;
+      -webkit-border-radius: 9px 9px 9px 9px;
+      border-radius: 9px 9px 9px 9px;
+      box-shadow: 1px 1px 11px #330033;
+    }
+
     /* We're working with the body tag, and so with the WHOLE page */
     head {
       background-color: black;
@@ -390,7 +415,7 @@
 
 </head>
 
-<body>
+<body onload="updateFields()">
   <h1>Temple University RoboBoat - Control Interface</h1>
   <div class="row">
     <div class="column" style="background-color:#aaa;">
@@ -403,16 +428,36 @@
           <th class="left">Rosbridge Status</th>
           <td><span id="rosConnStatus"></span></td>
         </tr>
+      </table>
+      <div class="columnHeader">
+        Control Mode
+      </div>
+      <table>
         <tr>
           <th class="left">Control Mode</th>
           <td>
             <div class="onoffswitch">
-              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="controlCheck" onclick="ControlMode.publish(new ROSLIB.Message({data: document.getElementById('controlCheck').checked}));" checked>
+              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="controlCheck" onclick="updateControlMode();" checked>
               <label class="onoffswitch-label" for="controlCheck">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
               </label>
             </div>
+          </td>
+        </tr>
+        <tr>
+          <th class="left">Course Select</th>
+          <td>
+            <form action=" ">
+              <select id="AutonomousCourseSelection" name="AutonomousCourse">
+                <option value="1">Navigation Channel</option>
+                <option value="2">Speed Gate</option>
+                <option value="3">Winding Navigation Channel</option>
+                <option value="4">Obstacle Field</option>
+                <option value="5">Acoustic Docking</option>
+                <option value="6">Package Delivery</option>
+              </select>
+            </form>
           </td>
         </tr>
       </table>
@@ -446,6 +491,11 @@
     </div>
   </div>
   <div class="row">
+    <div class="column" style="background-color:#eee;">
+      <div class="columnHeader">LIDAR Data</div>
+    </div>
+  </div>
+  <div class="row">
     <div class="column" style="background-color:#aaa; min-width: 0; min-height: 0;">
       <div class="columnHeader">LIDAR Info</div>
       <br>
@@ -473,13 +523,16 @@
       </table>
       <table>
         <tr>
-          <td class="thin"><button class="button button1" onclick="Chart_LIDAR.resetZoom();">Reset Pan/Zoom</button></td>
+          <td class="thin"><button class="button button1" style="font-size: 13px; font-weight: bold;" onclick="Chart_LIDAR.resetZoom();">Reset Pan/Zoom</button></td>
+          <td class="thin" style="font-size: 14px; font-weight: bold;">
+            LIDAR Update Rate: <span id="LIDAR_SliderDisplay"></span>Hz<br>
+            <input type="range" min="1" max="15" value="5" id="LIDAR_Slider" style="width: 100%;" oninput="LIDAR_UPDATE_FREQUENCY = parseInt(this.value,10); document.getElementById('LIDAR_SliderDisplay').innerHTML = LIDAR_UPDATE_FREQUENCY">
+          </td>
         </tr>
       </table>
 
     </div>
     <div class="column" style="background-color:#bbb; -webkit-flex: 3; min-width: 0; min-height: 0;">
-      <div class="columnHeader">LIDAR Data</div>
       <canvas id="Chart_LIDAR" height="110vw"></canvas>
     </div>
   </div>
@@ -490,7 +543,15 @@
   </div>
   <div class="row">
     <div class="column" width="25vw" style="background-color:#aaa; align-items: center; justify-content: center;">
-      <canvas id="myCanvas" style="position:relative;top: 0px; left: 0px;  width: 25vw; height: 30vw;"></canvas>
+      <canvas id="myCanvas" style="position:relative;top: 0px; left: 0px;  width: 25vw; height: 28vw;"></canvas>
+      <table>
+        <tr>
+          <td class="thin" style="font-size: 14px; font-weight: bold; padding: 0px; border-bottom: 0px;">
+            IMU Update Rate: <span id="IMU_SliderDisplay"></span>Hz<br>
+            <input type="range" min="1" max="100" value="5" id="IMU_Slider" style="width: 100%;" oninput="PLOT_UPDATE_FREQUENCY = parseInt(this.value,10); document.getElementById('IMU_SliderDisplay').innerHTML = PLOT_UPDATE_FREQUENCY">
+          </td>
+        </tr>
+      </table>
     </div>
     <div class="column" style="background-color:#bbb; -webkit-flex: 3; min-width: 0; min-height: 0">
       <!-- Tab links -->
@@ -499,7 +560,6 @@
         <button class="tablinks" onclick="openCity(event, 'Tab_IMU_Accel')">Linear Acceleration</button>
         <button class="tablinks" onclick="openCity(event, 'Tab_IMU_AngVel')">Angular Velocity</button>
         <button class="tablinks" onclick="openCity(event, 'Tab_IMU_Magnetometer')">Vector Magnetometer</button>
-
       </div>
       <!-- Tab content -->
       <div id="Tab_IMU_OrientationDeg" class="tabcontent">
@@ -530,9 +590,7 @@
       <div class="columnHeader">
         GPS Topic Data
       </div>
-      <br>
-      <br>
-      <br>
+      <br><br><br>
       <table>
         <tr>
           <th class="left">GPS Fix</th>
@@ -560,9 +618,16 @@
       <div class="columnHeader">
         Map
       </div>
-      <div id="map"></div>
+      <div id="map" style="height: 25vw;"></div>
     </div>
   </div>
+  <script>
+    function updateFields() {
+      document.getElementById('LIDAR_SliderDisplay').innerHTML = LIDAR_UPDATE_FREQUENCY;
+      document.getElementById('IMU_SliderDisplay').innerHTML = PLOT_UPDATE_FREQUENCY;
+    }
+  </script>
+
 </body>
 
 <script src="src/OrientationAnimation.js"></script>
@@ -572,9 +637,5 @@
 <script src="src/ros_handlers.js"></script>
 <script src="src/gamepad_control.js"></script>
 
-
-<style>
-
-</style>
 
 </html>

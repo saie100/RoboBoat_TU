@@ -87,7 +87,7 @@ IMU_MagnetometerListener.subscribe(function(message) {
 
   msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
 
-  // Update at a fixed interval to make the website more responsive
+  // Update at a fixed interval to make the website more responsive  if (msgTime - IMU_MagnetometerLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
   if (msgTime - IMU_MagnetometerLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
     IMU_MagnetometerLastUpdateTime = msgTime;
     magVec = [message.vector.x, message.vector.y, message.vector.z];
@@ -147,41 +147,49 @@ GPS_Coordinates.subscribe(function(message) {
 
 
 LIDAR_Scan.subscribe(function(message) {
-  var range_min = 100;
-  var range_max = 0;
-  var ang = message.angle_min;
-  var catesian_data = [];
-  var i;
-  for (i = 0; i < message.ranges.length; i++) {
-  if(message.ranges[i] != Infinity){
-    var xc = message.ranges[i] * Math.cos(ang);
-    var yc = message.ranges[i] * Math.sin(ang);
-    if(-xc > 0){
-      catesian_data.push({ x: yc, y: -xc});
-      if(message.ranges[i] < range_min){
-        range_min = message.ranges[i];
-      }
-      else if(message.ranges[i] > range_max){
-        range_max = message.ranges[i];
+  msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
+
+  // Update at a fixed interval to make the website more responsive
+  if (msgTime - LIDAR_LastUpdateTime >= 1 / LIDAR_UPDATE_FREQUENCY) {
+    LIDAR_LastUpdateTime = msgTime;
+
+    var range_min = 100;
+    var range_max = 0;
+    var ang = message.angle_min;
+    var catesian_data = [];
+    var i;
+    for (i = 0; i < message.ranges.length; i++) {
+    if(message.ranges[i] != Infinity){
+      var xc = message.ranges[i] * Math.cos(ang);
+      var yc = message.ranges[i] * Math.sin(ang);
+      if(-xc > 0){
+        catesian_data.push({ x: yc, y: -xc});
+        if(message.ranges[i] < range_min){
+          range_min = message.ranges[i];
+        }
+        else if(message.ranges[i] > range_max){
+          range_max = message.ranges[i];
+        }
       }
     }
+      ang = ang + message.angle_increment;
+    }
+
+    var f_secs = Math.round(message.header.stamp.nsecs / Math.pow(10,5)); // Fractional seconds
+    var myDate = new Date(message.header.stamp.secs * 1000);
+
+    var options = { hour12: false, fractionalSecondDigits: 3};
+
+    document.getElementById("LIDAR_range_min").innerHTML = Math.round(range_min*1000)/1000;
+    document.getElementById("LIDAR_range_max").innerHTML = Math.round(range_max*1000)/1000;
+    document.getElementById("LIDAR_time_increment").innerHTML = Math.round(message.time_increment*1000*1000)/1000;
+    document.getElementById("LIDAR_scan_time").innerHTML = Math.round(message.scan_time*1000*1000)/1000;
+    document.getElementById("LIDAR_last_measured_Time").innerHTML = (myDate.toLocaleString("en-US", options) + "." + f_secs).replace(", ", "<br>");
+
+    Chart_LIDAR.data.datasets[0].data = catesian_data;
+    Chart_LIDAR.update(0);
+
   }
-    ang = ang + message.angle_increment;
-  }
-
-  var f_secs = Math.round(message.header.stamp.nsecs / Math.pow(10,5)); // Fractional seconds
-  var myDate = new Date(message.header.stamp.secs * 1000);
-
-  var options = { hour12: false, fractionalSecondDigits: 3};
-
-  document.getElementById("LIDAR_range_min").innerHTML = Math.round(range_min*1000)/1000;
-  document.getElementById("LIDAR_range_max").innerHTML = Math.round(range_max*1000)/1000;
-  document.getElementById("LIDAR_time_increment").innerHTML = Math.round(message.time_increment*1000*1000)/1000;
-  document.getElementById("LIDAR_scan_time").innerHTML = Math.round(message.scan_time*1000*1000)/1000;
-  document.getElementById("LIDAR_last_measured_Time").innerHTML = (myDate.toLocaleString("en-US", options) + "." + f_secs).replace(", ", "<br>");
-
-  Chart_LIDAR.data.datasets[0].data = catesian_data;
-  Chart_LIDAR.update(0);
 });
 
 function updateChart(chart, newData, name, count) {
