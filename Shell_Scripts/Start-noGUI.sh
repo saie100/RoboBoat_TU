@@ -4,7 +4,7 @@ roscore > /dev/null 2>&1 &
 (sleep 5 &&(
 		./start-rosbridge.sh > /dev/null 2>&1 &
 		./start-rosserial_teensy.sh > /dev/null 2>&1 &
-		./start-status_light_ctl.sh > /dev/null 2>&1 &
+		./start-control_status.sh > /dev/null 2>&1 &
 	    )
 ) &
 (sleep 7 && (
