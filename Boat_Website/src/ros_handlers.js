@@ -38,15 +38,19 @@ IMU_AbsOrientationListener.subscribe(function(message) {
 
   // Update at a fixed interval to make the website more responsive
   if (msgTime - IMU_OrientationLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
+    // record the time that the plot was last updated
     IMU_OrientationLastUpdateTime = msgTime;
+    // extract the orientation information
     orientation_deg = [message.vector.x, message.vector.y, message.vector.z];
-    var rotation = BoatModel.rotation;
 
+    // Update the orientation animation visualization
+    var rotation = BoatModel.rotation;
     rotation[0] = orientation_deg[0] - 90;
     rotation[1] = orientation_deg[1];
     rotation[2] = orientation_deg[2];
     BoatModel.rotation = rotation;
 
+    // Update the orientation IMU chart
     updateChart(Chart_OrientationDeg, orientation_deg, getChartTime(msgTime), IMU_Cnt);
     IMU_Cnt++;
   }
@@ -54,7 +58,7 @@ IMU_AbsOrientationListener.subscribe(function(message) {
 });
 
 IMU_LinearAccelerationListener.subscribe(function(message) {
-
+  // Store the time that the message was recieved
   msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
 
   // Update at a fixed interval to make the website more responsive
@@ -69,7 +73,7 @@ IMU_LinearAccelerationListener.subscribe(function(message) {
 });
 
 IMU_AngularVelocityListener.subscribe(function(message) {
-
+  // Store the time that the message was recieved
   msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
 
   // Update at a fixed interval to make the website more responsive
@@ -84,7 +88,7 @@ IMU_AngularVelocityListener.subscribe(function(message) {
 });
 
 IMU_MagnetometerListener.subscribe(function(message) {
-
+  // Store the time that the message was recieved
   msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
 
   // Update at a fixed interval to make the website more responsive  if (msgTime - IMU_MagnetometerLastUpdateTime >= 1 / PLOT_UPDATE_FREQUENCY) {
@@ -108,27 +112,31 @@ GPS_Coordinates.subscribe(function(message) {
 
   document.getElementById("GPS_latitude").innerHTML = GPS_latitude;
   document.getElementById("GPS_longitude").innerHTML = GPS_longitude;
-  // Set altutude and convert from cm to ft
+  // Convert the altitude from [cm] to [ft]
   document.getElementById("GPS_altitude").innerHTML = GPS_altitude * 0.0328084;
 
-
-  if (GPS_fix == 1 && GPS_fixquality != 0) { // If there is a valid connection (GPS_fixquality != 0), update map
+  // If there is a valid connection (GPS_fixquality != 0), update map
+  if (GPS_fix == 1 && GPS_fixquality != 0) {
+    // Center the map on the most recent coordinates
     map.setCenter([GPS_longitude, GPS_latitude]);
+    // remove the last coordinate marker
     marker.remove();
+    // Add a new GREEN marker to the map at the coordinate position
     marker = new mapboxgl.Marker({
       color: `rgb(0, 255, 0)`
     }).setLngLat([GPS_longitude, GPS_latitude]).addTo(map);
-  } else {
+  }
+  else { // If there is not a valid GPS connection
+    // store the last known location in tmp
     tmp = marker.getLngLat()
+    // remove the last known location marker from the map
     marker.remove();
+    // Add a new RED marker to the map at the last known location
     marker = new mapboxgl.Marker({
       color: `rgb(255, 0, 0)`
     }).setLngLat(tmp).addTo(map);
 
   }
-
-  document.getElementById("GPS_fix").innerHTML = GPS_fix;
-  document.getElementById("GPS_fixquality").innerHTML = GPS_fixquality;
 
   if (GPS_fix == 1) {
     document.getElementById("GPS_fix").innerHTML = "Acquired";
@@ -143,81 +151,83 @@ GPS_Coordinates.subscribe(function(message) {
   } else {
     document.getElementById("GPS_fixquality").innerHTML = "Invalid";
   }
+
 });
 
-
 LIDAR_Scan.subscribe(function(message) {
+  // Store the time that the message was recieved
   msgTime = Math.round(((message.header.stamp.secs) + (message.header.stamp.nsecs / Math.pow(10, 9))) * 10000) / 10000;
 
   // Update at a fixed interval to make the website more responsive
   if (msgTime - LIDAR_LastUpdateTime >= 1 / LIDAR_UPDATE_FREQUENCY) {
     LIDAR_LastUpdateTime = msgTime;
 
-    var range_min = 100;
-    var range_max = 0;
-    var ang = message.angle_min;
-    var catesian_data = [];
+    var range_min = 100; // larger than any range that can be measured
+    var range_max = 0; // smaller than any range that can be measured
+    var ang = message.angle_min; // the starting angle measured
+    var catesian_data = []; // The array that will hold the cartesian coordinates
     var i;
     for (i = 0; i < message.ranges.length; i++) {
-    if(message.ranges[i] != Infinity){
-      var xc = message.ranges[i] * Math.cos(ang);
-      var yc = message.ranges[i] * Math.sin(ang);
-      if(-xc > 0){
-        catesian_data.push({ x: yc, y: -xc});
-        if(message.ranges[i] < range_min){
-          range_min = message.ranges[i];
-        }
-        else if(message.ranges[i] > range_max){
-          range_max = message.ranges[i];
+      // the magnitude is infinity if the range was not measured
+      if(message.ranges[i] != Infinity){
+        // convert polar coordinates to cartesian
+        var xc = message.ranges[i] * Math.cos(ang);
+        var yc = message.ranges[i] * Math.sin(ang);
+        // Only consider points that are in the front of the boat
+        if(-xc > 0){
+          // Add the cartesian points to the plot and rotate the points to make
+          // the data easier to visualize
+          catesian_data.push({ x: yc, y: -xc});
+          // determine if the point is at a new maximum/minimum range
+          if(message.ranges[i] < range_min){
+            range_min = message.ranges[i];
+          }
+          else if(message.ranges[i] > range_max){
+            range_max = message.ranges[i];
+          }
         }
       }
-    }
       ang = ang + message.angle_increment;
     }
 
+    // Extract and calculate time that the can was recorded
     var f_secs = Math.round(message.header.stamp.nsecs / Math.pow(10,5)); // Fractional seconds
     var myDate = new Date(message.header.stamp.secs * 1000);
-
+    // Options for the time formatter
     var options = { hour12: false, fractionalSecondDigits: 3};
 
+    // Update the HTML sections containing the LIDAR Info
     document.getElementById("LIDAR_range_min").innerHTML = Math.round(range_min*1000)/1000;
     document.getElementById("LIDAR_range_max").innerHTML = Math.round(range_max*1000)/1000;
     document.getElementById("LIDAR_time_increment").innerHTML = Math.round(message.time_increment*1000*1000)/1000;
     document.getElementById("LIDAR_scan_time").innerHTML = Math.round(message.scan_time*1000*1000)/1000;
     document.getElementById("LIDAR_last_measured_Time").innerHTML = (myDate.toLocaleString("en-US", options) + "." + f_secs).replace(", ", "<br>");
 
+    // Replace the LIDAR scan chart data with the data from the most recent scan
     Chart_LIDAR.data.datasets[0].data = catesian_data;
+    // Update the LIDAR scan chart with no delay
     Chart_LIDAR.update(0);
-
   }
 });
 
-function updateChart(chart, newData, name, count) {
-  if (count < MAX_PLOT_IDX) {
-    chart.data.labels.push(name);
-    chart.data.datasets.forEach((dataset, index) => {
-      dataset.data.push(newData[index]);
+// This function will be executed whenever the "Control Mode" switch is toggled
+function updateControlMode() {
+  // Variable where the control message will be stored
+  var controlMsg;
+  // If the control mode switch is "checked", the boat should be in manual mode
+  if (document.getElementById('controlCheck').checked) {
+    controlMsg = new ROSLIB.Message({
+      data: 0 // Send a 0 to indicate manual mode
     });
-  } else {
-    chart.data.labels.push(name);
-    chart.data.datasets.forEach((dataset, index) => {
-      dataset.data.push(newData[index]);
-      dataset.data.splice(0, 1); // remove first data point
-    });
-    chart.data.labels.splice(0, 1);
   }
-
-  chart.update(0);
+  // If the control mode switch is not "checked" the boat should be in autonomus mode
+  else {
+    controlMsg = new ROSLIB.Message({
+      // Send the number corresponding to the selected course form the drop down menu
+      data: parseInt(document.getElementById('AutonomousCourseSelection').value, 10)
+    });
+  }
+  ControlMode.publish(controlMsg); // Publish to the topic
 }
 
-function getChartTime(unixTime){
-  var date = new Date(unixTime*1000);
-  var msgTime_Formatted = "" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "." + date.getMilliseconds();
-  if(date.getMilliseconds() < 10){
-    msgTime_Formatted = msgTime_Formatted.padEnd(msgTime_Formatted.length + 2, "0");
-  }
-  else if(date.getMilliseconds() < 100){
-    msgTime_Formatted = msgTime_Formatted.padEnd(msgTime_Formatted.length + 1, "0");
-  }
-  return msgTime_Formatted;
-}
+updateControlMode();
