@@ -4,7 +4,7 @@
 
 ## Table of Contents ##
 
-1. ### [ROS Packages & Implementation](KiCad_Schematics/) ###
+1. ### [ROS Packages & Implementation](/ROS_Packages#ros-packages) ###
     1. [Status Indicator Light & Autonomous Mode Select](ROS_Packages/roboboat_control_status)
     1. [Rosserial - multiple serial nodes](ROS_Packages/roboboat_rosserial)
     
