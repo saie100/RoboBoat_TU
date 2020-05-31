@@ -8,6 +8,8 @@
     1. [Status Indicator Light & Autonomous Mode Select](ROS_Packages/roboboat_control_status)
     1. [Rosserial - multiple serial nodes](ROS_Packages/roboboat_rosserial)
     
+1. ### [Arduino Code](Arduino_Files/) ###
+    
 1. ### [Shell Scripts](Shell_Scripts/) ### 
     1. [General Use of the Shell Scripts](/Shell_Scripts#general-use-of-the-shell-scripts)
     1. [Starting and stopping the boat's software](/Shell_Scripts#starting-and-stopping-the-boats-software)
