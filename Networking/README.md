@@ -21,7 +21,7 @@ If the network is accidentally misconfigured, use the router's provided [backup 
 The GL.iNet GL-AR750 connects all network devices to the internet. Though its management portal, a connection to the `tusecurewireless` network can be established. Follow the instructions in the [Connect_to_Internet.md](Connect_to_Internet.md) file to establish an internet connection.
 
 ## Modifying the WiFi Bridge ##
-The WDS bridge may need to be modified if the boat is moved to a new location or if wireless networks are added to the boat's environment. A [guide](Modifying_WiFi_Bridge.md) is provided for this procedure
+The WDS bridge may need to be modified if the boat is moved to a new location or if wireless networks are added to the boat's environment. A [guide](Modifying_WiFi_Bridge.md) is provided for this procedure.
 
 ## Hardware Documentation ##
 * TP-Link AC1750 (Archer A7): | [User Guide](RouterManuals/AC1750A7_UserGuide.pdf) | [Quick Installation Guide](RouterManuals/AC1750A7_QuickInstallationGuide.pdf) | [Datasheet](RouterManuals/AC1750A7_DataSheet.pdf) |
