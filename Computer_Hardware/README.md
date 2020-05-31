@@ -12,4 +12,4 @@
 
 [Raspberry Pi 4B - Ubuntu Server Backup](https://drive.google.com/file/d/1QWxQ-Ip0vmJn0_VMbhWDokapooyWjGFs/view?usp=sharing)
 
-[Jetson TX2]()
+[Jetson TX2 - Link not working yet!]()
