@@ -19,7 +19,7 @@
 ---
 ## TP-Link AC1200 ##
 
-***NOTE: If this router is configured with the WDS and has its DHCP server disabled, you will not be able to directly access the management console by connecting to the network. Instead you will have to edit your computer's network settings. See [Modifying_Wifi_Bridge.md](../Modifying_Wifi_Bridge.md) for instructions on this procedure.***
+***NOTE: If this router is configured with the WDS and has its DHCP server disabled, you will not be able to directly access the management console by connecting to the network. Instead you will have to edit your computer's network settings. See [Modifying_Wifi_Bridge.md](../Modifying_WiFi_Bridge.md) for instructions on this procedure.***
 
 1. Expand the "**System Tools**" menu in the router's management portal located at [10.19.123.1](http://10.19.123.1) if the router was configured using the files in this directory, or [192.168.0.1](http://192.168.0.1) if the router has since been reset.
 ![](../NetworkingImages/Backup_AC1200_1.png)
