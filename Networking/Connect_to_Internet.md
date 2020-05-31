@@ -1,7 +1,7 @@
 # How to connect the boat's network to the internet #
 ---
 
-1. Navigate to the admin portal (located at [192.168.0.1](http://192.168.0.1) if the router was configured using the backup provided in the [RouterBackups](RouterBackups/) folder.
+1. Navigate to the admin portal (located at [10.19.121.1](http://10.19.121.1) if the router was configured using the backup provided in the [RouterBackups](RouterBackups/) folder.
 
 ---
 
@@ -23,4 +23,4 @@
 
 ---
 
-If this connection process fails, try restarting the router. If it still fails, refer to the [docs provided by GL-iNet](https://docs.gl-inet.com/en/3/setup/travel_ac_router/first-time_setup/). 
+If this connection process fails, try restarting the router. If it still fails, refer to the [docs provided by GL-iNet](https://docs.gl-inet.com/en/3/setup/travel_ac_router/first-time_setup/).
