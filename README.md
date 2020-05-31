@@ -14,6 +14,8 @@
     1. [HTML Code](Boat_Website/index.html)
     2. [Javascript Code](Boat_Website/src/)
     3. [CSS Styling](Boat_Website/main.css)
+    
+1. ### [The Computer Hardware](Computer_Hardware/) ### 
 
 1. ### [Networking](Networking/) ###
     1. [IP Addresses for the Networking Devices](Networking#network-hardware-ips)
