@@ -1,5 +1,7 @@
 # Temple University RoboBoat - Senior Design 2020 #
 
+![](Images/FullBoat/FullBoat_FrontSensorTower.jpg)
+
 ## Table of Contents ##
 
 1. ### [Circuit Schematics](/KiCad_Schematics/) ###
