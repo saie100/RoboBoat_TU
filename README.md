@@ -19,7 +19,8 @@
 
 1. ### [Networking](Networking/) ###
     1. [IP Addresses for the Networking Devices](Networking#network-hardware-ips)
-    1. [Reserved Device IPs](Networking/README.md#reserved-device-ips)
+    1. [Reserved Device IP Addresses](Networking/README.md#reserved-device-ips)
+    1. [Modifying the WDS Bridge](Networking/Modifying_WiFi_Bridge.md)
     1. [Backup & Restore the Network Equipment](Networking/RouterBackups/)
     1. [Connecting the Boat to the Internet](Networking/Connect_to_Internet.md)
     1. [Documentation from the Manufacturers](Networking/README.md#hardware-documentation)
