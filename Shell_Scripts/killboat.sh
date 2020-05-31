@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ssh -t ubuntu@10.19.122.102 "bash -ci 'rosservice call /stop_motor'"
+rosservice call /stop_motor
 pkill -f SimpleHTTPServer
 pkill -f rosbridge
 pkill -f rosserial
