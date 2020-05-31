@@ -9,11 +9,15 @@
     1. [Rosserial - multiple serial nodes](ROS_Packages/roboboat_rosserial)
     
 1. ### [Shell Scripts](Shell_Scripts/) ### 
+    1. [General Use of the Shell Scripts](/Shell_Scripts#general-use-of-the-shell-scripts)
+    1. [Starting and stopping the boat's software](/Shell_Scripts#starting-and-stopping-the-boats-software)
+    1. [Starting and stopping the boat's software for debugging](/Shell_Scripts#starting-and-stopping-the-boats-software-for-debugging)
+    1. [Creating rosbag recordings](/Shell_Scripts#creating-rosbag-recordings)
 
 1. ### [The Boat's Control Interface (Website)](Boat_Website/) ### 
     1. [HTML Code](Boat_Website/index.html)
-    2. [Javascript Code](Boat_Website/src/)
-    3. [CSS Styling](Boat_Website/main.css)
+    1. [Javascript Code](Boat_Website/src/)
+    1. [CSS Styling](Boat_Website/main.css)
     
 1. ### [The Computer Hardware](Computer_Hardware/) ### 
 
@@ -38,5 +42,3 @@
     1. [Teensy3.2 Enclosure](CAD_Files/TeensyEnclosure/)
     1. [LIDAR Enclosure](CAD_Files/LidarEnclosure/)
     1. [Other Parts](CAD_Files/Z-Other/)
-
-
