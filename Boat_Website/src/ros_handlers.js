@@ -212,6 +212,10 @@ LIDAR_Scan.subscribe(function(message) {
 
 // This function will be executed whenever the "Control Mode" switch is toggled
 function updateControlMode() {
+  // Always stop the motors when updading the control mode
+  ard_LeftPWM_listener.publish(zeroMotor);
+  ard_RightPWM_listener.publish(zeroMotor);
+
   // Variable where the control message will be stored
   var controlMsg;
   // If the control mode switch is "checked", the boat should be in manual mode

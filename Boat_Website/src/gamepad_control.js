@@ -1,12 +1,15 @@
 function move(axVal) {
-  var lScale = new ROSLIB.Message({
-    data: -(axVal[1] - axisOffset[1])
-  });
-  var rScale = new ROSLIB.Message({
-    data: -(axVal[4] - axisOffset[4])
-  });
-  ard_LeftPWM_listener.publish(lScale);
-  ard_RightPWM_listener.publish(rScale);
+  // If the manual/autonomus control select is in the manual position, you can publish
+  if (document.getElementById('controlCheck').checked) {
+    var lScale = new ROSLIB.Message({
+      data: -(axVal[1] - axisOffset[1])
+    });
+    var rScale = new ROSLIB.Message({
+      data: -(axVal[4] - axisOffset[4])
+    });
+    ard_LeftPWM_listener.publish(lScale);
+    ard_RightPWM_listener.publish(rScale);
+  }
 }
 
 function gamepadHandler(event, connecting) {
@@ -17,7 +20,7 @@ function gamepadHandler(event, connecting) {
       gpidx = gp.index;
       console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", gp.index, gp.id, gp.buttons.length, gp.axes.length);
       axisZeroed = false;
-      controlPolling = setInterval(updateControl, gpPollInt);
+      controlPolling = setInterval(updateControl, gpPollInt); // Poll the updateControl function
       document.getElementById("gamepad_connection").innerHTML = " - Press the \"Start\" controller button";
     } else {
       document.getElementById("gamepad_connection").innerHTML = " - Invalid Controller";
@@ -27,11 +30,15 @@ function gamepadHandler(event, connecting) {
       clearInterval(controlPolling);
       axisZeroed = false;
     }
-  } else {
+  }
+  // Will be executed if the controller disconnects
+  else {
     gpidx = -1;
     clearInterval(controlPolling);
     axisZeroed = false;
     document.getElementById("gamepad_connection").innerHTML = " - Disconnected";
+    ard_LeftPWM_listener.publish(zeroMotor);
+    ard_RightPWM_listener.publish(zeroMotor);
   }
 }
 
@@ -68,5 +75,6 @@ window.addEventListener("gamepaddisconnected", function(e) {
 // Tell the user to press a button on the controller to trigger the "gamepadconnected"
 // event listener
 document.getElementById("gamepad_connection").innerHTML = " - Press any controller button";
+
 // Send the "stop command" to the motors
 move([0, 0, 0, 0, 0, 0]);

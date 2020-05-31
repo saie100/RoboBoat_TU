@@ -89,13 +89,8 @@
     var IMU_MagnetometerLastUpdateTime = 0;
     var LIDAR_LastUpdateTime = 0;
 
-    var timeFormatter = new Intl.DateTimeFormat('en-us', {
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      fractionalSecondDigits: 3,
-      hour12: true,
-      timeZone: 'UTC'
+    var zeroMotor = new ROSLIB.Message({
+      data: 0
     });
   </script>
 
