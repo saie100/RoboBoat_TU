@@ -4,8 +4,8 @@
 | Device             | Location      | Function                                          | IP            |
 | :----------------- |:-------------:| :------------------------------------------------ | :------------:|
 | [TP-Link AC1750](https://www.tp-link.com/us/home-networking/wifi-router/archer-a7/) | On-board | Main router for the boat | `10.19.121.1`|
-| [GL.iNet GL-AR750](https://www.gl-inet.com/products/gl-ar750/) | On-board | Provide internet connection to `tusecurewireless` or another WiFi network | `10.19.122.1` |
-| [TP-Link AC1200](https://www.tp-link.com/us/home-networking/wifi-router/archer-a5/) | Shore-side | Create shore-side wireless bridged network | `10.19.123.1` |
+| [GL-iNet GL-AR750](https://www.gl-inet.com/products/gl-ar750/) | On-board | Provide internet connection to `tusecurewireless` or another WiFi network | `10.19.122.1` |
+| [TP-Link AC1200](https://www.tp-link.com/us/home-networking/wifi-router/archer-a5/) | Shore | Create shore-side wireless bridged network | `10.19.123.1` |
 
 ## Reserved Device IP Addresses ##
 | Hostname             | Interface     | IP              |
@@ -26,5 +26,5 @@ The WDS bridge may need to be modified if the boat is moved to a new location or
 ## Hardware Documentation ##
 * TP-Link AC1750 (Archer A7): | [User Guide](RouterManuals/AC1750A7_UserGuide.pdf) | [Quick Installation Guide](RouterManuals/AC1750A7_QuickInstallationGuide.pdf) | [Datasheet](RouterManuals/AC1750A7_DataSheet.pdf) |
 * TP-Link AC1200 (Archer A5): | [User Guide](RouterManuals/AC1200A5_UserGuide.pdf) | [Quick Installation Guide](RouterManuals/AC1200A5_QuickInstallationGuide.pdf) |
-* GL.iNet GL-AR750: | [Docs Website](https://docs.gl-inet.com/en/3/setup/travel_ac_router/first-time_setup/) | [Docs Website - PDF Version](RouterManuals/GL-AR750_UserGuide.pdf) | 
+* GL-iNet GL-AR750: | [Docs Website](https://docs.gl-inet.com/en/3/setup/travel_ac_router/first-time_setup/) | [Docs Website - PDF Version](RouterManuals/GL-AR750_UserGuide.pdf) | 
 
