@@ -16,5 +16,17 @@
 1. [chart_update.js](src/chart_update.js)
 1. [OrientationAnimation.js](src/OrientationAnimation.js)
 
+--- 
+## Controlling the boat from the website ##
+The image at the bottom of this page shows the final version of the boat's website. 
+
+The [Logitech F310 Controller](https://www.logitechg.com/en-us/products/gamepads/f310-gamepad.html) is used to manually drive the boat.
+
+Steps to activate manual control:
+1. Connect the Logitech F310 to the computer that is on the boat's website
+1. Press any button on the controller - this will "wake up" the website and let it know that a controller is connected
+1. Without pressing either of the joysticks, press the the "**Start**" button on the controller to zero the controller axis. 
+1. The left and right motors on the boat can now be controlled independently using the left and right joystics on the F310. The axis can be re-zeroed at any point by pressing the "**Start**" button on the controller again.  
+
 
 ![](../Images/FullBoat/Website_Screenshot.png)
