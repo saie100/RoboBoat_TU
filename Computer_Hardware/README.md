@@ -23,8 +23,7 @@ The guide listed below was used to configure the TX2 to boot from an SSD.
 1. To write the backup to a Micro SD card or SSD, first connect the drive to the computer and unmount the disk. 
 1. Use the following command after substituting the name of the drive to be written to and the name of the backup file.  
 ```
-	gzip -dc /[INSERT_PATH_AND_BACKUP_NAME_HERE].gz | sudo dd of=/dev/r[INSERT_DISK_HERE(disk3)] BS=1m
-
+	gzip -dc /[INSERT_PATH_AND_BACKUP_NAME_HERE].gz | sudo dd of=/dev/r[INSERT_DISK_HERE(disk3)] BS=32m
 ```
 
 ## Backup Files ##
