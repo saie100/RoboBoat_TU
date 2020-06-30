@@ -2,11 +2,30 @@
 
 ## Configuration Guides ##
 
- - [Raspberry Pi 4 Ubuntu Server - A Guide by James Chambers](https://jamesachambers.com/raspberry-pi-4-ubuntu-server-desktop-18-04-3-image-unofficial/)
+The guide listed below was used to install Ubuntu Server on the Raspberry Pi 4 so that ROS did not need to be compipled when installing.   
 
- - The Jetson Hacks Guide used create SSD boot on the TX2
- 
-    [![Develop on SSD - NVIDIA Jetson TX Dev Kits](http://img.youtube.com/vi/ZpQgRdg8RmA/0.jpg)](https://youtu.be/ZpQgRdg8RmA)
+[Raspberry Pi 4 Ubuntu Server - A Guide by James Chambers](https://jamesachambers.com/raspberry-pi-4-ubuntu-server-desktop-18-04-3-image-unofficial/)
+
+---
+The guide listed below was used to configure the TX2 to boot from an SSD. 
+   
+[![Develop on SSD - NVIDIA Jetson TX Dev Kits](http://img.youtube.com/vi/ZpQgRdg8RmA/0.jpg)](https://youtu.be/ZpQgRdg8RmA)
+
+
+## Creating/Restoring Backups Using a Linux Computer ##
+
+1. Connect the Micro SD card from the Raspberry Pi or the SSD from the TX2 to the computer where the backup will be made. 
+1. Unmount the Micro SD card or the SSD from the OS - this can be done in the disk manager. 
+1. Use the following command after substituting the path to the Micro SD card or the SSD and specifing a name for the compressed backup of the drive.
+```
+	sudo dd if=/dev/r[INSERT_DISK_HERE(disk2)] BS=32m | gzip > /[INSERT_PATH_AND_BACKUP_NAME_HERE].gz
+```
+1. To write the backup to a Micro SD card or SSD, first connect the drive to the computer and unmount the disk. 
+1. Use the following command after substituting the name of the drive to be written to and the name of the backup file.  
+```
+	gzip -dc /[INSERT_PATH_AND_BACKUP_NAME_HERE].gz | sudo dd of=/dev/r[INSERT_DISK_HERE(disk3)] BS=1m
+
+```
 
 ## Backup Files ##
 
