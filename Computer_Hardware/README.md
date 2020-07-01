@@ -28,8 +28,8 @@ The guide listed below was used to configure the TX2 to boot from an SSD.
 
 ## Backup Files ##
 
-[Raspberry Pi 4B - Ubuntu Server Backup](https://drive.google.com/uc?export=download&confirm=n3Q3&id=1xh1nTMyLx9h_HU1v4K-zJbxssuq-ram7)
+###[Raspberry Pi 4B - Ubuntu Server Backup](https://drive.google.com/uc?export=download&confirm=n3Q3&id=1xh1nTMyLx9h_HU1v4K-zJbxssuq-ram7)###
 *Note: This backup must be restored to a Micro SD Card with a capacity greater than or equal to 64GB*
 
-[Jetson TX2 - Cloned SSD Runing NVIDIA Jetpack](https://drive.google.com/uc?id=1ChVVHlB_Lbe0hwe4Fh0JUX25fiE8jmSy&export=download)
+###[Jetson TX2 - Cloned SSD Runing NVIDIA Jetpack](https://drive.google.com/uc?id=1ChVVHlB_Lbe0hwe4Fh0JUX25fiE8jmSy&export=download)###
 *Note: This backup must be restored to an SSD with a capacity greater than or equal to 500GB*
