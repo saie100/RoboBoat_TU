@@ -13,13 +13,14 @@ The guide listed below was used to configure the TX2 to boot from an SSD.
 
 
 ## Creating/Restoring Backups Using a Linux Computer ##
-
+### Creating a Backup ###
 1. Connect the Micro SD card from the Raspberry Pi or the SSD from the TX2 to the computer where the backup will be made. 
 1. Unmount the Micro SD card or the SSD from the OS - this can be done in the disk manager. 
 1. Use the following command after substituting the path to the Micro SD card or the SSD and specifing a name for the compressed backup of the drive.
 ```
 	sudo dd if=/dev/r[INSERT_DISK_HERE(disk2)] BS=32m | gzip > /[INSERT_PATH_AND_BACKUP_NAME_HERE].gz
 ```
+### Restoring a Backup ###
 1. To write the backup to a Micro SD card or SSD, first connect the drive to the computer and unmount the disk. 
 1. Use the following command after substituting the name of the drive to be written to and the name of the backup file.  
 ```
