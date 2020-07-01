@@ -9,6 +9,7 @@ This guide was used to install Ubuntu Server on the Raspberry Pi 4 so that ROS d
 ## [Develop on SSD - NVIDIA Jetson TX Dev Kits](https://youtu.be/ZpQgRdg8RmA) ##
 ---
 The guide listed below was used to configure the TX2 to boot from an SSD. 
+
 *Note: Only follow the guide up 4:57. Do not follow the steps after this time.*
    
 
