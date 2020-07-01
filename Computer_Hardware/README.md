@@ -2,15 +2,15 @@
 
 ## Configuration Guides ##
 
-The guide listed below was used to install Ubuntu Server on the Raspberry Pi 4 so that ROS did not need to be compipled when installing.   
 
-[Raspberry Pi 4 Ubuntu Server - A Guide by James Chambers](https://jamesachambers.com/raspberry-pi-4-ubuntu-server-desktop-18-04-3-image-unofficial/)
+## [Raspberry Pi 4 Ubuntu Server - A Guide by James Chambers](https://jamesachambers.com/raspberry-pi-4-ubuntu-server-desktop-18-04-3-image-unofficial/) ##
+This guide was used to install Ubuntu Server on the Raspberry Pi 4 so that ROS did not need to be compipled when installing.   
 
+## [Develop on SSD - NVIDIA Jetson TX Dev Kits](https://youtu.be/ZpQgRdg8RmA?start=53&end=59) ##
 ---
 The guide listed below was used to configure the TX2 to boot from an SSD. 
+*Note: Only follow the 
    
-[![Develop on SSD - NVIDIA Jetson TX Dev Kits](http://img.youtube.com/vi/ZpQgRdg8RmA/0.jpg)](https://youtu.be/ZpQgRdg8RmA)
-
 
 ## Creating/Restoring Backups Using a Linux Computer ##
 ### Creating a Backup ###
