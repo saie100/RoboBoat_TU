@@ -28,6 +28,6 @@ The guide listed below was used to configure the TX2 to boot from an SSD.
 
 ## Backup Files ##
 
-[Raspberry Pi 4B - Ubuntu Server Backup](https://drive.google.com/file/d/1QWxQ-Ip0vmJn0_VMbhWDokapooyWjGFs/view?usp=sharing)
+[Raspberry Pi 4B - Ubuntu Server Backup](https://drive.google.com/file/d/1xh1nTMyLx9h_HU1v4K-zJbxssuq-ram7/view?usp=sharing)
 
 [Jetson TX2 - Link not working yet!]()
