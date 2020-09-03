@@ -16,7 +16,7 @@ function gamepadHandler(event, connecting) {
   if (connecting) {
     var gp = event.gamepad;
     console.log(gp.id);
-    if (gp.id.localeCompare("Xbox 360 Wired Controller (Vendor: 046d Product: c21d)") == 0) {
+    if (true/*gp.id.localeCompare("Xbox 360 Wired Controller (Vendor: 046d Product: c21d)") == 0*/) {
       gpidx = gp.index;
       console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", gp.index, gp.id, gp.buttons.length, gp.axes.length);
       axisZeroed = false;
