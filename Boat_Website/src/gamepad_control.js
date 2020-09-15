@@ -2,10 +2,10 @@ function move(axVal) {
   // If the manual/autonomus control select is in the manual position, you can publish
   if (document.getElementById('controlCheck').checked) {
     var lScale = new ROSLIB.Message({
-      data: -(axVal[1] - axisOffset[1])
+      data: -(axVal[leftJoystickVert] - axisOffset[leftJoystickVert])
     });
     var rScale = new ROSLIB.Message({
-      data: -(axVal[4] - axisOffset[4])
+      data: -(axVal[rightJoystickVert] - axisOffset[rightJoystickVert])
     });
     ard_LeftPWM_listener.publish(lScale);
     ard_RightPWM_listener.publish(rScale);
