@@ -41,9 +41,9 @@
     var followAnimation;
 
     const zeroAxisButton = 9; // The start button on the Logitech Gamepad F310
-    const leftJoystickVert = 1; // The index of the left joystick's vertical axis
-    const rightJoystickVert = 3; // The index of the left joystick's vertical axis
-    var axisOffset = [0, 0, 0, 0, 0, 0];
+    const leftJoystickVert = 1; // The index of the left joystick's vertical axis (+1 --> moves backwards / -1 --> moves forward)
+    const rightJoystickHorz = 2; // The index of the right joystick's horizontal axis (+1 --> moves right / -1 --> moves left)
+    var axisOffset = [0, 0, 0, 0];
     var gpPollInt = 100;
     var gpidx;
     var controlPolling;
@@ -73,8 +73,7 @@
     var bat_3sb;
 
     var ros;
-    var ard_LeftPWM_listener;
-    var ard_RightPWM_listener;
+    var PWM_listener;
     var BatteryListener;
     var IMU_AbsOrientationListener;
     var IMU_LinearAccelerationListener;
@@ -90,7 +89,16 @@
     var LIDAR_LastUpdateTime = 0;
 
     var zeroMotor = new ROSLIB.Message({
-      data: 0
+        linear : {
+                x : 0,
+                y : 0,
+                z : 0
+            },
+        angular : {
+                x : 0,
+                y : 0,
+                z : 0
+            }
     });
 
   </script>

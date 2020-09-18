@@ -1,15 +1,13 @@
-ard_LeftPWM_listener.subscribe(function(message) {
+PWM_listener.subscribe(function(message) {
   // Update the chart with the left gamepad value
-  updateGamepadChart(0, message.data);
+  updateGamepadChart(0, message.linear.x);
   // Round and update the table with the left gamepad value
-  document.getElementById("lJoystickVal").innerHTML = Math.round(message.data*1000)/1000;
-});
-
-ard_RightPWM_listener.subscribe(function(message) {
-  // Update the chart with the right gamepad value
-  updateGamepadChart(1, message.data);
+  document.getElementById("lJoystickVal").innerHTML = Math.round(message.linear.x*1000)/1000;
+// Update the chart with the right gamepad value
+  updateGamepadChart(1, message.angular.z);
   // Round and update the table with the right gamepad value
-  document.getElementById("rJoystickVal").innerHTML = Math.round(message.data*1000)/1000;
+  document.getElementById("rJoystickVal").innerHTML = Math.round(message.angular.z*1000)/1000;
+
 });
 
 BatteryListener.subscribe(function(message) {
@@ -213,9 +211,7 @@ LIDAR_Scan.subscribe(function(message) {
 // This function will be executed whenever the "Control Mode" switch is toggled
 function updateControlMode() {
   // Always stop the motors when updading the control mode
-  ard_LeftPWM_listener.publish(zeroMotor);
-  ard_RightPWM_listener.publish(zeroMotor);
-
+  PWM_listener.publish(zeroMotor);
   // Variable where the control message will be stored
   var controlMsg;
   // If the control mode switch is "checked", the boat should be in manual mode
