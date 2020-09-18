@@ -39,6 +39,15 @@ function getChartTime(unixTime){
 }
 
 function updateGamepadChart(idx, val){
-  Chart_Controller.data.datasets[idx].data[0].y = val;
+/* 
+    idx=0  controls the left joystick
+    idx=1 controls the right joystick
+*/
+  if(idx == 0){
+    Chart_Controller.data.datasets[idx].data[0].y = val;
+  }
+  else if(idx == 1){
+    Chart_Controller.data.datasets[idx].data[0].x = val;
+  }
   Chart_Controller.update(0);
 }
